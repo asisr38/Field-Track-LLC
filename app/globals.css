@@ -1,0 +1,282 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+@keyframes moveGrid {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(35px);
+  }
+}
+
+@keyframes first {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  to {
+    transform: rotate(360deg) scale(1.1);
+  }
+}
+
+@keyframes second {
+  from {
+    transform: rotate(0deg) scale(1.2);
+  }
+  to {
+    transform: rotate(-360deg) scale(0.8);
+  }
+}
+
+@keyframes third {
+  from {
+    transform: rotate(0deg) scale(0.8);
+  }
+  to {
+    transform: rotate(360deg) scale(1.2);
+  }
+}
+
+@keyframes fourth {
+  from {
+    transform: rotate(360deg) scale(1);
+  }
+  to {
+    transform: rotate(0deg) scale(0.9);
+  }
+}
+
+@keyframes fifth {
+  from {
+    transform: rotate(0deg) scale(1.1);
+  }
+  to {
+    transform: rotate(360deg) scale(0.9);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@layer base {
+  :root {
+    --primary: 139, 30%, 39%;    /* Forest Green: #4B6F44 */
+    
+    --background: 37, 33%, 98%;   /* Cream White: #FAF8F3 */
+    --foreground: 26, 22%, 23%;   /* Dark Earth: #453C38 */
+
+    --card: 37, 33%, 98%;
+    --card-foreground: 26, 22%, 23%;
+
+    --popover: 37, 33%, 98%;
+    --popover-foreground: 26, 22%, 23%;
+
+    --primary-foreground: 37, 33%, 98%;
+
+    --secondary: 27, 27%, 85%;    /* Light Sand: #D9CFC1 */
+    --secondary-foreground: 26, 22%, 23%;
+
+    --muted: 27, 27%, 85%;
+    --muted-foreground: 26, 22%, 45%;
+
+    --accent: 34, 35%, 75%;       /* Wheat: #D4C4A8 */
+    --accent-foreground: 26, 22%, 23%;
+
+    --destructive: 0, 84.2%, 60.2%;
+    --destructive-foreground: 37, 33%, 98%;
+
+    --border: 27, 27%, 85%;
+    --input: 27, 27%, 85%;
+    --ring: 139, 30%, 39%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 26, 22%, 15%;   /* Dark Soil: #2B2623 */
+    --foreground: 37, 33%, 98%;
+
+    --card: 26, 22%, 15%;
+    --card-foreground: 37, 33%, 98%;
+
+    --popover: 26, 22%, 15%;
+    --popover-foreground: 37, 33%, 98%;
+
+    --primary: 139, 30%, 49%;     /* Lighter Forest Green: #5E8C56 */
+    --primary-foreground: 37, 33%, 98%;
+
+    --secondary: 26, 22%, 25%;    /* Deep Earth: #453C38 */
+    --secondary-foreground: 37, 33%, 98%;
+
+    --muted: 26, 22%, 25%;
+    --muted-foreground: 37, 33%, 75%;
+
+    --accent: 26, 22%, 25%;
+    --accent-foreground: 37, 33%, 98%;
+
+    --destructive: 0, 62.8%, 30.6%;
+    --destructive-foreground: 37, 33%, 98%;
+
+    --border: 26, 22%, 25%;
+    --input: 26, 22%, 25%;
+    --ring: 139, 30%, 49%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+  
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+  
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+  
+  p {
+    @apply leading-relaxed;
+  }
+}
+
+.font-poppins {
+  font-family: var(--font-poppins);
+  letter-spacing: -0.02em;
+}
+
+.font-inter {
+  font-family: var(--font-inter);
+  letter-spacing: -0.01em;
+  line-height: 1.6;
+}
+
+.merriweather-regular {
+  font-family: "Merriweather", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.merriweather-bold {
+  font-family: "Merriweather", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.merriweather-black {
+  font-family: "Merriweather", serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.custom-popup .leaflet-popup-content-wrapper {
+  @apply bg-card rounded-xl shadow-lg;
+}
+
+.custom-popup .leaflet-popup-content {
+  margin: 0;
+  min-width: 300px;
+}
+
+.custom-popup .leaflet-popup-tip {
+  @apply bg-card;
+}
+
+.legend {
+  line-height: 18px;
+  color: #555;
+}
+
+.legend i {
+  border-radius: 2px;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/90 focus:ring-secondary;
+  }
+  
+  .btn-outline {
+    @apply border border-primary/30 hover:bg-primary/10 focus:ring-primary;
+  }
+  
+  .card {
+    @apply bg-card rounded-xl border border-border/50 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300;
+  }
+  
+  .glass {
+    @apply bg-background/80 backdrop-blur-md border border-border/30;
+  }
+  
+  .form-input {
+    @apply w-full px-4 py-3 rounded-lg border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200;
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 5s ease-in-out infinite;
+  }
+  
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3s ease-in-out infinite;
+  }
+  
+  .transition-all-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .glass-card {
+    @apply bg-background/40 backdrop-blur-lg border border-white/10 shadow-xl;
+  }
+  
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70;
+  }
+}
+

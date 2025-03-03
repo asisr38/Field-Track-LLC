@@ -1,0 +1,188 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { 
+  Ruler,
+  TestTube2,
+  ClipboardList,
+  HeadphonesIcon,
+  ArrowRight
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+
+const processSteps = [
+  {
+    icon: Ruler,
+    title: "Field Survey",
+    description: "Comprehensive field evaluation and soil sampling to assess your land's current condition.",
+    details: [
+      "GPS-guided sampling",
+      "Depth consistency",
+      "Field mapping"
+    ],
+    image: "/images/farm2.jpg"
+  },
+  {
+    icon: TestTube2,
+    title: "Lab Testing",
+    description: "Detailed laboratory analysis of soil samples to determine nutrient levels and composition.",
+    details: [
+      "Complete nutrient panel",
+      "Organic matter analysis",
+      "pH and EC testing"
+    ],
+    image: "/images/farm3.jpg"
+  },
+  {
+    icon: ClipboardList,
+    title: "Data Analysis",
+    description: "Expert interpretation of results and development of customized recommendations.",
+    details: [
+      "Trend analysis",
+      "Custom recommendations",
+      "Cost-benefit calculations"
+    ],
+    image: "/images/farm8.jpg"
+  },
+  {
+    icon: HeadphonesIcon,
+    title: "Implementation",
+    description: "Ongoing support and guidance throughout the implementation process.",
+    details: [
+      "Dealer coordination",
+      "Application guidance",
+      "Progress monitoring"
+    ],
+    image: "/images/soil.jpg"
+  }
+];
+
+export default function Process() {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1
+  });
+
+  return (
+    <section id="process" className="py-20 bg-secondary/5">
+      <div className="container mx-auto px-4">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="max-w-6xl mx-auto"
+        >
+          <div className="text-center mb-16 space-y-4">
+            <h2 className={cn(
+              "text-4xl merriweather-bold"
+            )}>
+              Our <span className="text-primary">Process</span>
+            </h2>
+            <p className="text-lg text-muted-foreground merriweather-regular max-w-2xl mx-auto">
+              A systematic approach to soil analysis and management for optimal results
+            </p>
+          </div>
+
+          <div className="relative">
+            {/* Process Steps */}
+            <div className="space-y-12 lg:space-y-24">
+              {processSteps.map((step, index) => (
+                <motion.div
+                  key={step.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.5, delay: index * 0.2 }}
+                  className="relative group"
+                >
+                  <div className={cn(
+                    "grid lg:grid-cols-2 gap-8 items-center",
+                    index % 2 === 1 && "lg:grid-flow-dense"
+                  )}>
+                    {/* Content Side */}
+                    <div className={cn(
+                      "p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/50 transition-all duration-300",
+                      index % 2 === 1 && "lg:col-start-2"
+                    )}>
+                      <div className="flex items-start gap-4">
+                        {/* Icon */}
+                        <div className="p-4 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-colors">
+                          <step.icon className="w-8 h-8 text-primary" />
+                        </div>
+                        {/* Text Content */}
+                        <div className="flex-1">
+                          <h3 className="text-xl font-bold mb-2 font-merriweather group-hover:text-primary transition-colors">
+                            {step.title}
+                          </h3>
+                          <p className="text-muted-foreground mb-4 font-merriweather">
+                            {step.description}
+                          </p>
+                          {/* Details List */}
+                          <ul className="space-y-2">
+                            {step.details.map((detail, i) => (
+                              <li key={i} className="flex items-center gap-2 text-sm">
+                                <ArrowRight className="w-4 h-4 text-primary" />
+                                <span className="text-muted-foreground">{detail}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Image Side */}
+                    <div className={cn(
+                      "hidden lg:block relative h-full",
+                      index % 2 === 1 && "lg:col-start-1"
+                    )}>
+                      <motion.div 
+                        className="relative h-full"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {/* Image Container */}
+                        <div className="relative h-[300px] rounded-2xl overflow-hidden">
+                          <Image
+                            src={step.image}
+                            alt={step.title}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-tr from-primary/40 to-transparent" />
+                          
+                          {/* Number Overlay */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-20 h-20 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg border border-white/20">
+                              <span className="text-3xl font-bold text-primary">
+                                {(index + 1).toString().padStart(2, '0')}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Step Info Overlay */}
+                          <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
+                            <div className="flex items-center gap-3">
+                              <span className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                                <step.icon className="w-6 h-6 text-white" />
+                              </span>
+                              <div>
+                                <h4 className="text-white font-bold">{step.title}</h4>
+                                <p className="text-white/80 text-sm">{step.details[0]}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
