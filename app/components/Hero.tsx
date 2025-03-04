@@ -106,6 +106,7 @@ export default function Hero() {
                     src="/images/farm2.jpg"
                     alt="Agricultural field visualization"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                     priority
                   />
@@ -116,6 +117,7 @@ export default function Hero() {
                     src="/images/farmGrid.png"
                     alt="Field grid analysis"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                     priority
                   />
@@ -129,6 +131,7 @@ export default function Hero() {
                     src="/images/topography.png"
                     alt="Field topography"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                     priority
                   />
@@ -139,6 +142,7 @@ export default function Hero() {
                     src="/images/farm3.jpg"
                     alt="Agricultural technology"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                     priority
                   />

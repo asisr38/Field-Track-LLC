@@ -150,7 +150,7 @@ export default function SampleReport() {
 
         // Determine initial zoom based on screen width
         const isMobile = window.innerWidth < 768;
-        const initialZoom = isMobile ? 13 : 16;
+        const initialZoom = isMobile ? 15 : 16;
 
         // Initialize the map with the field center
         const map = L.map(mapRef.current, {
@@ -444,44 +444,6 @@ export default function SampleReport() {
           })
           .addTo(map);
 
-        // Add a custom control for drone imagery layers
-        const droneControl = L.control({ position: "bottomleft" });
-        droneControl.onAdd = function() {
-          const div = L.DomUtil.create("div", "leaflet-control leaflet-bar drone-imagery-control");
-          div.innerHTML = `
-            <div class="bg-white p-2 rounded-lg shadow-lg">
-              <h4 class="font-bold mb-2">Drone Imagery</h4>
-              <div class="space-y-2">
-                ${droneImageryLayers.map(layer => `
-                  <div class="flex items-center">
-                    <input type="checkbox" id="${layer.type}-toggle" class="mr-2" />
-                    <label for="${layer.type}-toggle">${layer.name}</label>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          `;
-          
-          // Add event listeners after the control is added to the map
-          setTimeout(() => {
-            droneImageryLayers.forEach(layer => {
-              const checkbox = document.getElementById(`${layer.type}-toggle`) as HTMLInputElement;
-              if (checkbox) {
-                checkbox.addEventListener('change', function() {
-                  if (this.checked) {
-                    map.addLayer(droneLayers[layer.name]);
-                  } else {
-                    map.removeLayer(droneLayers[layer.name]);
-                  }
-                });
-              }
-            });
-          }, 100);
-          
-          return div;
-        };
-        droneControl.addTo(map);
-
         // Add a legend for trial treatments
         const legend = L.control({ position: "bottomleft" });
         legend.onAdd = function () {
@@ -517,7 +479,16 @@ export default function SampleReport() {
         const bounds = fieldLayer.getBounds();
         if (bounds.isValid()) {
           const padding = isMobile ? 0.2 : 0.1; // More padding on mobile
-          map.fitBounds(bounds.pad(padding));
+          map.fitBounds(bounds.pad(padding), {
+            animate: true,
+            // Add a callback to zoom in after bounds are set
+            callback: function() {
+              // For mobile devices, zoom in by one level after bounds are set
+              if (isMobile) {
+                map.zoomIn(1);
+              }
+            }
+          });
         }
       } catch (error) {
         console.error("Error initializing map:", error);
