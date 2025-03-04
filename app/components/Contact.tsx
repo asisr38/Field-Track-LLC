@@ -499,12 +499,7 @@ ${formData.message}
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`w-full px-8 py-4 bg-primary text-primary-foreground rounded-lg font-medium transition-all duration-300 
-                  ${
-                    isSubmitting
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:bg-primary/90 hover:shadow-md active:translate-y-0.5"
-                  }`}
+                  className="w-full px-8 py-3 bg-green-600 text-white font-medium rounded-lg shadow-md border-2 border-green-600 hover:bg-green-700 hover:border-green-700 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center justify-center gap-2">

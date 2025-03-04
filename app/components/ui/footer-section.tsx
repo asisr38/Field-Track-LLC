@@ -128,9 +128,9 @@ function Footerdemo() {
 
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8">
-          <p className="text-sm text-muted-foreground">
-            © 2025 Basic Package LLC. All rights reserved.
-          </p>
+          <div className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Field Track LLC. All rights reserved.
+          </div>
           <div className="flex items-center gap-8">
             {/* <div className="flex items-center gap-2 bg-secondary/50 px-3 py-1.5 rounded-full">
               <Sun className="h-4 w-4" />

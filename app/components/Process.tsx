@@ -12,58 +12,39 @@ import {
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-const processSteps = [
+const steps = [
   {
-    icon: Ruler,
-    title: "Data Collection & Analysis",
+    title: "Data Collection",
     description:
-      "We deploy advanced technology including satellite imagery, IoT sensors, and drone mapping to gather comprehensive land data.",
+      "We integrate with your existing farm management tools like John Deere Operations Center and Climate FieldView, combining field data with high-resolution aerial imagery and weather station data.",
     details: [
-      "Satellite imagery",
-      "IoT sensor network",
-      "Drone mapping",
-      "Real-time monitoring"
-    ],
-    image: "/images/farm2.jpg"
+      "Integration with precision ag platforms",
+      "High-resolution aerial imagery",
+      "Weather station data integration",
+      "Field sensor networks"
+    ]
   },
   {
-    icon: TestTube2,
-    title: "AI-Powered Assessment",
+    title: "Trial Design",
     description:
-      "Our AI algorithms analyze multiple data points to provide insights into land health, resource utilization, and optimization opportunities.",
+      "Using scientific methodology, we design trials that answer your specific questions while accounting for field variability and operational constraints.",
     details: [
-      "Machine learning analysis",
-      "Predictive modeling",
-      "Resource optimization",
-      "Risk assessment"
-    ],
-    image: "/images/farm3.jpg"
+      "Randomized plot layouts",
+      "Statistical power analysis",
+      "Treatment planning",
+      "Implementation protocols"
+    ]
   },
   {
-    icon: ClipboardList,
-    title: "Strategy Development",
+    title: "Data Analysis",
     description:
-      "Based on AI insights and expert analysis, we develop customized land management strategies aligned with your goals.",
+      "Advanced statistical analysis reveals meaningful insights from your trial data, helping you make confident decisions about your operation.",
     details: [
-      "Custom strategies",
-      "ROI projections",
-      "Sustainability metrics",
-      "Implementation roadmap"
-    ],
-    image: "/images/farm8.jpg"
-  },
-  {
-    icon: HeadphonesIcon,
-    title: "Implementation & Support",
-    description:
-      "We provide ongoing support through our digital platform and expert team to ensure successful strategy implementation.",
-    details: [
-      "24/7 digital monitoring",
-      "Expert consultation",
-      "Progress tracking",
-      "Strategy optimization"
-    ],
-    image: "/images/soil.jpg"
+      "Statistical analysis",
+      "Spatial correlation",
+      "Economic evaluation",
+      "Visual reporting"
+    ]
   }
 ];
 
@@ -88,15 +69,15 @@ export default function Process() {
               Our <span className="text-primary">Process</span>
             </h2>
             <p className="text-body-lg text-muted-foreground font-secondary max-w-2xl mx-auto">
-              A systematic approach to land management powered by advanced
-              technology
+              We work with your existing farm management tools and trusted data
+              sources to deliver research-grade insights for your operation
             </p>
           </div>
 
           <div className="relative">
             {/* Process Steps */}
             <div className="space-y-12 lg:space-y-24">
-              {processSteps.map((step, index) => (
+              {steps.map((step, index) => (
                 <motion.div
                   key={step.title}
                   initial={{ opacity: 0, y: 20 }}
@@ -120,7 +101,7 @@ export default function Process() {
                       <div className="flex items-start gap-4">
                         {/* Icon */}
                         <div className="p-4 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-colors">
-                          <step.icon className="w-8 h-8 text-primary" />
+                          <Ruler className="w-8 h-8 text-primary" />
                         </div>
                         {/* Text Content */}
                         <div className="flex-1">
@@ -163,7 +144,7 @@ export default function Process() {
                         {/* Image Container */}
                         <div className="relative h-[300px] rounded-2xl overflow-hidden">
                           <Image
-                            src={step.image}
+                            src="/images/drone.jpg"
                             alt={step.title}
                             fill
                             className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -183,7 +164,7 @@ export default function Process() {
                           <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
                             <div className="flex items-center gap-3">
                               <span className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                                <step.icon className="w-6 h-6 text-white" />
+                                <Ruler className="w-6 h-6 text-white" />
                               </span>
                               <div>
                                 <h4 className="text-white font-bold">
