@@ -153,9 +153,36 @@ export default function Contact() {
 
     setIsSubmitting(true);
 
-    // Simulate API call
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Actually send data to the API endpoint
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: `
+Field Size: ${formData.acres || "Not specified"}
+Crop Types: ${formData.cropTypes || "Not specified"}
+Service Type: ${formData.serviceType || "Not specified"}
+Preferred Contact: ${formData.preferredContact}
+
+Message:
+${formData.message}
+          `,
+        }),
+      });
+
+      const data = await response.json();
+      console.log("API response:", data);
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send message");
+      }
+
       setIsSubmitted(true);
       setFormData({
         name: "",
@@ -169,8 +196,9 @@ export default function Contact() {
       });
       setIsSubmitting(false);
     } catch (error) {
+      console.error("Error sending contact form:", error);
       setIsSubmitting(false);
-      // Handle error (could add error state here)
+      // You could add error handling here if you want to show an error message
     }
   };
 

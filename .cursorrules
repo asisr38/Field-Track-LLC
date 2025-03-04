@@ -1,0 +1,46 @@
+# Cursor Configuration Rules
+
+## Formatting Rules
+editor.formatOnSave: true
+editor.defaultFormatter: esbenp.prettier-vscode
+editor.codeActionsOnSave.source.fixAll.eslint: true
+editor.tabSize: 2
+
+## Tailwind CSS
+tailwindCSS.includeLanguages.typescript: javascript
+tailwindCSS.includeLanguages.typescriptreact: javascript
+
+## TypeScript Settings
+typescript.preferences.importModuleSpecifier: relative
+typescript.updateImportsOnFileMove.enabled: always
+javascript.updateImportsOnFileMove.enabled: always
+typescript.tsdk: node_modules/typescript/lib
+
+## Next.js Specific
+files.associations.*.module.css: tailwindcss
+files.exclude.node_modules: true
+files.exclude..next: true
+
+## Linting
+eslint.validate: [javascript, javascriptreact, typescript, typescriptreact]
+eslint.run: onSave
+
+## Performance
+search.exclude.node_modules: true
+search.exclude..git: true
+search.exclude..next: true
+files.watcherExclude.node_modules: true
+files.watcherExclude..git: true
+
+## Component Structure
+# Keep related components organized
+# Components should be in PascalCase
+# Utilities should be in camelCase
+
+## File Organization
+# app/ - Application routes and pages
+# components/ - Reusable UI components
+# lib/ - Utility functions and helpers
+# hooks/ - Custom React hooks
+# public/ - Static assets
+# styles/ - Global CSS and Tailwind config 
