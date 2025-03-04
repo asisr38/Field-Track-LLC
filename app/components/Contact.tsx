@@ -601,7 +601,7 @@ export default function Contact() {
                       </a>
 
                       <p className="text-sm text-white/90 mt-2 max-w-md">
-                        With over 15 years of experience in agricultural
+                        With over 10 years of experience in agricultural
                         research and data science, Dr. Smith leads our team in
                         delivering precision agriculture solutions.
                       </p>
