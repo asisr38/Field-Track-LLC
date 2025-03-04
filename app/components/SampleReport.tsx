@@ -109,6 +109,28 @@ export default function SampleReport() {
   const mapInstanceRef = useRef<any>(null);
 
   useEffect(() => {
+    // Add custom CSS for better touch controls
+    const style = document.createElement('style');
+    style.textContent = `
+      .leaflet-touch .leaflet-control-zoom a {
+        width: 40px !important;
+        height: 40px !important;
+        line-height: 40px !important;
+        font-size: 18px !important;
+      }
+      .leaflet-control-zoom {
+        border: 2px solid rgba(0,0,0,0.2) !important;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.4) !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
+  useEffect(() => {
     // Ensure the map is only initialized once and when the div is ready
     if (
       typeof window === "undefined" ||
@@ -126,21 +148,36 @@ export default function SampleReport() {
           return;
         }
 
+        // Determine initial zoom based on screen width
+        const isMobile = window.innerWidth < 768;
+        const initialZoom = isMobile ? 13 : 16;
+
         // Initialize the map with the field center
         const map = L.map(mapRef.current, {
           center: FIELD_BOUNDS[0],
-          zoom: 16,
-          minZoom: 12,
+          zoom: initialZoom,
+          minZoom: 10, // Lower minimum zoom to allow zooming out further
           maxZoom: 19,
-          scrollWheelZoom: false
+          scrollWheelZoom: false,
+          tap: true, // Enable tap for mobile
+          touchZoom: true, // Enable pinch zoom on mobile
+          dragging: true, // Ensure dragging is enabled
+          zoomControl: false // Disable default zoom control, we'll add our own
         });
 
-        // Add zoom control
+        // Add zoom control with larger buttons for better mobile experience
         L.control
           .zoom({
-            position: "bottomright"
+            position: "bottomright",
+            zoomInTitle: "Zoom in",
+            zoomOutTitle: "Zoom out"
           })
           .addTo(map);
+
+        // Enable touch detection
+        if (L.Browser && L.Browser.touch) {
+          L.DomUtil.addClass(map._container, 'leaflet-touch');
+        }
 
         // Define base maps
         const baseMaps = {
@@ -197,14 +234,14 @@ export default function SampleReport() {
 
           if (layer.type === "ndvi") {
             // Create a clipping path using the field boundary
-            patternHTML += `<clipPath id="field-clip">
+            patternHTML += `<clipPath id="field-clip-ndvi">
               <path d="${createSVGPathFromCoordinates(
                 fieldData.features[0].geometry.coordinates[0]
               )}" />
             </clipPath>`;
 
             // NDVI visualization with field boundary clipping
-            patternHTML += `<g clip-path="url(#field-clip)">`;
+            patternHTML += `<g clip-path="url(#field-clip-ndvi)">`;
 
             // Create a more realistic NDVI pattern
             for (let i = 0; i < 40; i++) {
@@ -330,8 +367,14 @@ export default function SampleReport() {
 
           svgElement.innerHTML = patternHTML;
 
-          // Create SVG overlay
-          droneLayers[layer.name] = L.svgOverlay(svgElement, layer.bounds, {
+          // Create SVG overlay with precise bounds
+          // Use the exact field bounds for the overlay to ensure perfect alignment
+          const preciseBounds = L.latLngBounds(
+            [FIELD_BOUNDS[0][0] - 0.0001, FIELD_BOUNDS[0][1] - 0.0001], // Add a small padding
+            [FIELD_BOUNDS[1][0] + 0.0001, FIELD_BOUNDS[1][1] + 0.0001]  // Add a small padding
+          );
+          
+          droneLayers[layer.name] = L.svgOverlay(svgElement, preciseBounds, {
             opacity: 0.8,
             interactive: true
           });
@@ -386,19 +429,58 @@ export default function SampleReport() {
           trialLayer.addLayer(marker);
         });
 
-        // Add layer controls
+        // Add layer control
         const overlayMaps = {
           "Field Boundary": fieldLayer,
           "Trial Points": trialLayer,
           ...droneLayers
         };
 
+        // Add layer control
         L.control
           .layers(baseMaps, overlayMaps, {
-            collapsed: false,
-            position: "topright"
+            position: "topright",
+            collapsed: false
           })
           .addTo(map);
+
+        // Add a custom control for drone imagery layers
+        const droneControl = L.control({ position: "bottomleft" });
+        droneControl.onAdd = function() {
+          const div = L.DomUtil.create("div", "leaflet-control leaflet-bar drone-imagery-control");
+          div.innerHTML = `
+            <div class="bg-white p-2 rounded-lg shadow-lg">
+              <h4 class="font-bold mb-2">Drone Imagery</h4>
+              <div class="space-y-2">
+                ${droneImageryLayers.map(layer => `
+                  <div class="flex items-center">
+                    <input type="checkbox" id="${layer.type}-toggle" class="mr-2" />
+                    <label for="${layer.type}-toggle">${layer.name}</label>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+          
+          // Add event listeners after the control is added to the map
+          setTimeout(() => {
+            droneImageryLayers.forEach(layer => {
+              const checkbox = document.getElementById(`${layer.type}-toggle`) as HTMLInputElement;
+              if (checkbox) {
+                checkbox.addEventListener('change', function() {
+                  if (this.checked) {
+                    map.addLayer(droneLayers[layer.name]);
+                  } else {
+                    map.removeLayer(droneLayers[layer.name]);
+                  }
+                });
+              }
+            });
+          }, 100);
+          
+          return div;
+        };
+        droneControl.addTo(map);
 
         // Add a legend for trial treatments
         const legend = L.control({ position: "bottomleft" });
@@ -431,10 +513,11 @@ export default function SampleReport() {
         // Store map instance
         mapInstanceRef.current = map;
 
-        // Fit map to field bounds with padding
+        // Fit map to field bounds with padding (more padding on mobile)
         const bounds = fieldLayer.getBounds();
         if (bounds.isValid()) {
-          map.fitBounds(bounds.pad(0.1));
+          const padding = isMobile ? 0.2 : 0.1; // More padding on mobile
+          map.fitBounds(bounds.pad(padding));
         }
       } catch (error) {
         console.error("Error initializing map:", error);
@@ -483,13 +566,24 @@ export default function SampleReport() {
         >
           <div
             className="relative h-[600px] rounded-2xl overflow-hidden border border-border/50"
-            style={{ zIndex: 0 }}
+            style={{ zIndex: 1 }}
           >
             <div
               ref={mapRef}
               className="w-full h-full"
               style={{ background: "#f0f0f0" }}
             />
+            <style jsx global>{`
+              .leaflet-control-container {
+                pointer-events: auto;
+              }
+              .leaflet-control-zoom {
+                pointer-events: auto;
+              }
+              .leaflet-control-zoom a {
+                pointer-events: auto;
+              }
+            `}</style>
           </div>
           <p className="text-sm text-muted-foreground mt-2 text-center">
             Interactive map showing trial layout and sampling locations
@@ -569,8 +663,9 @@ function createSVGPathFromCoordinates(coordinates: number[][]) {
   let path = "";
   coordinates.forEach((coord, index) => {
     // Normalize to 0-100 range
+    // Swap x and y to match the SVG coordinate system with the map
     const x = ((coord[0] - minLng) / lngRange) * 100;
-    const y = ((coord[1] - minLat) / latRange) * 100;
+    const y = 100 - ((coord[1] - minLat) / latRange) * 100; // Invert Y axis for SVG
 
     if (index === 0) {
       path += `M ${x} ${y}`;
@@ -581,6 +676,6 @@ function createSVGPathFromCoordinates(coordinates: number[][]) {
 
   // Close the path
   path += " Z";
-
+  
   return path;
 }

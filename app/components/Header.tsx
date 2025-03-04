@@ -121,8 +121,8 @@ export default function Header() {
       className={cn(
         "fixed top-0 w-full backdrop-blur-md border-b z-50 transition-all duration-300",
         isScrolled 
-          ? "bg-background/95 border-border/60 shadow-elevation-low" 
-          : "bg-background/70 border-transparent"
+          ? "bg-background border-border/60 shadow-elevation-low" 
+          : "bg-background border-transparent"
       )}
     >
       <div className="container mx-auto px-4 md:px-6">
