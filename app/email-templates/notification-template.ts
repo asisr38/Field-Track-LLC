@@ -30,11 +30,6 @@ export const generateNotificationEmail = (name: string, email: string, phone: st
       margin: 0;
       font-size: 24px;
     }
-    .logo {
-      width: 120px;
-      height: auto;
-      margin-bottom: 15px;
-    }
     .content { 
       padding: 30px; 
       background-color: #ffffff;
@@ -62,6 +57,12 @@ export const generateNotificationEmail = (name: string, email: string, phone: st
       font-weight: bold;
       color: #0e4426;
     }
+    .info-section {
+      margin-bottom: 20px;
+    }
+    .info-item {
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -72,19 +73,39 @@ export const generateNotificationEmail = (name: string, email: string, phone: st
     <div class="content">
       <p>A new inquiry has been submitted through the website contact form. Details are below:</p>
       
-      <p><span class="label">Name:</span> ${name}</p>
-      <p><span class="label">Email:</span> ${email}</p>
-      ${phone ? `<p><span class="label">Phone:</span> ${phone}</p>` : ''}
+      <div class="info-section">
+        <div class="info-item">
+          <span class="label">Name:</span> ${name}
+        </div>
+        <div class="info-item">
+          <span class="label">Email:</span> ${email}
+        </div>
+        ${phone ? `<div class="info-item"><span class="label">Phone:</span> ${phone}</div>` : ''}
+      </div>
       
-      <p><span class="label">Message & Requirements:</span></p>
+      <div class="info-item">
+        <span class="label">Message & Requirements:</span>
+      </div>
       <div class="message-box">
         ${message.replace(/\n/g, '<br>')}
       </div>
       
       <p style="margin-top: 25px;">This inquiry may be regarding precision agriculture services, field data analysis, or other agricultural technology needs.</p>
+      
+      <p style="margin-top: 15px; font-size: 14px; color: #666666; text-align: right;">
+        Received: ${new Date().toLocaleString('en-US', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })}
+      </p>
     </div>
     <div class="footer">
-      &copy; ${new Date().getFullYear()} Field Track LLC. All rights reserved.
+      <p>This is an automated notification from the Field Track LLC website.</p>
+      <p>&copy; ${new Date().getFullYear()} Field Track LLC. All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -104,5 +125,15 @@ ${message}
 
 This inquiry may be regarding precision agriculture services, field data analysis, or other agricultural technology needs.
 
-© ${new Date().getFullYear()} Field Track LLC
+Received: ${new Date().toLocaleString('en-US', { 
+  weekday: 'long', 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit'
+})}
+
+This is an automated notification from the Field Track LLC website.
+© ${new Date().getFullYear()} Field Track LLC. All rights reserved.
 `; 
