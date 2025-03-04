@@ -19,11 +19,16 @@ export default function WhyChooseUs() {
           transition={{ duration: 0.6 }}
           className="max-w-6xl mx-auto"
         >
-          <h2 className="text-4xl font-bold text-center mb-12 font-poppins bg-gradient-to-r from-primary/80 to-primary bg-clip-text text-transparent">
-            Why Choose Us?
-          </h2>
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="text-4xl md:text-5xl font-primary">
+              Why Choose <span className="text-primary">Field Track</span>?
+            </h2>
+            <p className="text-body-lg text-muted-foreground font-secondary max-w-2xl mx-auto">
+              We combine agricultural expertise with cutting-edge technology to deliver actionable insights for your farm
+            </p>
+          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Unbiased Card */}
+            {/* Research Focus Card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -33,14 +38,19 @@ export default function WhyChooseUs() {
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="relative p-6 rounded-xl border border-border/50 group-hover:border-primary/30 transition-colors duration-300 h-full">
                 <div className="w-12 h-12 mb-4 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                  <span className="text-2xl">⚖️</span>
+                  <span className="text-2xl">🔬</span>
                 </div>
-                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors duration-300">Unbiased</h3>
-                <p className="text-muted-foreground">Our recommendations are not influenced by any entity selling fertilizer. We provide transparency in pricing for products between competing retailers.</p>
+                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors duration-300">
+                  Research Focus
+                </h3>
+                <p className="text-muted-foreground">
+                  Specialized in both small plot research and large-scale field
+                  trials, delivering reliable results you can trust.
+                </p>
               </div>
             </motion.div>
 
-            {/* Expertise Card */}
+            {/* Data Integration Card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -50,14 +60,19 @@ export default function WhyChooseUs() {
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="relative p-6 rounded-xl border border-border/50 group-hover:border-primary/30 transition-colors duration-300 h-full">
                 <div className="w-12 h-12 mb-4 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                  <span className="text-2xl">🎓</span>
+                  <span className="text-2xl">🔄</span>
                 </div>
-                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors duration-300">Expertise</h3>
-                <p className="text-muted-foreground">Years of experience in soil science, agronomy, and remote sensing.</p>
+                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors duration-300">
+                  Easy Integration
+                </h3>
+                <p className="text-muted-foreground">
+                  Works with your existing tools - John Deere Operations Center,
+                  Climate FieldView, and more.
+                </p>
               </div>
             </motion.div>
 
-            {/* Advanced Technology Card */}
+            {/* Experience Card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -67,14 +82,19 @@ export default function WhyChooseUs() {
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="relative p-6 rounded-xl border border-border/50 group-hover:border-primary/30 transition-colors duration-300 h-full">
                 <div className="w-12 h-12 mb-4 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                  <span className="text-2xl">🔬</span>
+                  <span className="text-2xl">📊</span>
                 </div>
-                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors duration-300">Advanced Technology</h3>
-                <p className="text-muted-foreground">Cutting-edge tools and techniques for accurate analysis.</p>
+                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors duration-300">
+                  Clear Results
+                </h3>
+                <p className="text-muted-foreground">
+                  Get straightforward analysis and practical recommendations
+                  based on your actual field data.
+                </p>
               </div>
             </motion.div>
 
-            {/* Farmer-Focused Card */}
+            {/* Personal Service Card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -84,10 +104,15 @@ export default function WhyChooseUs() {
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="relative p-6 rounded-xl border border-border/50 group-hover:border-primary/30 transition-colors duration-300 h-full">
                 <div className="w-12 h-12 mb-4 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                  <span className="text-2xl">🌾</span>
+                  <span className="text-2xl">👨‍🌾</span>
                 </div>
-                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors duration-300">Farmer-Focused</h3>
-                <p className="text-muted-foreground">We understand the challenges you face and are here to help.</p>
+                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors duration-300">
+                  Direct Support
+                </h3>
+                <p className="text-muted-foreground">
+                  Work directly with me throughout your trials - no middlemen,
+                  no corporate overhead.
+                </p>
               </div>
             </motion.div>
           </div>
@@ -95,4 +120,4 @@ export default function WhyChooseUs() {
       </div>
     </section>
   );
-} 
+}

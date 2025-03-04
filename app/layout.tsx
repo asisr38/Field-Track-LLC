@@ -7,6 +7,8 @@ import Footer from "./components/Footer";
 import Chatbot from "./components/Chatbot";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Metadata } from "next";
+import "./styles/map.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,10 +26,13 @@ const openSans = Open_Sans({
   preload: true
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Field Track LLC",
   description:
-    "Optimizing soil health and crop yields with unbiased, science-driven solutions"
+    "Advancing agriculture through research-driven field trials and data-powered insights for optimal farm management",
+  icons: {
+    icon: "/favicon.ico"
+  }
 };
 
 export default function RootLayout({

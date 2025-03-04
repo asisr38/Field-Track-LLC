@@ -9,24 +9,27 @@ import { Star } from "lucide-react";
 
 const testimonials = [
   {
-    content: "Basic Package's soil analysis has been instrumental in improving our crop yields. Their detailed reports and practical recommendations helped us optimize our fertilizer application, resulting in a 30% increase in corn yield.",
-    author: "John Anderson",
-    title: "Large-Scale Corn & Soybean Farmer",
-    location: "Jonesboro, AR",
+    content:
+      "Field Track's research trial design and implementation has been invaluable for our operation. The data integration with our John Deere equipment made the whole process seamless, and the insights helped us make better decisions about our variable rate applications.",
+    author: "Mark Richardson",
+    title: "Row Crop Producer",
+    location: "Northeast Arkansas",
     rating: 5
   },
   {
-    content: "The precision and attention to detail in their soil sampling process is unmatched. Dr. Smith's expertise in interpreting the results and providing actionable recommendations has made a significant difference in our cotton production.",
-    author: "Michael Thompson",
-    title: "Cotton Producer",
-    location: "Mississippi County, AR",
+    content:
+      "Having someone who understands both the research methodology and practical farming operations is rare. The field trial data was presented in a way that made it easy to understand and apply to our decision-making process.",
+    author: "David Wilson",
+    title: "Precision Ag Manager",
+    location: "Southeast Missouri",
     rating: 5
   },
   {
-    content: "Working with Jake and the team has transformed our approach to soil management. Their in-season monitoring and tissue testing services have helped us maintain optimal nutrient levels throughout the growing season.",
-    author: "Sarah Williams",
-    title: "Family Farm Owner",
-    location: "Craighead County, AR",
+    content:
+      "The level of personal attention and expertise in setting up our research plots was exceptional. The integration with our Climate FieldView data made it easy to track and measure results throughout the season.",
+    author: "James Cooper",
+    title: "Farm Operations Manager",
+    location: "Eastern Arkansas",
     rating: 5
   }
 ];
@@ -49,11 +52,10 @@ export default function Testimonials() {
         <div className="mx-auto flex max-w-container flex-col items-center gap-8">
           <div className="flex flex-col items-center gap-4 px-4">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-6 merriweather-bold">
-              What Our Clients Say
+              Client Success Stories
             </h2>
             <p className="text-md max-w-[600px] font-medium text-muted-foreground sm:text-xl">
-              Hear from the businesses we've helped transform through innovative
-              technology solutions
+              Real results from research trials and field studies
             </p>
           </div>
           <div className="relative w-full overflow-hidden min-h-[300px]" />
@@ -73,10 +75,11 @@ export default function Testimonials() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl font-bold mb-4 font-poppins">
-            Trusted by Local Farmers
+            Research That Drives Results
           </h2>
           <p className="text-muted-foreground font-inter">
-            Hear from farmers who have transformed their yields with our soil analysis services
+            See how our field trials and data analysis help farms make better
+            decisions
           </p>
         </motion.div>
 

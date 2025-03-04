@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { Waves } from "@/components/ui/waves-background";
-import { 
-  ArrowRight, 
-  Leaf, 
-  Droplet, 
+import {
+  ArrowRight,
+  Leaf,
+  Droplet,
   Sprout,
   TestTubes,
   LineChart,
@@ -40,11 +40,15 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         {/* Removing the background image and keeping only the waves */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/90 to-background/95" />
-        
+
         {/* Enhanced Interactive Waves Background */}
         <div className="absolute inset-0 z-10">
           <Waves
-            lineColor={resolvedTheme === "dark" ? "rgba(218, 165, 32, 0.4)" : "rgba(184, 134, 11, 0.5)"}
+            lineColor={
+              resolvedTheme === "dark"
+                ? "rgba(218, 165, 32, 0.4)"
+                : "rgba(184, 134, 11, 0.5)"
+            }
             backgroundColor="transparent"
             waveSpeedX={0.01}
             waveSpeedY={0.005}
@@ -74,17 +78,16 @@ export default function Hero() {
               Agronomic Research Consulting & Project Implementation
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Link
-                href="#contact"
-                className="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition duration-300"
-              >
-                Get Started
+              <Link href="#contact">
+                <button className="bg-green-600 text-white font-medium py-3 px-8 rounded-lg shadow-md border-2 border-green-600 hover:bg-green-700 hover:border-green-700">
+                  Get Started
+                </button>
               </Link>
-              <Link
-                href="#services"
-                className="inline-flex items-center justify-center px-8 py-3 text-base font-medium border border-primary/30 rounded-lg hover:bg-primary/10 transition duration-300"
-              >
-                Learn More
+
+              <Link href="#services">
+                <button className="bg-white text-green-600 font-medium py-3 px-8 rounded-lg shadow-md border-2 border-green-600 hover:bg-gray-50">
+                  Learn More
+                </button>
               </Link>
             </div>
           </motion.div>
@@ -116,7 +119,7 @@ export default function Hero() {
                     className="object-cover"
                     priority
                   />
-                  
+
                   <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent" />
                 </div>
               </div>
@@ -143,7 +146,7 @@ export default function Hero() {
                 </div>
               </div>
             </div>
-            
+
             {/* Floating Stats Card */}
             {/* <motion.div
               initial={{ opacity: 0, x: 20 }}

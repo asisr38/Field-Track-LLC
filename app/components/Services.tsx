@@ -5,60 +5,60 @@ import Image from "next/image";
 
 const services = [
   {
-    title: "Digital Land Monitoring",
+    title: "Spatial Data Support",
     description:
-      "Advanced satellite and IoT-based monitoring systems providing real-time insights into land conditions, usage patterns, and resource allocation.",
+      "We help you make sense of your field data by integrating information from multiple sources - whether it's your equipment sensors, satellite imagery, or weather stations. Compatible with your existing farm management software.",
     icon: "📍",
     image: "/images/farm1.jpg",
-    stats: ["Satellite Analytics", "IoT Sensor Network", "Real-time Monitoring"]
+    stats: [
+      "Multi-source Integration",
+      "Equipment Compatibility",
+      "Custom Analysis"
+    ]
   },
   {
-    title: "Precision Management",
+    title: "Aerial Imagery",
     description:
-      "AI-powered precision management solutions that optimize resource utilization, reduce waste, and enhance land productivity through data-driven decisions.",
-    icon: "🛰️",
+      "From collection to processing, we handle your aerial imagery needs with our SimpleSense pipeline. Get accurate, timely insights about your fields with our proven assessment methods.",
+    icon: "🛩️",
     image: "/images/farm4.jpg",
-    stats: ["AI Analytics", "Resource Optimization", "Performance Tracking"]
+    stats: [
+      "Collection Pipeline",
+      "SimpleSense Processing",
+      "Accuracy Assessment"
+    ]
   },
   {
-    title: "Strategic Planning",
+    title: "On-Farm Research",
     description:
-      "Comprehensive land management strategies developed using advanced analytics and machine learning to maximize ROI while ensuring sustainability.",
-    icon: "🔬",
+      "Comprehensive field trial services designed to test and validate agricultural practices. From plot design to data collection, we ensure reliable research outcomes.",
+    icon: "🌾",
     image: "/images/farm5.jpg",
-    stats: [
-      "Predictive Analytics",
-      "ROI Optimization",
-      "Sustainability Metrics"
-    ]
+    stats: ["Trial Design", "Data Analysis", "Performance Mapping"]
   },
   {
-    title: "Environmental Assessment",
+    title: "Small Plot Research",
     description:
-      "Advanced environmental monitoring and assessment using cutting-edge technology to ensure sustainable land use and regulatory compliance.",
-    icon: "🧪",
+      "Get precise insights with our small plot research capabilities. Our in-house software is customizable to your specific needs, delivering detailed analysis you can trust.",
+    icon: "🔬",
     image: "/images/farm6.jpg",
-    stats: [
-      "Environmental Monitoring",
-      "Compliance Tracking",
-      "Impact Assessment"
-    ]
+    stats: ["Custom Software", "Detailed Analysis", "Research Support"]
   },
   {
-    title: "Resource Management",
+    title: "Field Sampling",
     description:
-      "Smart resource allocation and management systems powered by AI to optimize water usage, energy consumption, and other critical resources.",
-    icon: "🗺️",
+      "Professional field sampling services that give you the full picture of your land's health. From soil conditions to crop status, we collect the data that drives better decisions.",
+    icon: "🧪",
     image: "/images/farm7.jpg",
-    stats: ["Smart Allocation", "Usage Analytics", "Efficiency Metrics"]
+    stats: ["Soil Analysis", "Crop Health", "Resource Mapping"]
   },
   {
-    title: "Performance Analytics",
+    title: "Analysis & Reporting",
     description:
-      "Comprehensive performance tracking and analysis using advanced data analytics to provide actionable insights and continuous improvement recommendations.",
+      "Transform raw data into actionable insights. Our comprehensive reports help you optimize resources, improve yields, and make confident decisions about your operation.",
     icon: "📊",
     image: "/images/farm1.jpg",
-    stats: ["Performance Metrics", "Trend Analysis", "Improvement Strategies"]
+    stats: ["Yield Analysis", "Resource Optimization", "Decision Support"]
   }
 ];
 
@@ -94,8 +94,10 @@ export default function Services() {
                 Our <span className="text-primary">Services</span>
               </h2>
               <p className="text-body-lg text-muted-foreground font-secondary max-w-2xl mx-auto">
-                Comprehensive agricultural solutions powered by cutting-edge
-                technology and expert analysis
+                From field sampling to detailed analytics, we bring
+                research-grade precision to your agricultural operations. Our
+                expertise helps you turn farm data into practical, profitable
+                decisions.
               </p>
             </div>
           </div>
