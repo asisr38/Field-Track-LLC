@@ -88,7 +88,7 @@ export default function Contact() {
     cropTypes: "",
     serviceType: "",
     message: "",
-    preferredContact: "email",
+    preferredContact: "email"
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -96,7 +96,9 @@ export default function Contact() {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -129,7 +131,8 @@ export default function Contact() {
     // Phone validation (optional unless preferred contact is phone)
     if (
       formData.preferredContact === "phone" &&
-      (!formData.phone.trim() || !/^\d{10}$/.test(formData.phone.replace(/\D/g, "")))
+      (!formData.phone.trim() ||
+        !/^\d{10}$/.test(formData.phone.replace(/\D/g, "")))
     ) {
       newErrors.phone = "Please enter a valid 10-digit phone number";
     }
@@ -145,11 +148,11 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setIsSubmitting(true);
-    
+
     // Simulate API call
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -162,7 +165,7 @@ export default function Contact() {
         cropTypes: "",
         serviceType: "",
         message: "",
-        preferredContact: "email",
+        preferredContact: "email"
       });
       setIsSubmitting(false);
     } catch (error) {
@@ -191,8 +194,9 @@ export default function Contact() {
               Get in <span className="text-primary">Touch</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Tell us about your fields and objectives. We'll create a personalized precision 
-              agriculture plan that maximizes your yields and profitability.
+              Tell us about your fields and objectives. We'll create a
+              personalized precision agriculture plan that maximizes your yields
+              and profitability.
             </p>
           </motion.div>
         </div>
@@ -207,7 +211,7 @@ export default function Contact() {
             className="bg-card shadow-lg rounded-2xl border border-border/40 backdrop-blur-sm p-6 sm:p-8"
           >
             <h3 className="text-xl font-bold mb-6">Request a Consultation</h3>
-            
+
             <div className="relative">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
@@ -227,7 +231,9 @@ export default function Contact() {
                         value={formData.name}
                         onChange={handleChange}
                         className={`w-full px-4 py-3 rounded-lg bg-background/80 border ${
-                          errors.name ? "border-red-500 ring-1 ring-red-500" : "border-border/50 focus:ring-2 focus:ring-primary/50"
+                          errors.name
+                            ? "border-red-500 ring-1 ring-red-500"
+                            : "border-border/50 focus:ring-2 focus:ring-primary/50"
                         } focus:outline-none transition-all duration-200`}
                         placeholder="Your name"
                       />
@@ -260,7 +266,9 @@ export default function Contact() {
                         value={formData.email}
                         onChange={handleChange}
                         className={`w-full px-4 py-3 rounded-lg bg-background/80 border ${
-                          errors.email ? "border-red-500 ring-1 ring-red-500" : "border-border/50 focus:ring-2 focus:ring-primary/50"
+                          errors.email
+                            ? "border-red-500 ring-1 ring-red-500"
+                            : "border-border/50 focus:ring-2 focus:ring-primary/50"
                         } focus:outline-none transition-all duration-200`}
                         placeholder="Your email address"
                       />
@@ -285,7 +293,9 @@ export default function Contact() {
                       className="block text-sm font-medium text-foreground"
                     >
                       Phone Number
-                      {formData.preferredContact === "phone" && <span className="text-red-500 ml-1">*</span>}
+                      {formData.preferredContact === "phone" && (
+                        <span className="text-red-500 ml-1">*</span>
+                      )}
                     </label>
                     <div className="relative">
                       <input
@@ -295,7 +305,9 @@ export default function Contact() {
                         value={formData.phone}
                         onChange={handleChange}
                         className={`w-full px-4 py-3 rounded-lg bg-background/80 border ${
-                          errors.phone ? "border-red-500 ring-1 ring-red-500" : "border-border/50 focus:ring-2 focus:ring-primary/50"
+                          errors.phone
+                            ? "border-red-500 ring-1 ring-red-500"
+                            : "border-border/50 focus:ring-2 focus:ring-primary/50"
                         } focus:outline-none transition-all duration-200`}
                         placeholder="(123) 456-7890"
                       />
@@ -354,7 +366,7 @@ export default function Contact() {
                       ))}
                     </select>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <label
                       htmlFor="serviceType"
@@ -395,7 +407,9 @@ export default function Contact() {
                       onChange={handleChange}
                       rows={4}
                       className={`w-full px-4 py-3 rounded-lg bg-background/80 border ${
-                        errors.message ? "border-red-500 ring-1 ring-red-500" : "border-border/50 focus:ring-2 focus:ring-primary/50"
+                        errors.message
+                          ? "border-red-500 ring-1 ring-red-500"
+                          : "border-border/50 focus:ring-2 focus:ring-primary/50"
                       } focus:outline-none transition-all duration-200`}
                       placeholder="Tell us about your specific needs..."
                     />
@@ -458,13 +472,33 @@ export default function Contact() {
                   type="submit"
                   disabled={isSubmitting}
                   className={`w-full px-8 py-4 bg-primary text-primary-foreground rounded-lg font-medium transition-all duration-300 
-                  ${isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-primary/90 hover:shadow-md active:translate-y-0.5"}`}
+                  ${
+                    isSubmitting
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-primary/90 hover:shadow-md active:translate-y-0.5"
+                  }`}
                 >
                   {isSubmitting ? (
                     <div className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       <span>Sending...</span>
                     </div>
@@ -484,8 +518,12 @@ export default function Contact() {
                     <Check className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="font-medium">Thank you for your submission!</p>
-                    <p className="text-sm text-green-600/80">We'll be in touch with you soon.</p>
+                    <p className="font-medium">
+                      Thank you for your submission!
+                    </p>
+                    <p className="text-sm text-green-600/80">
+                      We'll be in touch with you soon.
+                    </p>
                   </div>
                 </motion.div>
               )}
@@ -504,8 +542,8 @@ export default function Contact() {
             <div className="relative rounded-2xl overflow-hidden shadow-lg border border-border/50">
               {/* Background Image with Overlay */}
               <div className="absolute inset-0">
-                <Image 
-                  src="/images/farm3.jpg" 
+                <Image
+                  src="/images/farm3.jpg"
                   alt="Agricultural field background"
                   fill
                   className="object-cover object-center blur-[3px]"
@@ -513,46 +551,59 @@ export default function Contact() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/85 to-primary/75 backdrop-blur-md"></div>
               </div>
-              
+
               <div className="relative p-6 sm:p-8 z-10">
-                <h3 className="text-2xl font-bold mb-6 text-white border-b border-white/20 pb-2">
-                  Our Expert
-                </h3>
-                
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                   {/* Expert Profile Image */}
                   <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
-                    <Image 
-                      src="/images/expert-portrait.jpg" 
+                    <Image
+                      src="/images/rmsmith.png"
                       alt="Dr. Richard Smith"
                       fill
                       className="object-cover"
-                      onError={(e) => {
+                      onError={e => {
                         const target = e.target as HTMLImageElement;
-                        target.src = "https://ui-avatars.com/api/?name=Richard+Smith&background=0D8ABC&color=fff&size=128";
+                        target.src =
+                          "https://ui-avatars.com/api/?name=Richard+Smith&background=0D8ABC&color=fff&size=128";
                       }}
                     />
                   </div>
-                  
+
                   {/* Expert Info */}
                   <div className="text-center sm:text-left flex-1">
-                    <h4 className="text-xl font-bold text-white mb-1">Richard M. Smith, CCA, Ph.D.</h4>
-                    <p className="text-base font-medium text-white/90 mb-4">Agronomist & Data Scientist</p>
-                    
+                    <h4 className="text-xl font-bold text-white mb-1">
+                      Richard M. Smith, CCA, Ph.D.
+                    </h4>
+                    <p className="text-base font-medium text-white/90 mb-4">
+                      Agronomist & Data Scientist
+                    </p>
+
                     <div className="space-y-3">
                       <a
                         href="mailto:Richard.Smith@FieldTrackLLC.com"
                         className="inline-flex items-center gap-2 bg-white text-primary hover:bg-white/90 font-medium px-4 py-2 rounded-md transition-colors"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
                           <rect width="20" height="16" x="2" y="4" rx="2" />
                           <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                         </svg>
                         Richard.Smith@FieldTrackLLC.com
                       </a>
-                      
+
                       <p className="text-sm text-white/90 mt-2 max-w-md">
-                        With over 15 years of experience in agricultural research and data science, Dr. Smith leads our team in delivering precision agriculture solutions.
+                        With over 10 years of experience in agricultural
+                        research and data science, Dr. Smith leads our team in
+                        delivering precision agriculture solutions.
                       </p>
                     </div>
                   </div>

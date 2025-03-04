@@ -5,52 +5,60 @@ import Image from "next/image";
 
 const services = [
   {
-    title: "Spatial Data Support",
+    title: "Digital Land Monitoring",
     description:
-      "Advanced geospatial analysis and mapping services to help farmers visualize field variability, identify management zones, and make data-driven decisions.",
+      "Advanced satellite and IoT-based monitoring systems providing real-time insights into land conditions, usage patterns, and resource allocation.",
     icon: "📍",
     image: "/images/farm1.jpg",
-    stats: ["Precision Mapping", "Variable Rate Applications", "Zone Management"]
+    stats: ["Satellite Analytics", "IoT Sensor Network", "Real-time Monitoring"]
   },
   {
-    title: "Aerial Imagery",
+    title: "Precision Management",
     description:
-      "High-resolution drone and satellite imagery providing real-time insights into crop health, stress patterns, and field performance throughout the growing season.",
+      "AI-powered precision management solutions that optimize resource utilization, reduce waste, and enhance land productivity through data-driven decisions.",
     icon: "🛰️",
     image: "/images/farm4.jpg",
-    stats: ["NDVI Analysis", "Thermal Mapping", "Growth Monitoring"]
+    stats: ["AI Analytics", "Resource Optimization", "Performance Tracking"]
   },
   {
-    title: "On-Farm Research",
+    title: "Strategic Planning",
     description:
-      "Custom-designed field trials that evaluate products, practices, and management decisions under your specific field conditions to maximize ROI.",
+      "Comprehensive land management strategies developed using advanced analytics and machine learning to maximize ROI while ensuring sustainability.",
     icon: "🔬",
     image: "/images/farm5.jpg",
-    stats: ["Strip Trials", "Replicated Studies", "Statistical Analysis"]
+    stats: [
+      "Predictive Analytics",
+      "ROI Optimization",
+      "Sustainability Metrics"
+    ]
   },
   {
-    title: "Small Plot Research",
+    title: "Environmental Assessment",
     description:
-      "Controlled experimental designs that test multiple treatments and variables in a scientific setting to validate product efficacy and performance.",
+      "Advanced environmental monitoring and assessment using cutting-edge technology to ensure sustainable land use and regulatory compliance.",
     icon: "🧪",
     image: "/images/farm6.jpg",
-    stats: ["Randomized Trials", "Multi-Variable Testing", "Controlled Conditions"]
+    stats: [
+      "Environmental Monitoring",
+      "Compliance Tracking",
+      "Impact Assessment"
+    ]
   },
   {
-    title: "Field Sampling",
+    title: "Resource Management",
     description:
-      "Professional soil, tissue, and water sampling services using GPS-guided technology to ensure accurate representation of field conditions and nutrient status.",
+      "Smart resource allocation and management systems powered by AI to optimize water usage, energy consumption, and other critical resources.",
     icon: "🗺️",
     image: "/images/farm7.jpg",
-    stats: ["GPS Precision", "Zone-Based Sampling", "Depth Consistency"]
+    stats: ["Smart Allocation", "Usage Analytics", "Efficiency Metrics"]
   },
   {
-    title: "Analysis and Reporting",
+    title: "Performance Analytics",
     description:
-      "Comprehensive data interpretation and custom reports that transform complex field data into actionable recommendations tailored to your operation goals.",
+      "Comprehensive performance tracking and analysis using advanced data analytics to provide actionable insights and continuous improvement recommendations.",
     icon: "📊",
     image: "/images/farm1.jpg",
-    stats: ["Custom Insights", "Economic Analysis", "Management Recommendations"]
+    stats: ["Performance Metrics", "Trend Analysis", "Improvement Strategies"]
   }
 ];
 
@@ -82,10 +90,10 @@ export default function Services() {
         >
           <div className="flex flex-col items-center justify-center">
             <div className="text-center mb-16 space-y-4">
-              <h2 className="text-4xl merriweather-bold">
+              <h2 className="text-4xl md:text-5xl font-primary">
                 Our <span className="text-primary">Services</span>
               </h2>
-              <p className="text-lg text-muted-foreground merriweather-regular max-w-2xl mx-auto">
+              <p className="text-body-lg text-muted-foreground font-secondary max-w-2xl mx-auto">
                 Comprehensive agricultural solutions powered by cutting-edge
                 technology and expert analysis
               </p>
@@ -153,10 +161,10 @@ export default function Services() {
 
                     {/* Service Content */}
                     <div className="mt-8">
-                      <h3 className="text-2xl font-bold text-white mb-3">
+                      <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
                         {service.title}
                       </h3>
-                      <p className="text-white/90 text-sm mb-4 line-clamp-3">
+                      <p className="text-body text-white/90 mb-4 line-clamp-3">
                         {service.description}
                       </p>
 
@@ -165,7 +173,7 @@ export default function Services() {
                         {service.stats.map((stat, i) => (
                           <span
                             key={i}
-                            className="text-xs bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full text-white/90 border border-white/10 hover:bg-white/20 transition-colors"
+                            className="text-body-sm bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full text-white/90 border border-white/10 hover:bg-white/20 transition-colors"
                           >
                             {stat}
                           </span>
@@ -186,8 +194,6 @@ export default function Services() {
             </motion.div>
           ))}
         </div>
-
-      
       </div>
     </section>
   );

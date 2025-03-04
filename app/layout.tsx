@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Merriweather, Source_Sans_3 } from "next/font/google";
+import { Inter, Open_Sans } from "next/font/google";
 import type React from "react";
 import { ThemeProvider } from "./components/ThemeProvider";
 import Header from "./components/Header";
@@ -8,21 +8,24 @@ import Chatbot from "./components/Chatbot";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const merriweather = Merriweather({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "700", "900"],
-  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-primary",
   display: "swap",
   preload: true
 });
 
-const sourceSans = Source_Sans_3({
+const openSans = Open_Sans({
   subsets: ["latin"],
-  variable: "--font-inter"
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-secondary",
+  display: "swap",
+  preload: true
 });
 
 export const metadata = {
-  title: "Basic Package LLC",
+  title: "Field Track LLC",
   description:
     "Optimizing soil health and crop yields with unbiased, science-driven solutions"
 };
@@ -48,9 +51,7 @@ export default function RootLayout({
           defer
         ></script>
       </head>
-      <body
-        className={`${merriweather.variable} ${sourceSans.variable} font-sans`}
-      >
+      <body className={`${inter.variable} ${openSans.variable} font-secondary`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />
           <main>{children}</main>

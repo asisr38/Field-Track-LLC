@@ -18,76 +18,78 @@ import Image from "next/image";
 
 const stats = [
   {
-    label: "Fields Analyzed",
-    value: "10K+",
+    label: "Land Area Managed",
+    value: "50K+",
     icon: Tractor,
-    description: "Comprehensive soil analysis across diverse agricultural regions"
+    description: "Acres of land managed through our tech-driven solutions"
   },
   {
-    label: "Crop Yield Increase",
-    value: "30%",
+    label: "Efficiency Increase",
+    value: "40%",
     icon: Sprout,
-    description: "Average yield improvement reported by our partner farms"
+    description:
+      "Average operational efficiency improvement reported by clients"
   },
   {
-    label: "Cost Savings",
-    value: "25%",
+    label: "Resource Optimization",
+    value: "35%",
     icon: LineChart,
-    description: "Reduction in fertilizer costs through precise recommendations"
+    description:
+      "Average reduction in resource waste through precision management"
   },
   {
-    label: "Soil Health Score",
-    value: "85%",
+    label: "Land Health Score",
+    value: "90%",
     icon: Droplet,
-    description: "Average improvement in soil health indicators"
+    description: "Average improvement in overall land health indicators"
   },
   {
     label: "Expert Team",
-    value: "25+",
+    value: "30+",
     icon: Users,
-    description: "Years of combined expertise in soil science and agronomy"
+    description: "Years of combined expertise in AgTech and land management"
   },
   {
-    label: "Sustainable Practices",
+    label: "Sustainable Impact",
     value: "100%",
     icon: Leaf,
-    description: "Commitment to environmentally conscious farming methods"
+    description: "Commitment to environmentally sustainable land management"
   }
 ] as const;
 
 const industryComparison = [
   {
-    category: "Traditional Consultants",
-    cost: "$15-25/acre",
+    category: "Traditional Land Managers",
+    cost: "$20-30/acre",
     timeline: "2-3 weeks",
-    structure: "Limited soil analysis",
+    structure: "Manual monitoring",
     communication: "Periodic visits",
-    overhead: "High travel costs",
-    drawbacks: "Generic recommendations, limited scientific backing",
+    overhead: "High operational costs",
+    drawbacks: "Limited tech integration, reactive approach",
     icon: Users
   },
   {
-    category: "Fertilizer Dealers",
+    category: "Generic AgTech Solutions",
     cost: "Varies",
     timeline: "1-2 weeks",
-    structure: "Product-focused approach",
-    communication: "Sales-driven",
-    overhead: "Product markup",
-    drawbacks: "Biased recommendations, profit-driven advice",
+    structure: "One-size-fits-all approach",
+    communication: "Automated only",
+    overhead: "Software licensing fees",
+    drawbacks: "Limited customization, minimal human expertise",
     icon: Wheat
   },
   {
-    category: "Basic Package",
-    cost: "$12-20/acre",
-    timeline: "1-2 weeks",
-    structure: "Comprehensive analysis",
-    communication: "Direct with soil scientists",
+    category: "Field Track LLC",
+    cost: "$15-25/acre",
+    timeline: "Real-time",
+    structure: "Tech-driven comprehensive management",
+    communication: "24/7 digital + expert support",
     overhead: "Optimized operations",
     valueProps: [
-      "Unbiased scientific recommendations",
-      "Detailed soil health analysis",
-      "Continuous support throughout season",
-      "Transparent pricing & communication"
+      "AI-powered land analysis",
+      "Real-time monitoring & alerts",
+      "Custom management strategies",
+      "Integrated sustainability metrics"
     ],
     highlighted: true,
     icon: Microscope
@@ -162,7 +164,10 @@ const ComparisonCard = ({
               </h5>
               <div className="space-y-2">
                 {option.valueProps?.map((prop, index) => (
-                  <div key={index} className="flex items-center gap-2 text-sm font-inter">
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 text-sm font-inter"
+                  >
                     <span className="text-primary">→</span>
                     <span>{prop}</span>
                   </div>
@@ -210,10 +215,13 @@ const Feature = ({
 
 export default function About() {
   return (
-    <section id="about" className="py-20 bg-background/50 relative overflow-hidden">
+    <section
+      id="about"
+      className="py-20 bg-background/50 relative overflow-hidden"
+    >
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/0 via-background/50 to-background/0" />
-      
+
       <div className="container mx-auto px-4 relative">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Image Section */}
@@ -227,7 +235,7 @@ export default function About() {
             {/* Main Image */}
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
               <Image
-                src="/images/farm3.jpg"
+                src="/images/rmsmith.png"
                 alt="Agricultural field"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -253,25 +261,6 @@ export default function About() {
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent" />
             </motion.div>
-
-            {/* Floating Achievement Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="absolute -bottom-8 -right-8 bg-card/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-border/50"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-2xl">
-                  🏆
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg">Industry Leader</h4>
-                  <p className="text-muted-foreground">Since 1995</p>
-                </div>
-              </div>
-            </motion.div>
           </motion.div>
 
           {/* Content Section */}
@@ -283,11 +272,13 @@ export default function About() {
             className="space-y-8"
           >
             <div>
-              <h2 className="text-4xl font-bold mb-6">
+              <h2 className="text-4xl font-primary mb-6">
                 Pioneering Digital Agriculture Solutions
               </h2>
-              <p className="text-xl text-muted-foreground mb-8">
-                With over 25 years of experience, we combine traditional agricultural expertise with cutting-edge technology to deliver unparalleled soil management solutions.
+              <p className="text-xl text-muted-foreground font-secondary mb-8">
+                We are a team of experienced agronomists and data scientists who
+                are passionate about using technology to improve the efficiency
+                and sustainability of agriculture.
               </p>
             </div>
 
@@ -296,19 +287,22 @@ export default function About() {
               {[
                 {
                   title: "Expert Analysis",
-                  description: "Our team of certified agronomists provides detailed insights and recommendations.",
+                  description:
+                    "Our team of certified agronomists provides detailed insights and recommendations.",
                   icon: "🔬",
                   image: "/images/farmGrid.png"
                 },
                 {
                   title: "Advanced Technology",
-                  description: "Utilizing state-of-the-art equipment and satellite imagery for precise field mapping.",
+                  description:
+                    "Utilizing state-of-the-art equipment and satellite imagery for precise field mapping.",
                   icon: "🛰️",
                   image: "/images/topography.png"
                 },
                 {
                   title: "Sustainable Practices",
-                  description: "Promoting environmentally conscious farming methods for long-term soil health.",
+                  description:
+                    "Promoting environmentally conscious farming methods for long-term soil health.",
                   icon: "🌱",
                   image: "/images/farm3.jpg"
                 }
@@ -335,8 +329,12 @@ export default function About() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-2">{point.title}</h3>
-                    <p className="text-muted-foreground">{point.description}</p>
+                    <h3 className="font-bold text-lg mb-2 font-primary">
+                      {point.title}
+                    </h3>
+                    <p className="text-muted-foreground font-secondary">
+                      {point.description}
+                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -362,17 +360,21 @@ export default function About() {
             />
             <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 to-slate-900/80 backdrop-blur-[2px]" />
           </div>
-          
+
           <div className="relative grid grid-cols-2 md:grid-cols-4 gap-8 p-12">
             {[
               { value: "25+", label: "Years Experience" },
               { value: "50K+", label: "Soil Samples Analyzed" },
               { value: "95%", label: "Client Satisfaction" },
               { value: "30%", label: "Average Yield Increase" }
-            ].map((stat) => (
+            ].map(stat => (
               <div key={stat.label} className="text-center">
-                <h4 className="text-5xl font-bold text-primary drop-shadow-md mb-2">{stat.value}</h4>
-                <p className="text-primary-foreground font-medium drop-shadow-sm">{stat.label}</p>
+                <h4 className="text-5xl font-bold text-primary drop-shadow-md mb-2">
+                  {stat.value}
+                </h4>
+                <p className="text-primary-foreground font-medium drop-shadow-sm">
+                  {stat.label}
+                </p>
               </div>
             ))}
           </div>

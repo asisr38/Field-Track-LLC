@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { 
+import {
   Ruler,
   TestTube2,
   ClipboardList,
@@ -15,45 +15,53 @@ import Image from "next/image";
 const processSteps = [
   {
     icon: Ruler,
-    title: "Field Survey",
-    description: "Comprehensive field evaluation and soil sampling to assess your land's current condition.",
+    title: "Data Collection & Analysis",
+    description:
+      "We deploy advanced technology including satellite imagery, IoT sensors, and drone mapping to gather comprehensive land data.",
     details: [
-      "GPS-guided sampling",
-      "Depth consistency",
-      "Field mapping"
+      "Satellite imagery",
+      "IoT sensor network",
+      "Drone mapping",
+      "Real-time monitoring"
     ],
     image: "/images/farm2.jpg"
   },
   {
     icon: TestTube2,
-    title: "Lab Testing",
-    description: "Detailed laboratory analysis of soil samples to determine nutrient levels and composition.",
+    title: "AI-Powered Assessment",
+    description:
+      "Our AI algorithms analyze multiple data points to provide insights into land health, resource utilization, and optimization opportunities.",
     details: [
-      "Complete nutrient panel",
-      "Organic matter analysis",
-      "pH and EC testing"
+      "Machine learning analysis",
+      "Predictive modeling",
+      "Resource optimization",
+      "Risk assessment"
     ],
     image: "/images/farm3.jpg"
   },
   {
     icon: ClipboardList,
-    title: "Data Analysis",
-    description: "Expert interpretation of results and development of customized recommendations.",
+    title: "Strategy Development",
+    description:
+      "Based on AI insights and expert analysis, we develop customized land management strategies aligned with your goals.",
     details: [
-      "Trend analysis",
-      "Custom recommendations",
-      "Cost-benefit calculations"
+      "Custom strategies",
+      "ROI projections",
+      "Sustainability metrics",
+      "Implementation roadmap"
     ],
     image: "/images/farm8.jpg"
   },
   {
     icon: HeadphonesIcon,
-    title: "Implementation",
-    description: "Ongoing support and guidance throughout the implementation process.",
+    title: "Implementation & Support",
+    description:
+      "We provide ongoing support through our digital platform and expert team to ensure successful strategy implementation.",
     details: [
-      "Dealer coordination",
-      "Application guidance",
-      "Progress monitoring"
+      "24/7 digital monitoring",
+      "Expert consultation",
+      "Progress tracking",
+      "Strategy optimization"
     ],
     image: "/images/soil.jpg"
   }
@@ -76,13 +84,12 @@ export default function Process() {
           className="max-w-6xl mx-auto"
         >
           <div className="text-center mb-16 space-y-4">
-            <h2 className={cn(
-              "text-4xl merriweather-bold"
-            )}>
+            <h2 className={cn("text-4xl md:text-5xl font-primary")}>
               Our <span className="text-primary">Process</span>
             </h2>
-            <p className="text-lg text-muted-foreground merriweather-regular max-w-2xl mx-auto">
-              A systematic approach to soil analysis and management for optimal results
+            <p className="text-body-lg text-muted-foreground font-secondary max-w-2xl mx-auto">
+              A systematic approach to land management powered by advanced
+              technology
             </p>
           </div>
 
@@ -97,15 +104,19 @@ export default function Process() {
                   transition={{ duration: 0.5, delay: index * 0.2 }}
                   className="relative group"
                 >
-                  <div className={cn(
-                    "grid lg:grid-cols-2 gap-8 items-center",
-                    index % 2 === 1 && "lg:grid-flow-dense"
-                  )}>
+                  <div
+                    className={cn(
+                      "grid lg:grid-cols-2 gap-8 items-center",
+                      index % 2 === 1 && "lg:grid-flow-dense"
+                    )}
+                  >
                     {/* Content Side */}
-                    <div className={cn(
-                      "p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/50 transition-all duration-300",
-                      index % 2 === 1 && "lg:col-start-2"
-                    )}>
+                    <div
+                      className={cn(
+                        "p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/50 transition-all duration-300",
+                        index % 2 === 1 && "lg:col-start-2"
+                      )}
+                    >
                       <div className="flex items-start gap-4">
                         {/* Icon */}
                         <div className="p-4 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-colors">
@@ -113,18 +124,23 @@ export default function Process() {
                         </div>
                         {/* Text Content */}
                         <div className="flex-1">
-                          <h3 className="text-xl font-bold mb-2 font-merriweather group-hover:text-primary transition-colors">
+                          <h3 className="text-2xl md:text-3xl font-bold mb-3 font-primary group-hover:text-primary transition-colors">
                             {step.title}
                           </h3>
-                          <p className="text-muted-foreground mb-4 font-merriweather">
+                          <p className="text-body text-muted-foreground mb-6">
                             {step.description}
                           </p>
                           {/* Details List */}
-                          <ul className="space-y-2">
+                          <ul className="space-y-3">
                             {step.details.map((detail, i) => (
-                              <li key={i} className="flex items-center gap-2 text-sm">
+                              <li
+                                key={i}
+                                className="flex items-center gap-2 text-body-sm"
+                              >
                                 <ArrowRight className="w-4 h-4 text-primary" />
-                                <span className="text-muted-foreground">{detail}</span>
+                                <span className="text-muted-foreground">
+                                  {detail}
+                                </span>
                               </li>
                             ))}
                           </ul>
@@ -133,11 +149,13 @@ export default function Process() {
                     </div>
 
                     {/* Image Side */}
-                    <div className={cn(
-                      "hidden lg:block relative h-full",
-                      index % 2 === 1 && "lg:col-start-1"
-                    )}>
-                      <motion.div 
+                    <div
+                      className={cn(
+                        "hidden lg:block relative h-full",
+                        index % 2 === 1 && "lg:col-start-1"
+                      )}
+                    >
+                      <motion.div
                         className="relative h-full"
                         whileHover={{ scale: 1.02 }}
                         transition={{ duration: 0.3 }}
@@ -151,12 +169,12 @@ export default function Process() {
                             className="object-cover transition-transform duration-500 group-hover:scale-105"
                           />
                           <div className="absolute inset-0 bg-gradient-to-tr from-primary/40 to-transparent" />
-                          
+
                           {/* Number Overlay */}
                           <div className="absolute inset-0 flex items-center justify-center">
                             <div className="w-20 h-20 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg border border-white/20">
                               <span className="text-3xl font-bold text-primary">
-                                {(index + 1).toString().padStart(2, '0')}
+                                {(index + 1).toString().padStart(2, "0")}
                               </span>
                             </div>
                           </div>
@@ -168,8 +186,12 @@ export default function Process() {
                                 <step.icon className="w-6 h-6 text-white" />
                               </span>
                               <div>
-                                <h4 className="text-white font-bold">{step.title}</h4>
-                                <p className="text-white/80 text-sm">{step.details[0]}</p>
+                                <h4 className="text-white font-bold">
+                                  {step.title}
+                                </h4>
+                                <p className="text-white/80 text-sm">
+                                  {step.details[0]}
+                                </p>
                               </div>
                             </div>
                           </div>
