@@ -7,44 +7,68 @@ import {
   TestTube2,
   ClipboardList,
   HeadphonesIcon,
-  ArrowRight
+  ArrowRight,
+  Database,
+  Lightbulb,
+  BarChart2,
+  FileText
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
 
 const steps = [
   {
     title: "Data Collection",
     description:
-      "We integrate with your existing farm management tools like John Deere Operations Center and Climate FieldView, combining field data with high-resolution aerial imagery and weather station data.",
+      "We integrate with your existing farm management tools to collect comprehensive field data, including high-resolution aerial imagery and historical performance metrics.",
     details: [
-      "Integration with precision ag platforms",
-      "High-resolution aerial imagery",
-      "Weather station data integration",
-      "Field sensor networks"
-    ]
+      "Integration with John Deere Operations Center and Climate FieldView",
+      "High-resolution drone imagery collection",
+      "Historical yield data analysis"
+    ],
+    icon: Database,
+    image: "/images/spatialImage2.jpeg",
+    alt: "Spatial field data visualization showing variable crop conditions across multiple fields"
   },
   {
-    title: "Trial Design",
+    title: "Strategy and Implementation",
     description:
-      "Using scientific methodology, we design trials that answer your specific questions while accounting for field variability and operational constraints.",
+      "Our team works with you to develop and implement customized field trial strategies that address your specific agronomic questions and operational goals.",
     details: [
-      "Randomized plot layouts",
-      "Statistical power analysis",
-      "Treatment planning",
-      "Implementation protocols"
-    ]
+      "Customized trial design",
+      "Variable rate application maps",
+      "Field-specific implementation plans"
+    ],
+    icon: Lightbulb,
+    image: "/images/implementation.jpg",
+    alt: "Field implementation of agricultural strategy with equipment in operation"
   },
   {
     title: "Data Analysis",
     description:
-      "Advanced statistical analysis reveals meaningful insights from your trial data, helping you make confident decisions about your operation.",
+      "We apply advanced statistical methods to analyze trial data, identifying significant patterns and extracting actionable insights for your operation.",
     details: [
-      "Statistical analysis",
-      "Spatial correlation",
-      "Economic evaluation",
-      "Visual reporting"
-    ]
+      "Multi-variate analysis",
+      "Yield performance mapping",
+      "Economic return calculations"
+    ],
+    icon: BarChart2,
+    image: "/images/sateliteFarm.jpg",
+    alt: "Satellite imagery of agricultural fields with data overlay showing performance metrics"
+  },
+  {
+    title: "Customized Reporting",
+    description:
+      "Our detailed reports translate complex data into clear, actionable recommendations tailored to your specific operation and goals.",
+    details: [
+      "Visual data presentations",
+      "ROI analysis",
+      "Seasonal performance tracking"
+    ],
+    icon: FileText,
+    image: "/images/report.jpg",
+    alt: "Customized agricultural report with charts, graphs and field performance metrics"
   }
 ];
 
@@ -55,135 +79,139 @@ export default function Process() {
   });
 
   return (
-    <section id="process" className="py-20 bg-secondary/5">
+    <section
+      id="process"
+      className="py-20 bg-gradient-to-b from-background to-muted/30"
+    >
       <div className="container mx-auto px-4">
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="max-w-6xl mx-auto"
-        >
-          <div className="text-center mb-16 space-y-4">
-            <h2 className={cn("text-4xl md:text-5xl font-primary")}>
-              Our <span className="text-primary">Process</span>
-            </h2>
-            <p className="text-body-lg text-muted-foreground font-secondary max-w-2xl mx-auto">
-              We work with your existing farm management tools and trusted data
-              sources to deliver research-grade insights for your operation
-            </p>
-          </div>
+        <div className="text-center mb-16">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-3xl md:text-4xl font-bold mb-4"
+          >
+            Our Research Process
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-xl text-muted-foreground max-w-3xl mx-auto"
+          >
+            A systematic approach to field trials that delivers reliable results
+            and actionable insights
+          </motion.p>
+        </div>
 
-          <div className="relative">
-            {/* Process Steps */}
-            <div className="space-y-12 lg:space-y-24">
-              {steps.map((step, index) => (
-                <motion.div
-                  key={step.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: index * 0.2 }}
-                  className="relative group"
+        <div ref={ref} className="space-y-12 lg:space-y-24">
+          {steps.map((step, index) => (
+            <motion.div
+              key={step.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
+              className="relative group"
+            >
+              <div
+                className={cn(
+                  "grid lg:grid-cols-2 gap-8 items-stretch min-h-[400px]",
+                  index % 2 === 1 && "lg:grid-flow-dense"
+                )}
+              >
+                {/* Content Side */}
+                <div
+                  className={cn(
+                    "p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/50 transition-all duration-300 h-full flex flex-col justify-center",
+                    index % 2 === 1 && "lg:col-start-2"
+                  )}
                 >
-                  <div
-                    className={cn(
-                      "grid lg:grid-cols-2 gap-8 items-center",
-                      index % 2 === 1 && "lg:grid-flow-dense"
-                    )}
-                  >
-                    {/* Content Side */}
-                    <div
-                      className={cn(
-                        "p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/50 transition-all duration-300",
-                        index % 2 === 1 && "lg:col-start-2"
-                      )}
-                    >
-                      <div className="flex items-start gap-4">
-                        {/* Icon */}
-                        <div className="p-4 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-colors">
-                          <Ruler className="w-8 h-8 text-primary" />
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                      <step.icon className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-2xl font-bold">{step.title}</h3>
+                  </div>
+                  <p className="text-muted-foreground mb-6">
+                    {step.description}
+                  </p>
+                  <ul className="space-y-2">
+                    {step.details.map((detail, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center mt-0.5 flex-shrink-0">
+                          <div className="w-2 h-2 rounded-full bg-primary"></div>
                         </div>
-                        {/* Text Content */}
-                        <div className="flex-1">
-                          <h3 className="text-2xl md:text-3xl font-bold mb-3 font-primary group-hover:text-primary transition-colors">
-                            {step.title}
-                          </h3>
-                          <p className="text-body text-muted-foreground mb-6">
-                            {step.description}
-                          </p>
-                          {/* Details List */}
-                          <ul className="space-y-3">
-                            {step.details.map((detail, i) => (
-                              <li
-                                key={i}
-                                className="flex items-center gap-2 text-body-sm"
-                              >
-                                <ArrowRight className="w-4 h-4 text-primary" />
-                                <span className="text-muted-foreground">
-                                  {detail}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Image Side */}
+                <div
+                  className={cn(
+                    "relative overflow-hidden rounded-2xl shadow-xl h-full",
+                    index % 2 === 1 && "lg:col-start-1"
+                  )}
+                >
+                  <Image
+                    src={step.image}
+                    alt={step.alt}
+                    width={800}
+                    height={600}
+                    className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+                    style={{ height: "100%", minHeight: "350px" }}
+                  />
+                  {index === 3 && (
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                      <div className="p-6">
+                        <div className="flex items-center gap-2 text-white">
+                          <Image
+                            src="/images/report.jpg"
+                            alt="Performance chart showing yield improvements"
+                            width={120}
+                            height={80}
+                            className="rounded-md shadow-lg"
+                          />
+                          <div>
+                            <p className="font-semibold">
+                              Performance Tracking
+                            </p>
+                            <p className="text-sm opacity-80">
+                              Continuous monitoring of trial results
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
+                  )}
+                </div>
+              </div>
 
-                    {/* Image Side */}
-                    <div
-                      className={cn(
-                        "hidden lg:block relative h-full",
-                        index % 2 === 1 && "lg:col-start-1"
-                      )}
-                    >
-                      <motion.div
-                        className="relative h-full"
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        {/* Image Container */}
-                        <div className="relative h-[300px] rounded-2xl overflow-hidden">
-                          <Image
-                            src="/images/drone.jpg"
-                            alt={step.title}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-tr from-primary/40 to-transparent" />
+              {/* Step connector */}
+              {index < steps.length - 1 && (
+                <div className="hidden lg:block absolute left-1/2 -translate-x-1/2 h-16 w-px bg-gradient-to-b from-primary/30 to-primary/10 my-4"></div>
+              )}
+            </motion.div>
+          ))}
+        </div>
 
-                          {/* Number Overlay */}
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-20 h-20 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg border border-white/20">
-                              <span className="text-3xl font-bold text-primary">
-                                {(index + 1).toString().padStart(2, "0")}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Step Info Overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
-                            <div className="flex items-center gap-3">
-                              <span className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                                <Ruler className="w-6 h-6 text-white" />
-                              </span>
-                              <div>
-                                <h4 className="text-white font-bold">
-                                  {step.title}
-                                </h4>
-                                <p className="text-white/80 text-sm">
-                                  {step.details[0]}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+        {/* Call to Action */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mt-20"
+        >
+          <Link href="#contact">
+            <button className="inline-flex items-center gap-2 bg-green-600 text-white font-medium py-3 px-8 rounded-lg shadow-md border-2 border-green-600 hover:bg-green-700 hover:border-green-700">
+              Start Your Research Trial
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </Link>
         </motion.div>
       </div>
     </section>
