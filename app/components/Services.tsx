@@ -113,24 +113,26 @@ export default function Services() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group relative bg-card rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              <div className="relative h-[500px] sm:h-[520px] rounded-2xl overflow-hidden">
+              <div className="relative h-[400px] rounded-2xl overflow-hidden">
                 {/* Background Image */}
                 <Image
                   src={service.image}
                   alt={service.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  priority={index < 3}
                 />
-                {/* Darker overlay for better text contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/80 to-black/40" />
+                {/* Adjusted overlay for better text contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/80 to-black/50" />
 
                 {/* Content */}
-                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-                  <div className="relative backdrop-blur-sm bg-black/60 rounded-xl p-5 sm:p-6 border border-white/10 transform transition-all duration-300 group-hover:translate-y-[-8px]">
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <div className="relative backdrop-blur-none bg-black/70 rounded-xl p-4 border border-white/10 transform transition-all duration-300 group-hover:translate-y-[-8px]">
                     {/* Service Icon */}
-                    <div className="absolute -top-8 left-6">
+                    <div className="absolute -top-8 left-4">
                       <div className="relative">
-                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-black/80 backdrop-blur-xl flex items-center justify-center text-2xl sm:text-3xl border border-white/20 shadow-lg">
+                        <div className="w-14 h-14 rounded-xl bg-black/90 backdrop-blur-none flex items-center justify-center text-2xl border border-white/20 shadow-lg">
                           {service.icon}
                         </div>
                         <motion.div
@@ -142,21 +144,21 @@ export default function Services() {
                     </div>
 
                     {/* Service Content */}
-                    <div className="mt-6 sm:mt-8">
-                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
+                    <div className="mt-6">
+                      <h3 className="text-lg font-bold text-white mb-2">
                         {service.title}
                       </h3>
-                      {/* Adjust line height and remove line clamp for better readability */}
-                      <p className="text-sm sm:text-base text-white/90 mb-4 leading-relaxed min-h-[80px]">
+                      {/* Improved text clarity for mobile */}
+                      <p className="text-[15px] text-white leading-relaxed mb-3 font-medium">
                         {service.description}
                       </p>
 
                       {/* Stats */}
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5">
                         {service.stats.map((stat, i) => (
                           <span
                             key={i}
-                            className="text-xs sm:text-sm bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full text-white border border-white/10 hover:bg-white/30 transition-colors"
+                            className="text-[13px] bg-white/20 backdrop-blur-none px-2.5 py-1 rounded-full text-white font-medium border border-white/10 hover:bg-white/30 transition-colors"
                           >
                             {stat}
                           </span>

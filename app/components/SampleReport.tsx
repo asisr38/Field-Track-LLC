@@ -150,19 +150,19 @@ export default function SampleReport() {
 
         // Determine initial zoom based on screen width
         const isMobile = window.innerWidth < 768;
-        const initialZoom = isMobile ? 15 : 16;
+        const initialZoom = isMobile ? 14 : 16;
 
         // Initialize the map with the field center
         const map = L.map(mapRef.current, {
           center: FIELD_BOUNDS[0],
           zoom: initialZoom,
-          minZoom: 10, // Lower minimum zoom to allow zooming out further
+          minZoom: 10,
           maxZoom: 19,
           scrollWheelZoom: false,
-          tap: true, // Enable tap for mobile
-          touchZoom: true, // Enable pinch zoom on mobile
-          dragging: true, // Ensure dragging is enabled
-          zoomControl: false // Disable default zoom control, we'll add our own
+          tap: true,
+          touchZoom: true,
+          dragging: true,
+          zoomControl: false
         });
 
         // Add zoom control with larger buttons for better mobile experience
@@ -478,16 +478,10 @@ export default function SampleReport() {
         // Fit map to field bounds with padding (more padding on mobile)
         const bounds = fieldLayer.getBounds();
         if (bounds.isValid()) {
-          const padding = isMobile ? 0.2 : 0.1; // More padding on mobile
+          const padding = isMobile ? 0.15 : 0.1; // Reduced padding for mobile
           map.fitBounds(bounds.pad(padding), {
             animate: true,
-            // Add a callback to zoom in after bounds are set
-            callback: function() {
-              // For mobile devices, zoom in by one level after bounds are set
-              if (isMobile) {
-                map.zoomIn(1);
-              }
-            }
+            duration: 0.5
           });
         }
       } catch (error) {
