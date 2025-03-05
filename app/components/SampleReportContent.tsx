@@ -30,6 +30,15 @@ interface LegendControl {
   addTo(map: any): any; // Using any to avoid strict return type checking
 }
 
+// Define interface for soil sample properties
+interface SampleProperties {
+  SampleID: number;
+  'pH (1_1)': number;
+  'P (B1 1_7)': number;
+  'K (AA)': number;
+  [key: string]: any; // Allow for dynamic property access with string keys
+}
+
 interface FieldFeature {
   type: "Feature";
   properties: {
@@ -100,14 +109,23 @@ function FieldMap() {
           zoom: 16,
           minZoom: 12,
           maxZoom: 19,
-          zoomControl: false,
+          zoomControl: false,  // Disable default zoom control, we'll add our own
           scrollWheelZoom: false,  // Disable scroll wheel zoom
           preferCanvas: true,      // Use canvas renderer for better performance
-          renderer: L.canvas()     // Force canvas renderer
+          renderer: L.canvas(),     // Force canvas renderer
+          tap: true,               // Enable tap for mobile
+          touchZoom: true          // Enable pinch zoom on mobile
         });
         
         mapInstanceRef.current = map;
         
+        // Add custom zoom control
+        L.control.zoom({
+          position: 'bottomright',
+          zoomInTitle: 'Zoom in',
+          zoomOutTitle: 'Zoom out'
+        }).addTo(map);
+
         // Define base maps
         const baseMaps = {
           "Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -154,20 +172,20 @@ function FieldMap() {
           });
 
           // Only create tooltip content if it hasn't been created already
-          if (!tooltipContentMemo.has(point.properties.SampleID)) {
+          if (!tooltipContentMemo.has((point.properties as unknown as SampleProperties).SampleID)) {
             const tooltipContent = `
               <div class="p-2">
-                <div class="font-bold">Sample ID: ${point.properties.SampleID}</div>
-                <div>pH: ${point.properties['pH (1_1)']}</div>
-                <div>P: ${point.properties['P (B1 1_7)']} ppm</div>
-                <div>K: ${point.properties['K (AA)']} ppm</div>
+                <div class="font-bold">Sample ID: ${(point.properties as unknown as SampleProperties).SampleID}</div>
+                <div>pH: ${(point.properties as unknown as SampleProperties)['pH (1_1)']}</div>
+                <div>P: ${(point.properties as unknown as SampleProperties)['P (B1 1_7)']} ppm</div>
+                <div>K: ${(point.properties as unknown as SampleProperties)['K (AA)']} ppm</div>
               </div>
             `;
-            tooltipContentMemo.set(point.properties.SampleID, tooltipContent);
+            tooltipContentMemo.set((point.properties as unknown as SampleProperties).SampleID, tooltipContent);
           }
           
           // Use the cached tooltip content
-          marker.bindTooltip(tooltipContentMemo.get(point.properties.SampleID), { 
+          marker.bindTooltip(tooltipContentMemo.get((point.properties as unknown as SampleProperties).SampleID), { 
             direction: 'top',
             offset: [0, -10]
           });
@@ -221,10 +239,12 @@ function FieldMap() {
         <div ref={mapRef} className="w-full h-full" style={{ background: '#f0f0f0' }} />
       </div>
       {selectedSample && (
-        <div className="bg-white rounded-lg p-4 border border-border/50 space-y-4">
-          <h4 className="font-bold text-lg text-primary">
-            Sample Point {selectedSample.SampleID}
-          </h4>
+        <div className="bg-white p-4 rounded-lg shadow-lg max-w-2xl mx-auto">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-semibold text-primary">
+              Sample Point {(selectedSample as unknown as SampleProperties).SampleID}
+            </h3>
+          </div>
           <div className="space-y-4">
             <div className="bg-gray-50 p-3 rounded-lg">
               <p className="mb-1"><span className="font-semibold text-gray-700">Date:</span> {new Date(selectedSample.SampleDate).toLocaleDateString()}</p>
@@ -309,20 +329,21 @@ function PhosphorusMap() {
           zoom: 16,
           minZoom: 12,
           maxZoom: 19,
-          zoomControl: false,
-          scrollWheelZoom: false,
-          preferCanvas: true,
-          renderer: L.canvas(),
-          fadeAnimation: false,
-          markerZoomAnimation: false,
-          zoomAnimation: true
+          zoomControl: false,  // Disable default zoom control, we'll add our own
+          scrollWheelZoom: false,  // Disable scroll wheel zoom
+          preferCanvas: true,      // Use canvas renderer for better performance
+          renderer: L.canvas(),     // Force canvas renderer
+          tap: true,               // Enable tap for mobile
+          touchZoom: true          // Enable pinch zoom on mobile
         });
         
         mapInstanceRef.current = map;
 
-        // Add zoom control to top-left
+        // Add custom zoom control
         L.control.zoom({
-          position: 'topleft'
+          position: 'bottomright',
+          zoomInTitle: 'Zoom in',
+          zoomOutTitle: 'Zoom out'
         }).addTo(map);
 
         // Add satellite imagery base layer
@@ -383,8 +404,19 @@ function PhosphorusMap() {
 
   return (
     <div className="space-y-4">
-      <div className="relative h-[400px] rounded-2xl overflow-hidden border border-border/50">
+      <div className="relative h-[400px] rounded-2xl overflow-hidden border border-border/50" style={{ zIndex: 1 }}>
         <div ref={mapRef} className="w-full h-full" style={{ background: '#f0f0f0' }} />
+        <style jsx global>{`
+          .leaflet-control-container {
+            pointer-events: auto;
+          }
+          .leaflet-control-zoom {
+            pointer-events: auto;
+          }
+          .leaflet-control-zoom a {
+            pointer-events: auto;
+          }
+        `}</style>
       </div>
     </div>
   );
@@ -423,20 +455,21 @@ function PotassiumMap() {
           zoom: 16,
           minZoom: 12,
           maxZoom: 19,
-          zoomControl: false,
-          scrollWheelZoom: false,
-          preferCanvas: true,
-          renderer: L.canvas(),
-          fadeAnimation: false,
-          markerZoomAnimation: false,
-          zoomAnimation: true
+          zoomControl: false,  // Disable default zoom control, we'll add our own
+          scrollWheelZoom: false,  // Disable scroll wheel zoom
+          preferCanvas: true,      // Use canvas renderer for better performance
+          renderer: L.canvas(),     // Force canvas renderer
+          tap: true,               // Enable tap for mobile
+          touchZoom: true          // Enable pinch zoom on mobile
         });
         
         mapInstanceRef.current = map;
 
-        // Add zoom control to top-left
+        // Add custom zoom control
         L.control.zoom({
-          position: 'topleft'
+          position: 'bottomright',
+          zoomInTitle: 'Zoom in',
+          zoomOutTitle: 'Zoom out'
         }).addTo(map);
 
         // Add satellite imagery base layer
@@ -497,8 +530,19 @@ function PotassiumMap() {
 
   return (
     <div className="space-y-4">
-      <div className="relative h-[400px] rounded-2xl overflow-hidden border border-border/50">
+      <div className="relative h-[400px] rounded-2xl overflow-hidden border border-border/50" style={{ zIndex: 1 }}>
         <div ref={mapRef} className="w-full h-full" style={{ background: '#f0f0f0' }} />
+        <style jsx global>{`
+          .leaflet-control-container {
+            pointer-events: auto;
+          }
+          .leaflet-control-zoom {
+            pointer-events: auto;
+          }
+          .leaflet-control-zoom a {
+            pointer-events: auto;
+          }
+        `}</style>
       </div>
     </div>
   );
@@ -524,17 +568,21 @@ function SampleDistributionMap() {
           zoom: 16,
           minZoom: 12,
           maxZoom: 19,
-          zoomControl: false,
-          scrollWheelZoom: false,
-          preferCanvas: true,
-          renderer: L.canvas()
+          zoomControl: false,  // Disable default zoom control, we'll add our own
+          scrollWheelZoom: false,  // Disable scroll wheel zoom
+          preferCanvas: true,      // Use canvas renderer for better performance
+          renderer: L.canvas(),     // Force canvas renderer
+          tap: true,               // Enable tap for mobile
+          touchZoom: true          // Enable pinch zoom on mobile
         });
         
         mapInstanceRef.current = map;
 
-        // Add zoom control to top-left
+        // Add custom zoom control
         L.control.zoom({
-          position: 'topleft'
+          position: 'bottomright',
+          zoomInTitle: 'Zoom in',
+          zoomOutTitle: 'Zoom out'
         }).addTo(map);
 
         // Add satellite imagery base layer
@@ -572,7 +620,7 @@ function SampleDistributionMap() {
           });
           
           // Keep simple tooltip without complex HTML
-          marker.bindTooltip(`Sample ${point.properties.SampleID}`, {
+          marker.bindTooltip(`Sample ${(point.properties as unknown as SampleProperties).SampleID}`, {
             direction: 'top',
             offset: [0, -8]
           });
@@ -615,8 +663,19 @@ function SampleDistributionMap() {
 
   return (
     <div className="space-y-4">
-      <div className="relative h-[400px] rounded-2xl overflow-hidden border border-border/50">
+      <div className="relative h-[400px] rounded-2xl overflow-hidden border border-border/50" style={{ zIndex: 1 }}>
         <div ref={mapRef} className="w-full h-full" style={{ background: '#f0f0f0' }} />
+        <style jsx global>{`
+          .leaflet-control-container {
+            pointer-events: auto;
+          }
+          .leaflet-control-zoom {
+            pointer-events: auto;
+          }
+          .leaflet-control-zoom a {
+            pointer-events: auto;
+          }
+        `}</style>
       </div>
       <p className="text-sm text-center text-muted-foreground">
         Each point represents a soil sample location in the field.
