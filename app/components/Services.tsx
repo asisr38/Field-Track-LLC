@@ -103,7 +103,7 @@ export default function Services() {
           </div>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => (
             <motion.div
               key={service.title}
@@ -113,7 +113,7 @@ export default function Services() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group relative bg-card rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              <div className="relative h-[400px] rounded-2xl overflow-hidden">
+              <div className="relative h-[500px] sm:h-[520px] rounded-2xl overflow-hidden">
                 {/* Background Image */}
                 <Image
                   src={service.image}
@@ -121,36 +121,16 @@ export default function Services() {
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-
-                {/* Futuristic Overlay Elements */}
-                <div className="absolute inset-0">
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity,
-                      repeatType: "reverse"
-                    }}
-                    className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent"
-                  />
-                  <div className="absolute top-4 right-4 flex items-center gap-2">
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="w-2 h-2 rounded-full bg-primary"
-                    />
-                  </div>
-                </div>
+                {/* Darker overlay for better text contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/80 to-black/40" />
 
                 {/* Content */}
-                <div className="absolute inset-x-0 bottom-0 p-6">
-                  <div className="relative backdrop-blur-sm bg-black/40 rounded-xl p-6 border border-white/10 transform transition-all duration-300 group-hover:translate-y-[-8px]">
+                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                  <div className="relative backdrop-blur-sm bg-black/60 rounded-xl p-5 sm:p-6 border border-white/10 transform transition-all duration-300 group-hover:translate-y-[-8px]">
                     {/* Service Icon */}
                     <div className="absolute -top-8 left-6">
                       <div className="relative">
-                        <div className="w-16 h-16 rounded-xl bg-black/60 backdrop-blur-xl flex items-center justify-center text-3xl border border-white/20 shadow-lg">
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-black/80 backdrop-blur-xl flex items-center justify-center text-2xl sm:text-3xl border border-white/20 shadow-lg">
                           {service.icon}
                         </div>
                         <motion.div
@@ -162,11 +142,12 @@ export default function Services() {
                     </div>
 
                     {/* Service Content */}
-                    <div className="mt-8">
-                      <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                    <div className="mt-6 sm:mt-8">
+                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
                         {service.title}
                       </h3>
-                      <p className="text-body text-white/90 mb-4 line-clamp-3">
+                      {/* Adjust line height and remove line clamp for better readability */}
+                      <p className="text-sm sm:text-base text-white/90 mb-4 leading-relaxed min-h-[80px]">
                         {service.description}
                       </p>
 
@@ -175,7 +156,7 @@ export default function Services() {
                         {service.stats.map((stat, i) => (
                           <span
                             key={i}
-                            className="text-body-sm bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full text-white/90 border border-white/10 hover:bg-white/20 transition-colors"
+                            className="text-xs sm:text-sm bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full text-white border border-white/10 hover:bg-white/30 transition-colors"
                           >
                             {stat}
                           </span>
