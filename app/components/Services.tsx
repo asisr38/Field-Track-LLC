@@ -103,7 +103,7 @@ export default function Services() {
           </div>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => (
             <motion.div
               key={service.title}
@@ -119,38 +119,20 @@ export default function Services() {
                   src={service.image}
                   alt={service.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  priority={index < 3}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-
-                {/* Futuristic Overlay Elements */}
-                <div className="absolute inset-0">
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity,
-                      repeatType: "reverse"
-                    }}
-                    className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent"
-                  />
-                  <div className="absolute top-4 right-4 flex items-center gap-2">
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="w-2 h-2 rounded-full bg-primary"
-                    />
-                  </div>
-                </div>
+                {/* Adjusted overlay for better text contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/80 to-black/50" />
 
                 {/* Content */}
-                <div className="absolute inset-x-0 bottom-0 p-6">
-                  <div className="relative backdrop-blur-sm bg-black/40 rounded-xl p-6 border border-white/10 transform transition-all duration-300 group-hover:translate-y-[-8px]">
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <div className="relative backdrop-blur-none bg-black/70 rounded-xl p-4 border border-white/10 transform transition-all duration-300 group-hover:translate-y-[-8px]">
                     {/* Service Icon */}
-                    <div className="absolute -top-8 left-6">
+                    <div className="absolute -top-8 left-4">
                       <div className="relative">
-                        <div className="w-16 h-16 rounded-xl bg-black/60 backdrop-blur-xl flex items-center justify-center text-3xl border border-white/20 shadow-lg">
+                        <div className="w-14 h-14 rounded-xl bg-black/90 backdrop-blur-none flex items-center justify-center text-2xl border border-white/20 shadow-lg">
                           {service.icon}
                         </div>
                         <motion.div
@@ -162,20 +144,21 @@ export default function Services() {
                     </div>
 
                     {/* Service Content */}
-                    <div className="mt-8">
-                      <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                    <div className="mt-6">
+                      <h3 className="text-lg font-bold text-white mb-2">
                         {service.title}
                       </h3>
-                      <p className="text-body text-white/90 mb-4 line-clamp-3">
+                      {/* Improved text clarity for mobile */}
+                      <p className="text-[15px] text-white leading-relaxed mb-3 font-medium">
                         {service.description}
                       </p>
 
                       {/* Stats */}
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5">
                         {service.stats.map((stat, i) => (
                           <span
                             key={i}
-                            className="text-body-sm bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full text-white/90 border border-white/10 hover:bg-white/20 transition-colors"
+                            className="text-[13px] bg-white/20 backdrop-blur-none px-2.5 py-1 rounded-full text-white font-medium border border-white/10 hover:bg-white/30 transition-colors"
                           >
                             {stat}
                           </span>
