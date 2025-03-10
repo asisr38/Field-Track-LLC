@@ -19,19 +19,6 @@ import Link from "next/link";
 
 const steps = [
   {
-    title: "Data Collection",
-    description:
-      "We integrate with your existing farm management tools to collect comprehensive field data, including high-resolution aerial imagery and historical performance metrics.",
-    details: [
-      "Integration with John Deere Operations Center and Climate FieldView",
-      "High-resolution drone imagery collection",
-      "Historical yield data analysis"
-    ],
-    icon: Database,
-    image: "/images/spatialImage2.jpeg",
-    alt: "Spatial field data visualization showing variable crop conditions across multiple fields"
-  },
-  {
     title: "Strategy and Implementation",
     description:
       "Our team works with you to develop and implement customized field trial strategies that address your specific agronomic questions and operational goals.",
@@ -44,6 +31,20 @@ const steps = [
     image: "/images/implementation.jpg",
     alt: "Field implementation of agricultural strategy with equipment in operation"
   },
+  {
+    title: "Data Collection",
+    description:
+      "We integrate with your existing farm management tools to collect comprehensive field data, including high-resolution aerial imagery and historical performance metrics.",
+    details: [
+      "Integration with John Deere Operations Center and Climate FieldView",
+      "High-resolution drone imagery collection",
+      "Historical yield data analysis"
+    ],
+    icon: Database,
+    image: "/images/spatialImage2.jpeg",
+    alt: "Spatial field data visualization showing variable crop conditions across multiple fields"
+  },
+
   {
     title: "Data Analysis",
     description:
@@ -90,9 +91,9 @@ export default function Process() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold mb-4"
+            className="text-4xl md:text-5xl font-primary mb-6"
           >
-            Our Research Process
+            Research <span className="text-primary">Process</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
