@@ -12,11 +12,11 @@ export default function Home() {
     <main>
       <Hero />
       <Services />
-      <SampleReport />
+      {/* <SampleReport /> */}
       <Process />
       <WhyChooseUs />
       <About />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Contact />
     </main>
   );

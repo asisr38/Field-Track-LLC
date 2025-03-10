@@ -127,8 +127,8 @@ export default function Header() {
     <header
       className={cn(
         "fixed top-0 w-full backdrop-blur-md border-b z-50 transition-all duration-300",
-        isScrolled 
-          ? "bg-background border-border/60 shadow-elevation-low" 
+        isScrolled
+          ? "bg-background border-border/60 shadow-elevation-low"
           : "bg-background border-transparent"
       )}
     >
@@ -140,7 +140,7 @@ export default function Header() {
             className="flex items-center gap-2 transition-all hover:opacity-90"
           >
             <Image
-              src="/logo/basic-package-logo-only.png"
+              src="/logo/field-track-logo.png"
               alt="Field Track Logo"
               width={40}
               height={40}

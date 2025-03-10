@@ -10,7 +10,7 @@ const services: ServiceItem[] = [
     description:
       "Our advanced aerial imagery pipeline that delivers precise field insights through multi-temporal NDVI analysis. Track crop health, monitor growth stages, and identify field variability with research-grade accuracy.",
     icon: <Plane className="w-6 h-6" />,
-    image: "/simple-sense/ndvi_map_composite.png",
+    image: "/simple-sense/dji-mavic-3.jpg",
     tags: [
       "Multi-temporal Analysis",
       "Growth Stage Tracking",

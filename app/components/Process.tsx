@@ -199,7 +199,7 @@ export default function Process() {
           ))}
         </div>
 
-        {/* Call to Action */}
+        {/* Call to Action
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -213,7 +213,7 @@ export default function Process() {
               <ArrowRight className="w-4 h-4" />
             </button>
           </Link>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );
