@@ -26,9 +26,9 @@ const cropTypes = [
 ];
 
 const serviceTypes = [
-  "Grower Data Support",
-  "Researcher support",
-  "Aerial Image processing"
+  "SimpleSense - Aerial Imagery",
+  "OnFarm Research",
+  "Basic Package -Field Sampling"
 ];
 
 const globalConnections = [
@@ -158,7 +158,7 @@ export default function Contact() {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           name: formData.name,
@@ -172,8 +172,8 @@ Preferred Contact: ${formData.preferredContact}
 
 Message:
 ${formData.message}
-          `,
-        }),
+          `
+        })
       });
 
       const data = await response.json();
@@ -218,8 +218,8 @@ ${formData.message}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-              Get in <span className="text-primary">Touch</span>
+            <h2 className="text-4xl md:text-5xl font-primary">
+              Get in <span className="text-primary">Touch</span>?
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Tell us about your fields and objectives. We'll create a

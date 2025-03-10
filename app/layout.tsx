@@ -27,7 +27,7 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Field Track LLC",
+  title: "Field Track",
   description:
     "Advancing agriculture through research-driven field trials and data-powered insights for optimal farm management",
   icons: {
@@ -61,7 +61,7 @@ export default function RootLayout({
           <Header />
           <main>{children}</main>
           <Footer />
-          <Chatbot />
+          {/* <Chatbot /> */}
           <Analytics />
           <SpeedInsights />
         </ThemeProvider>

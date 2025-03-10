@@ -22,29 +22,33 @@ const navItems = [
   { name: "Home", url: "/#home", icon: Home },
   { name: "Process", url: "/#process", icon: ClipboardList },
   { name: "Services", url: "/#services", icon: Code },
-  { name: "Contact", url: "/#contact", icon: Phone },
+  { name: "Contact", url: "/#contact", icon: Phone }
 ];
 
 export default function Header() {
   const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [isRotating, setIsRotating] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    
+    // Initialize theme based on system preference if not set
+    if (!theme) {
+      setTheme(resolvedTheme || "light");
+    }
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    
-    window.addEventListener('scroll', handleScroll);
-    
+
+    window.addEventListener("scroll", handleScroll);
+
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [theme, setTheme, resolvedTheme]);
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -65,7 +69,8 @@ export default function Header() {
       if (targetElement) {
         const isMobile = window.innerWidth < 768;
         const offset = isMobile ? 80 : 70;
-        const offsetTop = targetElement.getBoundingClientRect().top + window.scrollY - offset;
+        const offsetTop =
+          targetElement.getBoundingClientRect().top + window.scrollY - offset;
         window.scrollTo({ top: offsetTop, behavior: "smooth" });
       }
 
@@ -81,7 +86,8 @@ export default function Header() {
 
   const handleThemeChange = () => {
     setIsRotating(true);
-    setTheme(theme === "dark" ? "light" : "dark");
+    const newTheme = resolvedTheme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
     setTimeout(() => setIsRotating(false), 500);
   };
 
@@ -114,37 +120,40 @@ export default function Header() {
     isRotating && "rotate-[360deg]"
   );
 
-  const tooltipText = theme === "dark" ? "Switch to daylight mode" : "Switch to growth mode";
+  const tooltipText =
+    theme === "dark" ? "Switch to daylight mode" : "Switch to growth mode";
 
   return (
-    <header 
+    <header
       className={cn(
         "fixed top-0 w-full backdrop-blur-md border-b z-50 transition-all duration-300",
-        isScrolled 
-          ? "bg-background border-border/60 shadow-elevation-low" 
+        isScrolled
+          ? "bg-background border-border/60 shadow-elevation-low"
           : "bg-background border-transparent"
       )}
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 transition-all hover:opacity-90">
+          <Link
+            href="/"
+            className="flex items-center gap-2 transition-all hover:opacity-90"
+          >
             <Image
-              src="/logo/basic-package-logo-only.png"
+              src="/logo/field-track-logo.png"
               alt="Field Track Logo"
               width={40}
               height={40}
               className="object-contain"
             />
-            <span className="text-2xl font-bold merriweather-bold text-foreground">Field Track LLC</span>
+            <span className="text-2xl font-bold merriweather-bold text-foreground">
+              Field Track LLC
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
-            <NavBar
-              items={navItems}
-              onSectionChange={() => {}}
-            />
+            <NavBar items={navItems} onSectionChange={() => {}} />
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -162,10 +171,7 @@ export default function Header() {
                       : "scale-0 rotate-180 opacity-0"
                   )}
                 >
-                  <Sprout 
-                    size={20}
-                    className="animate-pulse-slow"
-                  />
+                  <Sprout size={20} className="animate-pulse-slow" />
                 </div>
                 <div
                   className={cn(
@@ -175,10 +181,7 @@ export default function Header() {
                       : "scale-100 rotate-0 opacity-100"
                   )}
                 >
-                  <Sun 
-                    size={20}
-                    className="animate-spin-slow"
-                  />
+                  <Sun size={20} className="animate-spin-slow" />
                 </div>
               </div>
             </motion.button>
@@ -203,10 +206,7 @@ export default function Header() {
                       : "scale-0 rotate-180 opacity-0"
                   )}
                 >
-                  <Sprout 
-                    size={20}
-                    className="animate-pulse-slow"
-                  />
+                  <Sprout size={20} className="animate-pulse-slow" />
                 </div>
                 <div
                   className={cn(
@@ -216,10 +216,7 @@ export default function Header() {
                       : "scale-100 rotate-0 opacity-100"
                   )}
                 >
-                  <Sun 
-                    size={20}
-                    className="animate-spin-slow"
-                  />
+                  <Sun size={20} className="animate-spin-slow" />
                 </div>
               </div>
             </motion.button>
@@ -239,14 +236,14 @@ export default function Header() {
       {/* Mobile Menu */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
             className="md:hidden glass border-t border-border"
           >
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.3 }}

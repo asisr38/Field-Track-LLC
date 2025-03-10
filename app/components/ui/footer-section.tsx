@@ -143,7 +143,7 @@ function Footerdemo() {
               />
               <Moon className="h-4 w-4" />
             </div> */}
-            <nav className="flex gap-6 text-sm">
+            {/* <nav className="flex gap-6 text-sm">
               <a
                 href="#"
                 className="text-muted-foreground hover:text-primary transition-colors"
@@ -156,7 +156,7 @@ function Footerdemo() {
               >
                 Terms of Service
               </a>
-            </nav>
+            </nav> */}
           </div>
         </div>
       </div>
