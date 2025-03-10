@@ -30,7 +30,7 @@ export default function Chatbot() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 bg-primary text-primary-foreground p-4 rounded-full shadow-lg hover:bg-primary/90 transition-colors"
+        className="fixed bottom-4 right-4 bg-primary text-primary-foreground p-4 rounded-full shadow-lg hover:bg-primary/90 transition-colors z-50"
       >
         <MessageCircle />
       </button>
@@ -40,7 +40,7 @@ export default function Chatbot() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-20 right-4 w-80 bg-background border border-border rounded-lg shadow-xl"
+            className="fixed bottom-20 right-4 w-80 bg-background border border-border rounded-lg shadow-xl z-50"
           >
             <div className="flex justify-between items-center p-4 border-b border-border">
               <h3 className="font-semibold">Chat with us</h3>

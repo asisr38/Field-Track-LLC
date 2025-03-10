@@ -569,6 +569,7 @@ ${formData.message}
                   src="/images/farm3.jpg"
                   alt="Agricultural field background"
                   fill
+                  sizes="100vw"
                   className="object-cover object-center blur-[3px]"
                   priority
                 />
