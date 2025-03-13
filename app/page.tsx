@@ -6,6 +6,7 @@ import Testimonials from "@/app/components/Testimonials";
 import Contact from "@/app/components/Contact";
 import WhyChooseUs from "@/app/components/WhyChooseUs";
 import SampleReport from "@/app/components/SampleReport";
+import WhyResearchMatters from "@/app/components/WhyResearchMatters";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Services />
       {/* <SampleReport /> */}
       <Process />
+      <WhyResearchMatters />
       <WhyChooseUs />
       <About />
       {/* <Testimonials /> */}

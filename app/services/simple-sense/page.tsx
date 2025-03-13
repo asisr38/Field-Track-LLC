@@ -128,10 +128,13 @@ const DataCard = ({
   icon: React.ReactNode;
   children: React.ReactNode;
 }) => (
-  <Card className="p-4 h-full">
+  <Card className="p-4 h-full dark:bg-card">
     <div className="flex items-center gap-2 mb-3">
       <IconContext.Provider
-        value={{ size: "1.2em", className: "text-emerald-600" }}
+        value={{
+          size: "1.2em",
+          className: "text-emerald-600 dark:text-emerald-500"
+        }}
       >
         {icon}
       </IconContext.Provider>
@@ -149,8 +152,8 @@ const DataRow = ({
   value: string | number;
 }) => (
   <div className="flex justify-between items-center">
-    <span className="text-sm text-gray-600">{label}</span>
-    <span className="font-medium">{value}</span>
+    <span className="text-sm text-gray-600 dark:text-gray-400">{label}</span>
+    <span className="font-medium dark:text-foreground">{value}</span>
   </div>
 );
 
@@ -311,7 +314,7 @@ export default function SimpleSensePage() {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative pt-32 pb-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-green-100/20 to-transparent" />
         <div className="container mx-auto px-4 relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1111,7 +1114,7 @@ export default function SimpleSensePage() {
                   </button>
                   <button className="p-6 bg-muted rounded-lg hover:bg-muted/70 transition-colors text-center">
                     <Download className="w-6 h-6 text-primary mx-auto mb-3" />
-                    <h5 className="font-medium mb-1">Raw Data Export</h5>
+                    <h5 className="font-medium mb-1"> Data Export</h5>
                     <p className="text-sm text-muted-foreground">
                       Download processed data files
                     </p>

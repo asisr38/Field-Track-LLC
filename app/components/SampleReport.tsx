@@ -1,12 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { Map } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import fieldData from "../data/Boundary_Demo.json";
-import trialData from "../data/Point_Demo.json";
+import dynamic from "next/dynamic";
 
 // Add this at the top of the file, after imports:
 declare global {
@@ -15,31 +12,57 @@ declare global {
   }
 }
 
-// Define interfaces for trial data
-interface TrialProperties {
+// Define interfaces for soil sample data
+export interface SampleProperties {
   ID: number;
-  TrialID: string;
-  PlotDate: string;
-  Treatment: string;
-  YieldData: number;
-  YieldUnit: string;
-  Replicate: number;
+  "pH (1_1)": number;
+  "P (B1 1_7)": number;
+  "K (AA)": number;
+  "OM (LOI)": number;
+  "CEC (meq/100g)": number;
   Notes: string;
+  [key: string]: any; // Allow for additional properties
 }
 
-interface TrialFeature {
+export interface SampleFeature {
   type: "Feature";
   geometry: {
     type: "Point";
     coordinates: [number, number];
   };
-  properties: TrialProperties;
+  properties: SampleProperties;
 }
 
-interface DroneImageryLayer {
-  name: string;
-  type: "ndvi" | "rgb" | "thermal";
-  bounds: [[number, number], [number, number]];
+export interface FieldBoundaryFeature {
+  type: "Feature";
+  properties: {
+    name: string;
+    area: string;
+    farmID: string;
+    [key: string]: any; // Allow for additional properties
+  };
+  geometry: {
+    type: "Polygon";
+    coordinates: number[][][];
+  };
+}
+
+export interface GeoJSONFeatureCollection {
+  type: "FeatureCollection";
+  features: SampleFeature[] | FieldBoundaryFeature[];
+}
+
+// Define type for color ranges
+interface ColorRange {
+  min: number;
+  max: number;
+  color: string;
+  label?: string;
+}
+
+// Define type for color ranges by property
+interface ColorRanges {
+  [key: string]: ColorRange[];
 }
 
 // Calculate the bounds of the field from the field boundary data
@@ -67,50 +90,138 @@ const calculateFieldBounds = (
   ];
 };
 
-const FIELD_BOUNDS = calculateFieldBounds(
-  fieldData.features[0].geometry.coordinates
-);
+// Get color based on soil property value
+const getColorByValue = (value: number, property: string): string => {
+  // Define color ranges for different soil properties
+  const colorRanges: ColorRanges = {
+    "pH (1_1)": [
+      { min: 0, max: 5.0, color: "#d73027" }, // Very acidic - red
+      { min: 5.0, max: 5.5, color: "#fc8d59" }, // Acidic - orange
+      { min: 5.5, max: 6.0, color: "#fee090" }, // Slightly acidic - yellow
+      { min: 6.0, max: 6.5, color: "#e0f3f8" }, // Neutral - light blue
+      { min: 6.5, max: 7.0, color: "#91bfdb" }, // Slightly alkaline - medium blue
+      { min: 7.0, max: 7.5, color: "#4575b4" }, // Alkaline - dark blue
+      { min: 7.5, max: 14, color: "#313695" } // Very alkaline - very dark blue
+    ],
+    "P (B1 1_7)": [
+      { min: 0, max: 10, color: "#d73027" }, // Very low - red
+      { min: 10, max: 20, color: "#fc8d59" }, // Low - orange
+      { min: 20, max: 30, color: "#fee090" }, // Medium - yellow
+      { min: 30, max: 40, color: "#e0f3f8" }, // High - light blue
+      { min: 40, max: 50, color: "#91bfdb" }, // Very high - medium blue
+      { min: 50, max: 1000, color: "#4575b4" } // Extremely high - dark blue
+    ],
+    "K (AA)": [
+      { min: 0, max: 100, color: "#d73027" }, // Very low - red
+      { min: 100, max: 150, color: "#fc8d59" }, // Low - orange
+      { min: 150, max: 200, color: "#fee090" }, // Medium - yellow
+      { min: 200, max: 250, color: "#e0f3f8" }, // High - light blue
+      { min: 250, max: 300, color: "#91bfdb" }, // Very high - medium blue
+      { min: 300, max: 1000, color: "#4575b4" } // Extremely high - dark blue
+    ],
+    "OM (LOI)": [
+      { min: 0, max: 1.5, color: "#d73027" }, // Very low - red
+      { min: 1.5, max: 2.0, color: "#fc8d59" }, // Low - orange
+      { min: 2.0, max: 2.5, color: "#fee090" }, // Medium - yellow
+      { min: 2.5, max: 3.0, color: "#e0f3f8" }, // High - light blue
+      { min: 3.0, max: 3.5, color: "#91bfdb" }, // Very high - medium blue
+      { min: 3.5, max: 10, color: "#4575b4" } // Extremely high - dark blue
+    ],
+    "CEC (meq/100g)": [
+      { min: 0, max: 5, color: "#d73027" }, // Very low - red
+      { min: 5, max: 10, color: "#fc8d59" }, // Low - orange
+      { min: 10, max: 15, color: "#fee090" }, // Medium - yellow
+      { min: 15, max: 20, color: "#e0f3f8" }, // High - light blue
+      { min: 20, max: 25, color: "#91bfdb" }, // Very high - medium blue
+      { min: 25, max: 100, color: "#4575b4" } // Extremely high - dark blue
+    ]
+  };
 
-// Move getColorByTreatment outside of initMap
-const getColorByTreatment = (treatment: string) => {
-  switch (treatment) {
-    case "Variable Rate A":
-      return "#22c55e"; // green
-    case "Variable Rate B":
-      return "#3b82f6"; // blue
-    case "Control":
-      return "#ef4444"; // red
-    default:
-      return "#94a3b8"; // gray
+  // Default color if property not found
+  if (!colorRanges[property]) {
+    return "#94a3b8"; // gray
   }
+
+  // Find the appropriate color range
+  const range = colorRanges[property].find(
+    (range: ColorRange) => value >= range.min && value < range.max
+  );
+
+  return range ? range.color : "#94a3b8"; // Return gray if no range found
 };
 
-// Add drone imagery layers configuration
-const droneImageryLayers: DroneImageryLayer[] = [
-  {
-    name: "NDVI Analysis",
-    type: "ndvi",
-    bounds: FIELD_BOUNDS
-  },
-  {
-    name: "RGB Orthomosaic",
-    type: "rgb",
-    bounds: FIELD_BOUNDS
-  },
-  {
-    name: "Thermal Imagery",
-    type: "thermal",
-    bounds: FIELD_BOUNDS
-  }
-];
+// Placeholder data - will be replaced with user's data
+const placeholderFieldData: GeoJSONFeatureCollection = {
+  type: "FeatureCollection",
+  features: [
+    {
+      type: "Feature",
+      properties: {
+        name: "Sample Field",
+        area: "0 acres",
+        farmID: "Placeholder"
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-93.5784, 42.0551],
+            [-93.5784, 42.0601],
+            [-93.5704, 42.0601],
+            [-93.5704, 42.0551],
+            [-93.5784, 42.0551]
+          ]
+        ]
+      }
+    }
+  ]
+};
 
-export default function SampleReport() {
+// Placeholder sample data - will be replaced with user's data
+const placeholderSampleData: GeoJSONFeatureCollection = {
+  type: "FeatureCollection",
+  features: [
+    {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [-93.5764, 42.0561]
+      },
+      properties: {
+        ID: 1,
+        "pH (1_1)": 6.2,
+        "P (B1 1_7)": 24,
+        "K (AA)": 185,
+        "OM (LOI)": 2.8,
+        "CEC (meq/100g)": 14.2,
+        Notes: "Placeholder sample"
+      }
+    }
+  ]
+};
+
+interface SampleReportProps {
+  fieldData?: GeoJSONFeatureCollection;
+  sampleData?: GeoJSONFeatureCollection;
+}
+
+export default function SampleReport({
+  fieldData = placeholderFieldData,
+  sampleData = placeholderSampleData
+}: SampleReportProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
+  const [selectedProperty, setSelectedProperty] = useState<string>("pH (1_1)");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Calculate field bounds from the provided field data
+  const FIELD_BOUNDS = calculateFieldBounds(
+    (fieldData.features[0] as FieldBoundaryFeature).geometry.coordinates
+  );
 
   useEffect(() => {
     // Add custom CSS for better touch controls
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .leaflet-touch .leaflet-control-zoom a {
         width: 40px !important;
@@ -124,7 +235,7 @@ export default function SampleReport() {
       }
     `;
     document.head.appendChild(style);
-    
+
     return () => {
       document.head.removeChild(style);
     };
@@ -142,6 +253,7 @@ export default function SampleReport() {
 
     const initMap = () => {
       try {
+        setIsLoading(true);
         const L = (window as any).L;
         if (!L) {
           console.error("Leaflet not loaded");
@@ -176,7 +288,7 @@ export default function SampleReport() {
 
         // Enable touch detection
         if (L.Browser && L.Browser.touch) {
-          L.DomUtil.addClass(map._container, 'leaflet-touch');
+          L.DomUtil.addClass(map._container, "leaflet-touch");
         }
 
         // Define base maps
@@ -212,228 +324,67 @@ export default function SampleReport() {
           }
         }).addTo(map);
 
-        // Create a feature group for trial points
-        const trialLayer = L.featureGroup().addTo(map);
+        // Create a feature group for soil sample points
+        const sampleLayer = L.featureGroup().addTo(map);
 
-        // Create drone imagery layers using SVG overlays
-        const droneLayers: { [key: string]: L.SVGOverlay } = {};
+        // Add soil sample points
+        (sampleData.features as SampleFeature[]).forEach(
+          (point: SampleFeature) => {
+            const latlng = [
+              point.geometry.coordinates[1],
+              point.geometry.coordinates[0]
+            ];
 
-        droneImageryLayers.forEach(layer => {
-          // Create SVG element
-          const svgElement = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "svg"
-          );
-          svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-          svgElement.setAttribute("viewBox", "0 0 100 100");
-          svgElement.setAttribute("width", "100%");
-          svgElement.setAttribute("height", "100%");
+            // Use the selected property to determine marker color
+            const value =
+              (point.properties[
+                selectedProperty as keyof SampleProperties
+              ] as number) || 0;
+            const color = getColorByValue(value, selectedProperty);
 
-          // Generate pattern based on layer type
-          let patternHTML = "";
+            const marker = L.circleMarker(latlng, {
+              radius: 10,
+              fillColor: color,
+              color: "#fff",
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.8
+            });
 
-          if (layer.type === "ndvi") {
-            // Create a clipping path using the field boundary
-            patternHTML += `<clipPath id="field-clip-ndvi">
-              <path d="${createSVGPathFromCoordinates(
-                fieldData.features[0].geometry.coordinates[0]
-              )}" />
-            </clipPath>`;
-
-            // NDVI visualization with field boundary clipping
-            patternHTML += `<g clip-path="url(#field-clip-ndvi)">`;
-
-            // Create a more realistic NDVI pattern
-            for (let i = 0; i < 40; i++) {
-              for (let j = 0; j < 40; j++) {
-                const x = i * 2.5;
-                const y = j * 2.5;
-                const width = 2.5;
-                const height = 2.5;
-
-                // Create patterns that follow field contours
-                const distFromCenter = Math.sqrt(
-                  Math.pow((i - 20) / 20, 2) + Math.pow((j - 20) / 20, 2)
-                );
-                const ndviValue =
-                  0.7 -
-                  distFromCenter * 0.3 +
-                  Math.sin(i / 4) * Math.cos(j / 4) * 0.2;
-
-                // Use a more realistic NDVI color scale
-                let color;
-                if (ndviValue < 0.2) {
-                  color = "rgba(189, 0, 38, 0.8)"; // Very low NDVI - red
-                } else if (ndviValue < 0.4) {
-                  color = "rgba(240, 59, 32, 0.8)"; // Low NDVI - orange-red
-                } else if (ndviValue < 0.6) {
-                  color = "rgba(253, 141, 60, 0.8)"; // Medium-low NDVI - orange
-                } else if (ndviValue < 0.7) {
-                  color = "rgba(254, 204, 92, 0.8)"; // Medium NDVI - yellow
-                } else if (ndviValue < 0.8) {
-                  color = "rgba(168, 221, 181, 0.8)"; // Medium-high NDVI - light green
-                } else {
-                  color = "rgba(0, 104, 55, 0.8)"; // High NDVI - dark green
-                }
-
-                patternHTML += `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${color}" />`;
-              }
-            }
-
-            patternHTML += `</g>`;
-          } else if (layer.type === "rgb") {
-            // Create a clipping path using the field boundary
-            patternHTML += `<clipPath id="field-clip-rgb">
-              <path d="${createSVGPathFromCoordinates(
-                fieldData.features[0].geometry.coordinates[0]
-              )}" />
-            </clipPath>`;
-
-            // RGB orthomosaic with field boundary clipping
-            patternHTML += `<g clip-path="url(#field-clip-rgb)">`;
-
-            // Create a more realistic RGB pattern that resembles crop rows
-            for (let i = 0; i < 100; i++) {
-              // Draw crop rows
-              const y = i;
-              patternHTML += `<line x1="0" y1="${y}" x2="100" y2="${y}" stroke-width="0.8" stroke="rgba(${
-                50 + Math.sin(i / 5) * 30
-              }, ${120 + Math.sin(i / 3) * 40}, ${
-                30 + Math.sin(i / 7) * 20
-              }, 0.9)" />`;
-
-              // Add some variation to simulate field patterns
-              if (i % 10 === 0) {
-                patternHTML += `<path d="M0,${i} Q50,${
-                  i + Math.sin(i) * 5
-                } 100,${i}" stroke="rgba(${70 + Math.sin(i / 2) * 30}, ${
-                  140 + Math.sin(i / 4) * 30
-                }, ${
-                  40 + Math.sin(i / 5) * 20
-                }, 0.8)" stroke-width="1.5" fill="none" />`;
-              }
-            }
-
-            // Add some "tractor paths" or field divisions
-            patternHTML += `<path d="M25,0 L25,100" stroke="rgba(120, 100, 80, 0.7)" stroke-width="0.8" stroke-dasharray="1,1" />`;
-            patternHTML += `<path d="M50,0 L50,100" stroke="rgba(120, 100, 80, 0.7)" stroke-width="0.8" stroke-dasharray="1,1" />`;
-            patternHTML += `<path d="M75,0 L75,100" stroke="rgba(120, 100, 80, 0.7)" stroke-width="0.8" stroke-dasharray="1,1" />`;
-
-            patternHTML += `</g>`;
-          } else if (layer.type === "thermal") {
-            // Create a clipping path using the field boundary
-            patternHTML += `<clipPath id="field-clip-thermal">
-              <path d="${createSVGPathFromCoordinates(
-                fieldData.features[0].geometry.coordinates[0]
-              )}" />
-            </clipPath>`;
-
-            // Thermal imagery with field boundary clipping
-            patternHTML += `<g clip-path="url(#field-clip-thermal)">`;
-
-            // Create a more realistic thermal pattern
-            // First, create a gradient background
-            patternHTML += `<defs>
-              <radialGradient id="thermal-gradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-                <stop offset="0%" style="stop-color:rgba(255,0,0,0.7)" />
-                <stop offset="25%" style="stop-color:rgba(255,165,0,0.7)" />
-                <stop offset="50%" style="stop-color:rgba(255,255,0,0.7)" />
-                <stop offset="75%" style="stop-color:rgba(0,255,255,0.7)" />
-                <stop offset="100%" style="stop-color:rgba(0,0,255,0.7)" />
-              </radialGradient>
-            </defs>`;
-
-            // Add the base thermal layer
-            patternHTML += `<rect x="0" y="0" width="100" height="100" fill="url(#thermal-gradient)" />`;
-
-            // Add some "hot spots" and "cold spots"
-            for (let i = 0; i < 10; i++) {
-              const x = 10 + Math.random() * 80;
-              const y = 10 + Math.random() * 80;
-              const radius = 3 + Math.random() * 7;
-
-              // Randomly choose between hot and cold spots
-              if (Math.random() > 0.5) {
-                // Hot spot
-                patternHTML += `<circle cx="${x}" cy="${y}" r="${radius}" fill="rgba(255,0,0,0.6)" />`;
-              } else {
-                // Cold spot
-                patternHTML += `<circle cx="${x}" cy="${y}" r="${radius}" fill="rgba(0,0,255,0.6)" />`;
-              }
-            }
-
-            patternHTML += `</g>`;
-          }
-
-          svgElement.innerHTML = patternHTML;
-
-          // Create SVG overlay with precise bounds
-          // Use the exact field bounds for the overlay to ensure perfect alignment
-          const preciseBounds = L.latLngBounds(
-            [FIELD_BOUNDS[0][0] - 0.0001, FIELD_BOUNDS[0][1] - 0.0001], // Add a small padding
-            [FIELD_BOUNDS[1][0] + 0.0001, FIELD_BOUNDS[1][1] + 0.0001]  // Add a small padding
-          );
-          
-          droneLayers[layer.name] = L.svgOverlay(svgElement, preciseBounds, {
-            opacity: 0.8,
-            interactive: true
-          });
-        });
-
-        // Add trial points
-        trialData.features.forEach(point => {
-          const latlng = [
-            point.geometry.coordinates[1],
-            point.geometry.coordinates[0]
-          ];
-
-          const marker = L.circleMarker(latlng, {
-            radius: 10,
-            fillColor: getColorByTreatment(point.properties.Treatment),
-            color: "#fff",
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.8
-          });
-
-          // Create tooltip content
-          const tooltipContent = `
+            // Create tooltip content
+            const tooltipContent = `
             <div class="p-3 bg-white rounded-lg shadow-lg">
-              <div class="font-bold text-lg mb-2">Trial Plot ${
-                point.properties.ID
-              }</div>
+              <div class="font-bold text-lg mb-2">Sample ${point.properties.ID}</div>
               <div class="grid grid-cols-2 gap-2">
-                <div class="font-semibold">Treatment:</div>
-                <div>${point.properties.Treatment}</div>
-                <div class="font-semibold">Yield:</div>
-                <div>${point.properties.YieldData} ${
-            point.properties.YieldUnit
-          }</div>
-                <div class="font-semibold">Replicate:</div>
-                <div>${point.properties.Replicate}</div>
-                <div class="font-semibold">Date:</div>
-                <div>${new Date(
-                  point.properties.PlotDate
-                ).toLocaleDateString()}</div>
+                <div class="font-semibold">pH:</div>
+                <div>${point.properties["pH (1_1)"]}</div>
+                <div class="font-semibold">Phosphorus:</div>
+                <div>${point.properties["P (B1 1_7)"]} ppm</div>
+                <div class="font-semibold">Potassium:</div>
+                <div>${point.properties["K (AA)"]} ppm</div>
+                <div class="font-semibold">Organic Matter:</div>
+                <div>${point.properties["OM (LOI)"]}%</div>
+                <div class="font-semibold">CEC:</div>
+                <div>${point.properties["CEC (meq/100g)"]} meq/100g</div>
               </div>
             </div>
           `;
 
-          marker.bindTooltip(tooltipContent, {
-            permanent: false,
-            direction: "top",
-            className: "custom-tooltip",
-            offset: [0, -10]
-          });
+            marker.bindTooltip(tooltipContent, {
+              permanent: false,
+              direction: "top",
+              className: "custom-tooltip",
+              offset: [0, -10]
+            });
 
-          trialLayer.addLayer(marker);
-        });
+            sampleLayer.addLayer(marker);
+          }
+        );
 
         // Add layer control
         const overlayMaps = {
           "Field Boundary": fieldLayer,
-          "Trial Points": trialLayer,
-          ...droneLayers
+          "Soil Samples": sampleLayer
         };
 
         // Add layer control
@@ -444,30 +395,101 @@ export default function SampleReport() {
           })
           .addTo(map);
 
-        // Add a legend for trial treatments
+        // Add a legend for soil properties
         const legend = L.control({ position: "bottomleft" });
         legend.onAdd = function () {
           const div = L.DomUtil.create(
             "div",
             "legend bg-white p-3 rounded-lg shadow-lg"
           );
+
+          // Add property selector
           div.innerHTML = `
-            <h4 class="font-bold mb-2">Treatments</h4>
-            <div class="space-y-2">
-              <div class="flex items-center">
-                <div class="w-4 h-4 rounded-full bg-[#22c55e] mr-2"></div>
-                <span>Variable Rate A</span>
-              </div>
-              <div class="flex items-center">
-                <div class="w-4 h-4 rounded-full bg-[#3b82f6] mr-2"></div>
-                <span>Variable Rate B</span>
-              </div>
-              <div class="flex items-center">
-                <div class="w-4 h-4 rounded-full bg-[#ef4444] mr-2"></div>
-                <span>Control</span>
-              </div>
-            </div>
+            <h4 class="font-bold mb-2">Soil Property</h4>
+            <select id="property-selector" class="w-full p-1 mb-3 border rounded">
+              <option value="pH (1_1)">pH</option>
+              <option value="P (B1 1_7)">Phosphorus (ppm)</option>
+              <option value="K (AA)">Potassium (ppm)</option>
+              <option value="OM (LOI)">Organic Matter (%)</option>
+              <option value="CEC (meq/100g)">CEC (meq/100g)</option>
+            </select>
+            <h4 class="font-bold mb-2">Legend</h4>
           `;
+
+          // Add legend items based on selected property
+          const legendColorRanges: ColorRanges = {
+            "pH (1_1)": [
+              {
+                min: 0,
+                max: 5.0,
+                color: "#d73027",
+                label: "< 5.0 (Very Acidic)"
+              },
+              {
+                min: 5.0,
+                max: 5.5,
+                color: "#fc8d59",
+                label: "5.0 - 5.5 (Acidic)"
+              },
+              {
+                min: 5.5,
+                max: 6.0,
+                color: "#fee090",
+                label: "5.5 - 6.0 (Slightly Acidic)"
+              },
+              {
+                min: 6.0,
+                max: 6.5,
+                color: "#e0f3f8",
+                label: "6.0 - 6.5 (Neutral)"
+              },
+              {
+                min: 6.5,
+                max: 7.0,
+                color: "#91bfdb",
+                label: "6.5 - 7.0 (Slightly Alkaline)"
+              },
+              {
+                min: 7.0,
+                max: 7.5,
+                color: "#4575b4",
+                label: "7.0 - 7.5 (Alkaline)"
+              },
+              {
+                min: 7.5,
+                max: 14,
+                color: "#313695",
+                label: "> 7.5 (Very Alkaline)"
+              }
+            ]
+          };
+
+          const ranges = legendColorRanges[selectedProperty] || [];
+
+          let legendItems = '<div class="space-y-2">';
+          ranges.forEach((range: ColorRange) => {
+            legendItems += `
+              <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-[${range.color}] mr-2"></div>
+                <span>${range.label}</span>
+              </div>
+            `;
+          });
+          legendItems += "</div>";
+
+          div.innerHTML += legendItems;
+
+          // Add event listener to property selector
+          setTimeout(() => {
+            const selector = document.getElementById("property-selector");
+            if (selector) {
+              selector.addEventListener("change", e => {
+                const target = e.target as HTMLSelectElement;
+                setSelectedProperty(target.value);
+              });
+            }
+          }, 0);
+
           return div;
         };
         legend.addTo(map);
@@ -484,8 +506,11 @@ export default function SampleReport() {
             duration: 0.5
           });
         }
+
+        setIsLoading(false);
       } catch (error) {
         console.error("Error initializing map:", error);
+        setIsLoading(false);
       }
     };
 
@@ -499,25 +524,26 @@ export default function SampleReport() {
         mapInstanceRef.current = null;
       }
     };
-  }, []);
+  }, [FIELD_BOUNDS, fieldData, sampleData, selectedProperty]);
 
   return (
-    <section id="sample-report" className="py-20 bg-secondary/5">
+    <section id="sample-report" className="bg-secondary/5">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16"
+          className="space-y-4 mb-8"
         >
-          <h2 className="text-4xl md:text-5xl font-primary mb-6">
-            Research <span className="text-primary">Results</span>
-          </h2>
-          <p className="text-body-lg text-muted-foreground max-w-3xl mx-auto">
-            Explore real data from our field trials and research projects.
-            Interactive maps show sampling points, trial layouts, and detailed
-            findings from actual studies.
+          <div className="flex items-center gap-3 mb-1">
+            <Map className="w-8 h-8 text-primary" />
+            <h3 className="text-2xl font-bold">Interactive Soil Analysis</h3>
+          </div>
+          <p className="text-muted-foreground max-w-3xl">
+            Explore our interactive soil analysis map showing sampling locations
+            and results. Click on sample points to view detailed soil test
+            results.
           </p>
         </motion.div>
 
@@ -527,17 +553,25 @@ export default function SampleReport() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="max-w-6xl mx-auto mb-16"
+          className="max-w-6xl mx-auto mb-8"
         >
           <div
             className="relative h-[600px] rounded-2xl overflow-hidden border border-border/50"
             style={{ zIndex: 1 }}
           >
-            <div
-              ref={mapRef}
-              className="w-full h-full"
-              style={{ background: "#f0f0f0" }}
-            />
+            {isLoading ? (
+              <div className="w-full h-full bg-muted/20 flex items-center justify-center">
+                <p className="text-muted-foreground">
+                  Loading soil sampling map...
+                </p>
+              </div>
+            ) : (
+              <div
+                ref={mapRef}
+                className="w-full h-full"
+                style={{ background: "#f0f0f0" }}
+              />
+            )}
             <style jsx global>{`
               .leaflet-control-container {
                 pointer-events: auto;
@@ -551,96 +585,10 @@ export default function SampleReport() {
             `}</style>
           </div>
           <p className="text-sm text-muted-foreground mt-2 text-center">
-            Interactive map showing trial layout and sampling locations
+            Interactive map showing soil sampling locations and results
           </p>
-        </motion.div>
-
-        {/* Features List */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-16"
-        >
-          <div className="text-center">
-            <h3 className="text-xl font-semibold mb-2">Clear Visualization</h3>
-            <p className="text-muted-foreground">
-              See your land's potential with easy-to-understand maps and reports
-            </p>
-          </div>
-          <div className="text-center">
-            <h3 className="text-xl font-semibold mb-2">Smart Planning</h3>
-            <p className="text-muted-foreground">
-              Make informed decisions about your land's resources and usage
-            </p>
-          </div>
-          <div className="text-center">
-            <h3 className="text-xl font-semibold mb-2">Practical Guidance</h3>
-            <p className="text-muted-foreground">
-              Get straightforward advice based on your land's unique
-              characteristics
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Call to Action */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center"
-        >
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/sample-report">
-              <button className="inline-flex items-center gap-2 bg-green-600 text-white font-medium py-3 px-6 rounded-full shadow-md border-2 border-green-600 hover:bg-green-700 hover:border-green-700">
-                View Demo Replicated Trial
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </Link>
-            <Link href="/trial-report">
-              <button className="inline-flex items-center gap-2 bg-white text-green-600 font-medium py-3 px-6 rounded-full shadow-md border-2 border-green-600 hover:bg-gray-50">
-                View Demo On-Farm Trial Report
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </Link>
-          </div>
         </motion.div>
       </div>
     </section>
   );
-}
-
-// Helper function to create SVG path from GeoJSON coordinates
-function createSVGPathFromCoordinates(coordinates: number[][]) {
-  // Normalize coordinates to fit in 0-100 range for SVG viewBox
-  const bounds = calculateFieldBounds([coordinates]);
-  const minLat = bounds[0][0];
-  const minLng = bounds[0][1];
-  const maxLat = bounds[1][0];
-  const maxLng = bounds[1][1];
-
-  const latRange = maxLat - minLat;
-  const lngRange = maxLng - minLng;
-
-  // Create SVG path
-  let path = "";
-  coordinates.forEach((coord, index) => {
-    // Normalize to 0-100 range
-    // Swap x and y to match the SVG coordinate system with the map
-    const x = ((coord[0] - minLng) / lngRange) * 100;
-    const y = 100 - ((coord[1] - minLat) / latRange) * 100; // Invert Y axis for SVG
-
-    if (index === 0) {
-      path += `M ${x} ${y}`;
-    } else {
-      path += ` L ${x} ${y}`;
-    }
-  });
-
-  // Close the path
-  path += " Z";
-  
-  return path;
 }

@@ -21,7 +21,7 @@ interface ServiceGridProps {
 
 function ServiceGrid({ items }: ServiceGridProps) {
   return (
-    <div className="flex flex-col space-y-8 max-w-7xl mx-auto">
+    <div className="flex flex-col space-y-6 sm:space-y-8 max-w-7xl mx-auto">
       {items.map((item, index) => (
         <motion.div
           key={index}
@@ -30,7 +30,8 @@ function ServiceGrid({ items }: ServiceGridProps) {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: index * 0.2 }}
           className={cn(
-            "group relative rounded-2xl overflow-hidden h-[280px]",
+            "group relative rounded-xl sm:rounded-2xl overflow-hidden",
+            "h-auto sm:h-[280px]",
             "bg-card/50 backdrop-blur-sm border border-border/50",
             "hover:border-primary/50 transition-all duration-300",
             "[box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
@@ -38,15 +39,15 @@ function ServiceGrid({ items }: ServiceGridProps) {
           )}
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-            {/* Image Section */}
-            <div className="relative h-full overflow-hidden">
+            {/* Image Section - Full width on mobile, half width on desktop */}
+            <div className="relative h-48 sm:h-full overflow-hidden">
               {item.image && (
                 <Image
                   src={item.image}
                   alt={item.title}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   priority={index === 0}
                 />
               )}
@@ -54,34 +55,34 @@ function ServiceGrid({ items }: ServiceGridProps) {
             </div>
 
             {/* Content Section */}
-            <div className="p-8 flex flex-col justify-between h-full relative">
+            <div className="p-4 sm:p-6 lg:p-8 flex flex-col justify-between h-full relative">
               {/* Top Section with Icon and Title */}
               <div>
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 text-primary border border-primary/10">
+                <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-6">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center bg-primary/10 text-primary border border-primary/10">
                     {item.icon}
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-foreground">
+                    <h3 className="text-xl sm:text-2xl font-bold text-foreground">
                       {item.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                       {item.meta}
                     </p>
                   </div>
                 </div>
 
                 {/* Description */}
-                <p className="text-[14px] text-muted-foreground leading-relaxed line-clamp-3">
+                <p className="text-xs sm:text-sm md:text-[14px] text-muted-foreground leading-relaxed line-clamp-3 sm:line-clamp-3">
                   {item.description}
                 </p>
 
                 {/* Tags */}
-                <div className="flex flex-wrap gap-2 mt-4">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-3 sm:mt-4">
                   {item.tags?.map((tag, i) => (
                     <span
                       key={i}
-                      className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-lg bg-primary/10 text-primary border border-primary/10"
+                      className="inline-flex items-center px-2 py-0.5 text-[10px] sm:text-xs font-medium rounded-md sm:rounded-lg bg-primary/10 text-primary border border-primary/10"
                     >
                       {tag}
                     </span>
@@ -89,14 +90,17 @@ function ServiceGrid({ items }: ServiceGridProps) {
                 </div>
               </div>
 
-              {/* CTA Link */}
-              <div className="absolute top-8 right-8">
+              {/* CTA Link - Positioned differently on mobile vs desktop */}
+              <div className="mt-4 sm:mt-0 sm:absolute sm:top-6 sm:right-6 lg:top-8 lg:right-8">
                 <Link
                   href={item.link || "#"}
-                  className="group/link inline-flex items-center text-sm font-medium"
+                  className="group/link inline-flex items-center text-xs sm:text-sm font-medium text-primary"
                 >
                   <span className="relative overflow-hidden inline-flex items-center">
-                    <span className="opacity-0 -translate-y-6 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out text-primary inline-flex items-center">{item.cta || "Learn More"}<ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover/link:translate-x-1" /></span>
+                    <span className="sm:opacity-0 sm:-translate-y-6 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out inline-flex items-center">
+                      {item.cta || "Learn More"}
+                      <ArrowRight className="ml-1 h-3 w-3 sm:h-4 sm:w-4 transition-transform group-hover/link:translate-x-1" />
+                    </span>
                   </span>
                 </Link>
               </div>
