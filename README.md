@@ -102,21 +102,31 @@ The following environment variables should be configured in a `.env.local` file:
 
 ## Open Graph Images
 
-The website includes dynamic Open Graph images that appear when links are shared on social media platforms, messaging apps, and other services.
+The website includes Open Graph metadata that appears when links are shared on social media platforms, messaging apps, and other services.
 
 ### How It Works
 
-- The Open Graph images are generated dynamically using the `/api/og` endpoint
-- The images include the Field Track logo, title, and description
-- The metadata is configured in `app/layout.tsx`
+- The Open Graph metadata is configured in `app/layout.tsx`
+- The image used is `public/images/plotsdrone.jpg` - an aerial view of agricultural field trials
+- The title is set to "Field Track LLC"
+- The description is set to "Technology-driven Strategies for Land Management Agronomic Research Consulting & Project Implementation"
+
+### Testing Open Graph Previews
+
+To test how your links will appear when shared:
+
+1. Use Facebook's Sharing Debugger: https://developers.facebook.com/tools/debug/
+2. Use Twitter's Card Validator: https://cards-dev.twitter.com/validator
+3. Use LinkedIn's Post Inspector: https://www.linkedin.com/post-inspector/
+4. Or simply share the link in a private message to yourself on platforms like Slack or Discord
 
 ### Customizing Open Graph Images
 
 To customize the Open Graph image:
 
-1. Edit the dynamic image generator in `app/api/og/route.tsx`
-2. For a static fallback, edit `app/api/og/static/route.tsx`
-3. Update the metadata in `app/layout.tsx` if needed
+1. Replace the image at `public/images/plotsdrone.jpg` with your preferred image
+2. Update the metadata in `app/layout.tsx` if needed
+3. Make sure your image has dimensions close to 1200x630 for optimal display
 
 When deploying, make sure to set the `NEXT_PUBLIC_APP_URL` environment variable to your actual domain.
 
