@@ -67,18 +67,18 @@ const Legend = ({ view }: { view: "treatment" | "replication" }) => {
         ];
 
   return (
-    <Card className="absolute bottom-4 right-4 z-[400] p-4 bg-white/90 backdrop-blur">
-      <h6 className="font-semibold mb-2">
+    <Card className="absolute bottom-4 right-4 z-[400] p-4 bg-white">
+      <h6 className="font-semibold mb-2 text-black">
         {view === "treatment" ? "Treatments" : "Replications"}
       </h6>
       <div className="grid grid-cols-1 gap-1">
         {items.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
             <div
-              className="w-4 h-4 rounded"
+              className="w-4 h-4 rounded border border-gray-200"
               style={{ backgroundColor: item.color }}
             />
-            <span className="text-xs">{item.label}</span>
+            <span className="text-xs text-black">{item.label}</span>
           </div>
         ))}
       </div>
