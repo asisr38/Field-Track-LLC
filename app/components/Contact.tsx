@@ -205,23 +205,23 @@ ${formData.message}
   return (
     <section
       id="contact"
-      className="py-20 bg-gradient-to-b from-background to-muted/30"
+      className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-background to-muted/30"
     >
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:14px_24px]" />
 
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center text-center mb-12">
+        <div className="flex flex-col items-center text-center mb-8 sm:mb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-4xl md:text-5xl font-primary">
-              Get in <span className="text-primary">Touch</span>?
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-primary">
+              Get in <span className="text-primary">Touch</span>
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
               Tell us about your fields and objectives. We'll create a
               personalized precision agriculture plan that maximizes your yields
               and profitability.
@@ -229,170 +229,185 @@ ${formData.message}
           </motion.div>
         </div>
 
-        <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-12 items-start">
+        <div className="grid lg:grid-cols-[1fr_1fr] gap-8 lg:gap-12 items-start">
           {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="bg-card shadow-lg rounded-2xl border border-border/40 backdrop-blur-sm p-6 sm:p-8"
+            className="bg-card shadow-lg rounded-xl sm:rounded-2xl border border-border/40 backdrop-blur-sm p-4 sm:p-6 md:p-8 order-2 lg:order-1"
           >
-            <h3 className="text-xl font-bold mb-6">Request a Consultation</h3>
+            <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">
+              Request a Consultation
+            </h3>
 
             <div className="relative">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium text-foreground"
-                    >
-                      Name
-                      <span className="text-red-500 ml-1">*</span>
-                    </label>
-                    <div className="relative">
+              {isSubmitted ? (
+                <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 sm:p-6 text-center">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/20 text-primary mb-4">
+                    <Check className="w-6 h-6" />
+                  </div>
+                  <h4 className="text-lg sm:text-xl font-bold mb-2">
+                    Thank You!
+                  </h4>
+                  <p className="text-sm sm:text-base text-muted-foreground">
+                    Your message has been sent successfully. We'll get back to
+                    you shortly to discuss your agricultural needs.
+                  </p>
+                </div>
+              ) : (
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-4 sm:space-y-5"
+                >
+                  <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="name"
+                        className="block text-sm font-medium text-foreground"
+                      >
+                        Your Name <span className="text-red-500">*</span>
+                      </label>
                       <input
                         type="text"
                         id="name"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        className={`w-full px-4 py-3 rounded-lg bg-background/80 border ${
+                        className={`w-full px-3 py-2 text-sm sm:text-base bg-background border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
                           errors.name
-                            ? "border-red-500 ring-1 ring-red-500"
-                            : "border-border/50 focus:ring-2 focus:ring-primary/50"
-                        } focus:outline-none transition-all duration-200`}
-                        placeholder="Your name"
+                            ? "border-red-500 focus:ring-red-500"
+                            : "border-input"
+                        }`}
                       />
                       {errors.name && (
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">
-                          <AlertCircle className="w-5 h-5" />
-                        </div>
+                        <p className="text-xs text-red-500 mt-1">
+                          {errors.name}
+                        </p>
                       )}
                     </div>
-                    {errors.name && (
-                      <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
-                        {errors.name}
-                      </p>
-                    )}
-                  </div>
 
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-foreground"
-                    >
-                      Email
-                      <span className="text-red-500 ml-1">*</span>
-                    </label>
-                    <div className="relative">
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-medium text-foreground"
+                      >
+                        Email Address <span className="text-red-500">*</span>
+                      </label>
                       <input
                         type="email"
                         id="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className={`w-full px-4 py-3 rounded-lg bg-background/80 border ${
+                        className={`w-full px-3 py-2 text-sm sm:text-base bg-background border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
                           errors.email
-                            ? "border-red-500 ring-1 ring-red-500"
-                            : "border-border/50 focus:ring-2 focus:ring-primary/50"
-                        } focus:outline-none transition-all duration-200`}
-                        placeholder="Your email address"
+                            ? "border-red-500 focus:ring-red-500"
+                            : "border-input"
+                        }`}
                       />
                       {errors.email && (
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">
-                          <AlertCircle className="w-5 h-5" />
-                        </div>
+                        <p className="text-xs text-red-500 mt-1">
+                          {errors.email}
+                        </p>
                       )}
                     </div>
-                    {errors.email && (
-                      <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
-                        {errors.email}
-                      </p>
-                    )}
                   </div>
-                </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="phone"
-                      className="block text-sm font-medium text-foreground"
-                    >
-                      Phone Number
-                      {formData.preferredContact === "phone" && (
-                        <span className="text-red-500 ml-1">*</span>
-                      )}
-                    </label>
-                    <div className="relative">
+                  <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="phone"
+                        className="block text-sm font-medium text-foreground"
+                      >
+                        Phone Number
+                      </label>
                       <input
                         type="tel"
                         id="phone"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className={`w-full px-4 py-3 rounded-lg bg-background/80 border ${
+                        className={`w-full px-3 py-2 text-sm sm:text-base bg-background border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
                           errors.phone
-                            ? "border-red-500 ring-1 ring-red-500"
-                            : "border-border/50 focus:ring-2 focus:ring-primary/50"
-                        } focus:outline-none transition-all duration-200`}
-                        placeholder="(123) 456-7890"
+                            ? "border-red-500 focus:ring-red-500"
+                            : "border-input"
+                        }`}
                       />
                       {errors.phone && (
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">
-                          <AlertCircle className="w-5 h-5" />
-                        </div>
+                        <p className="text-xs text-red-500 mt-1">
+                          {errors.phone}
+                        </p>
                       )}
                     </div>
-                    {errors.phone && (
-                      <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
-                        {errors.phone}
-                      </p>
-                    )}
+
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="preferredContact"
+                        className="block text-sm font-medium text-foreground"
+                      >
+                        Preferred Contact Method
+                      </label>
+                      <select
+                        id="preferredContact"
+                        name="preferredContact"
+                        value={formData.preferredContact}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 text-sm sm:text-base bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                      >
+                        <option value="email">Email</option>
+                        <option value="phone">Phone</option>
+                      </select>
+                    </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="acres"
-                      className="block text-sm font-medium text-foreground"
-                    >
-                      Field Size (Acres)
-                    </label>
-                    <input
-                      type="text"
-                      id="acres"
-                      name="acres"
-                      value={formData.acres}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg bg-background/80 border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-200"
-                      placeholder="Approximate acreage"
-                    />
-                  </div>
-                </div>
+                  <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="acres"
+                        className="block text-sm font-medium text-foreground"
+                      >
+                        Field Size
+                      </label>
+                      <select
+                        id="acres"
+                        name="acres"
+                        value={formData.acres}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 text-sm sm:text-base bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                      >
+                        <option value="">Select field size</option>
+                        {fieldSizes.map(size => (
+                          <option key={size} value={size}>
+                            {size}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="cropTypes"
-                      className="block text-sm font-medium text-foreground"
-                    >
-                      Primary Crops
-                    </label>
-                    <select
-                      id="cropTypes"
-                      name="cropTypes"
-                      value={formData.cropTypes}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg bg-background/80 border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-200"
-                    >
-                      <option value="">Select primary crops</option>
-                      {cropTypes.map(crop => (
-                        <option key={crop} value={crop}>
-                          {crop}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="cropTypes"
+                        className="block text-sm font-medium text-foreground"
+                      >
+                        Primary Crop Type
+                      </label>
+                      <select
+                        id="cropTypes"
+                        name="cropTypes"
+                        value={formData.cropTypes}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 text-sm sm:text-base bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                      >
+                        <option value="">Select crop type</option>
+                        {cropTypes.map(crop => (
+                          <option key={crop} value={crop}>
+                            {crop}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div className="space-y-2">
@@ -400,16 +415,16 @@ ${formData.message}
                       htmlFor="serviceType"
                       className="block text-sm font-medium text-foreground"
                     >
-                      Service Needed
+                      Service of Interest
                     </label>
                     <select
                       id="serviceType"
                       name="serviceType"
                       value={formData.serviceType}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg bg-background/80 border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-200"
+                      className="w-full px-3 py-2 text-sm sm:text-base bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                     >
-                      <option value="">Select service type</option>
+                      <option value="">Select service</option>
                       {serviceTypes.map(service => (
                         <option key={service} value={service}>
                           {service}
@@ -417,138 +432,67 @@ ${formData.message}
                       ))}
                     </select>
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <label
-                    htmlFor="message"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    Additional Information
-                    <span className="text-red-500 ml-1">*</span>
-                  </label>
-                  <div className="relative">
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium text-foreground"
+                    >
+                      Message <span className="text-red-500">*</span>
+                    </label>
                     <textarea
                       id="message"
                       name="message"
+                      rows={4}
                       value={formData.message}
                       onChange={handleChange}
-                      rows={4}
-                      className={`w-full px-4 py-3 rounded-lg bg-background/80 border ${
+                      className={`w-full px-3 py-2 text-sm sm:text-base bg-background border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
                         errors.message
-                          ? "border-red-500 ring-1 ring-red-500"
-                          : "border-border/50 focus:ring-2 focus:ring-primary/50"
-                      } focus:outline-none transition-all duration-200`}
-                      placeholder="Tell us about your specific needs..."
-                    />
+                          ? "border-red-500 focus:ring-red-500"
+                          : "border-input"
+                      }`}
+                    ></textarea>
                     {errors.message && (
-                      <div className="absolute right-3 top-6 text-red-500">
-                        <AlertCircle className="w-5 h-5" />
-                      </div>
+                      <p className="text-xs text-red-500 mt-1">
+                        {errors.message}
+                      </p>
                     )}
                   </div>
-                  {errors.message && (
-                    <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
-                      {errors.message}
-                    </p>
-                  )}
-                </div>
 
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Preferred Contact Method
-                  </label>
-                  <div className="flex gap-6">
-                    <label className="flex items-center gap-2 cursor-pointer group">
-                      <div className="relative flex items-center justify-center">
-                        <input
-                          type="radio"
-                          name="preferredContact"
-                          value="email"
-                          checked={formData.preferredContact === "email"}
-                          onChange={handleChange}
-                          className="sr-only"
-                        />
-                        <div className="w-5 h-5 border-2 rounded-full border-muted-foreground/50 group-hover:border-primary transition-colors"></div>
-                        {formData.preferredContact === "email" && (
-                          <div className="absolute w-3 h-3 rounded-full bg-primary"></div>
-                        )}
-                      </div>
-                      <span className="text-sm">Email</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer group">
-                      <div className="relative flex items-center justify-center">
-                        <input
-                          type="radio"
-                          name="preferredContact"
-                          value="phone"
-                          checked={formData.preferredContact === "phone"}
-                          onChange={handleChange}
-                          className="sr-only"
-                        />
-                        <div className="w-5 h-5 border-2 rounded-full border-muted-foreground/50 group-hover:border-primary transition-colors"></div>
-                        {formData.preferredContact === "phone" && (
-                          <div className="absolute w-3 h-3 rounded-full bg-primary"></div>
-                        )}
-                      </div>
-                      <span className="text-sm">Phone</span>
-                    </label>
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full px-8 py-3 bg-green-600 text-white font-medium rounded-lg shadow-md border-2 border-green-600 hover:bg-green-700 hover:border-green-700 disabled:opacity-70 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <svg
-                        className="animate-spin h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      <span>Sending...</span>
-                    </div>
-                  ) : (
-                    "Submit Request"
-                  )}
-                </button>
-              </form>
-
-              {isSubmitted && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-6 p-6 bg-green-500/10 border border-green-500/30 rounded-lg flex items-center gap-3 text-green-600"
-                >
-                  <div className="bg-green-100 rounded-full p-1">
-                    <Check className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="font-medium">
-                      Thank you for your submission!
-                    </p>
-                    <p className="text-sm text-green-600/80">
-                      We'll be in touch with you soon.
-                    </p>
-                  </div>
-                </motion.div>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-primary text-primary-foreground font-medium py-2.5 px-4 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors disabled:opacity-70 text-sm sm:text-base"
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center justify-center">
+                        <svg
+                          className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Sending...
+                      </span>
+                    ) : (
+                      "Submit Request"
+                    )}
+                  </button>
+                </form>
               )}
             </div>
           </motion.div>
@@ -558,8 +502,8 @@ ${formData.message}
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="space-y-8"
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="order-1 lg:order-2"
           >
             {/* Expert Section with Image Background */}
             <div className="relative rounded-2xl overflow-hidden shadow-lg border border-border/50">

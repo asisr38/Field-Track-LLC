@@ -10,7 +10,7 @@ export default function WhyChooseUs() {
   });
 
   return (
-    <section className="py-20 bg-background">
+    <section id="why-choose-us" className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -24,7 +24,8 @@ export default function WhyChooseUs() {
               Why Choose <span className="text-primary">Field Track</span>?
             </h2>
             <p className="text-body-lg text-muted-foreground font-secondary max-w-2xl mx-auto">
-              We combine agricultural expertise with cutting-edge technology to deliver actionable insights for your farm
+              We combine agricultural expertise with cutting-edge technology to
+              deliver actionable insights for your farm
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">

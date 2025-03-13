@@ -10,18 +10,53 @@ import {
   X,
   ClipboardList,
   Home,
-  Code,
-  Phone
+  Phone,
+  BookOpen,
+  Users,
+  FileText,
+  Plane,
+  Microscope,
+  TestTube,
+  ChevronDown
 } from "lucide-react";
 import { NavBar } from "./ui/tubelight-navbar";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+
+const serviceItems = [
+  {
+    name: "SimpleSense",
+    description: "Advanced aerial imagery with multi-temporal NDVI analysis",
+    icon: Plane,
+    url: "/services/simple-sense"
+  },
+  {
+    name: "OnFarm Research",
+    description: "Comprehensive field trial services with spatial analytics",
+    icon: Microscope,
+    url: "/services/onfarm-research"
+  },
+  {
+    name: "Field Sampling",
+    description: "Professional soil and crop sampling services",
+    icon: TestTube,
+    url: "/services/field-sampling"
+  }
+];
 
 const navItems = [
-  { name: "Home", url: "/#home", icon: Home },
-  { name: "Process", url: "/#process", icon: ClipboardList },
-  { name: "Services", url: "/#services", icon: Code },
+  { name: "Home", url: "/", icon: Home },
+  {
+    name: "Services",
+    url: "/#services",
+    icon: ClipboardList,
+    hasDropdown: true,
+    dropdownItems: serviceItems
+  },
+  { name: "Process", url: "/#process", icon: Sprout },
+  { name: "About", url: "/#about", icon: BookOpen },
   { name: "Contact", url: "/#contact", icon: Phone }
 ];
 
@@ -31,6 +66,9 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [isRotating, setIsRotating] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -39,23 +77,102 @@ export default function Header() {
       setTheme(resolvedTheme || "light");
     }
 
+    // Check if we're on a service page and set activeSection accordingly
+    const checkCurrentPath = () => {
+      const path = window.location.pathname;
+
+      if (path.startsWith("/services/")) {
+        // On service pages, set activeSection to "services"
+        setActiveSection("services");
+      } else if (path === "/") {
+        // On homepage, determine section based on scroll position
+        const sections = navItems
+          .filter(item => item.url.startsWith("/#"))
+          .map(item => item.url.substring(2));
+
+        const currentPosition = window.scrollY + 100;
+
+        // If at the top of the page, set to home
+        if (window.scrollY < 100) {
+          setActiveSection("home");
+          return;
+        }
+
+        let foundSection = false;
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const section = document.getElementById(sections[i]);
+          if (section && section.offsetTop <= currentPosition) {
+            setActiveSection(sections[i]);
+            foundSection = true;
+            break;
+          }
+        }
+
+        // If no section is found (e.g., at the very top), default to home
+        if (!foundSection) {
+          setActiveSection("home");
+        }
+      } else {
+        // On other pages, don't highlight any section
+        setActiveSection(null);
+      }
+    };
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+
+      // Only update active section based on scroll on homepage
+      if (window.location.pathname === "/") {
+        checkCurrentPath();
+      }
+    };
+
+    // Close dropdown when clicking outside
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setActiveDropdown(null);
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Initial check for active section
+    checkCurrentPath();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [theme, setTheme, resolvedTheme]);
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
+    // When opening the menu, prevent body scroll
+    if (!isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
   };
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const href = e.currentTarget.getAttribute("href");
+
+    // Handle root URL
+    if (href === "/") {
+      if (window.location.pathname === "/") {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setActiveSection("home");
+      }
+      setTimeout(() => setIsMenuOpen(false), 150);
+      return;
+    }
+
     if (href?.startsWith("/#")) {
       e.preventDefault();
       const targetId = href.substring(2);
@@ -72,6 +189,7 @@ export default function Header() {
         const offsetTop =
           targetElement.getBoundingClientRect().top + window.scrollY - offset;
         window.scrollTo({ top: offsetTop, behavior: "smooth" });
+        setActiveSection(targetId);
       }
 
       setTimeout(() => setIsMenuOpen(false), 150);
@@ -80,8 +198,25 @@ export default function Header() {
     }
   };
 
+  // Don't render anything until client-side hydration is complete
   if (!mounted) {
-    return null;
+    return (
+      <header className="fixed top-0 w-full backdrop-blur-md border-b z-50 transition-all duration-300 bg-background border-transparent">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex items-center justify-between py-4">
+            <div className="flex items-center gap-4">
+              <span className="text-2xl font-bold text-primary font-primary">
+                Field Track LLC
+              </span>
+            </div>
+            <div className="hidden md:flex items-center gap-6">
+              {/* Placeholder for navigation */}
+              <nav className="flex items-center gap-2"></nav>
+            </div>
+          </div>
+        </div>
+      </header>
+    );
   }
 
   const handleThemeChange = () => {
@@ -123,72 +258,182 @@ export default function Header() {
   const tooltipText =
     theme === "dark" ? "Switch to daylight mode" : "Switch to growth mode";
 
+  // Custom navigation with dropdown
+  const CustomNavigation = () => {
+    const toggleDropdown = (name: string) => {
+      setActiveDropdown(prev => (prev === name ? null : name));
+    };
+
+    // Add a timeout ref to prevent flickering
+    const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+    const handleMouseEnter = (name: string) => {
+      // Clear any existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+      // Set the active dropdown immediately
+      setActiveDropdown(name);
+    };
+
+    const handleMouseLeave = () => {
+      // Set a small delay before closing the dropdown
+      timeoutRef.current = setTimeout(() => {
+        setActiveDropdown(null);
+      }, 100);
+    };
+
+    // Check if current path is a service page
+    const isServicePage =
+      typeof window !== "undefined" &&
+      window.location.pathname.startsWith("/services/");
+
+    return (
+      <nav className="hidden md:flex items-center gap-2">
+        {navItems.map((item, index) => {
+          const isDropdownActive = activeDropdown === item.name;
+          const isActive = activeSection === item.url.replace("/#", "");
+
+          // Highlight Services nav item when on a service page
+          const isServicesHighlighted =
+            isServicePage && item.name === "Services";
+
+          if (item.hasDropdown) {
+            return (
+              <div
+                key={index}
+                className="relative"
+                onMouseEnter={() => handleMouseEnter(item.name)}
+                onMouseLeave={handleMouseLeave}
+              >
+                <button
+                  className={cn(
+                    "relative px-4 py-2 rounded-full transition-all duration-300",
+                    "flex items-center gap-2",
+                    "text-base font-medium border-0 bg-transparent",
+                    "focus:outline-none",
+                    isDropdownActive || isActive || isServicesHighlighted
+                      ? "text-primary font-semibold"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <item.icon className="w-5 h-5" />
+                  <span>{item.name}</span>
+                  <ChevronDown
+                    className={cn(
+                      "w-4 h-4 transition-transform duration-300",
+                      isDropdownActive && "rotate-180"
+                    )}
+                  />
+                </button>
+
+                {/* Dropdown for services */}
+                {isDropdownActive && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute top-full left-0 mt-2 w-72 rounded-xl border border-border shadow-elevation-medium overflow-hidden z-50 dark:bg-card bg-background transition-all duration-200 origin-top-left"
+                    onMouseEnter={() => {
+                      // Clear any existing timeout when mouse enters dropdown
+                      if (timeoutRef.current) {
+                        clearTimeout(timeoutRef.current);
+                        timeoutRef.current = null;
+                      }
+                    }}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <div className="p-2">
+                      {item.dropdownItems?.map((dropdownItem, idx) => {
+                        // Check if this service item matches current path
+                        const isActiveService =
+                          typeof window !== "undefined" &&
+                          window.location.pathname === dropdownItem.url;
+
+                        return (
+                          <Link
+                            key={idx}
+                            href={dropdownItem.url}
+                            className={cn(
+                              "flex items-start gap-3 p-3 rounded-lg hover:bg-primary/10 transition-colors group",
+                              isActiveService && "bg-primary/5"
+                            )}
+                          >
+                            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                              <dropdownItem.icon className="w-5 h-5" />
+                            </div>
+                            <div className="flex-1">
+                              <div
+                                className={cn(
+                                  "font-medium text-foreground group-hover:text-primary transition-colors",
+                                  isActiveService && "text-primary"
+                                )}
+                              >
+                                {dropdownItem.name}
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                {dropdownItem.description}
+                              </div>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          }
+
+          return (
+            <Link
+              key={index}
+              href={item.url}
+              onClick={handleLinkClick}
+              className={cn(
+                "relative px-4 py-2 rounded-full transition-all duration-300",
+                "flex items-center gap-2",
+                "text-base font-medium",
+                isActive
+                  ? "text-primary font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <item.icon className="w-5 h-5" />
+              <span>{item.name}</span>
+            </Link>
+          );
+        })}
+      </nav>
+    );
+  };
+
   return (
     <header
       className={cn(
         "fixed top-0 w-full backdrop-blur-md border-b z-50 transition-all duration-300",
         isScrolled
-          ? "bg-background border-border/60 shadow-elevation-low"
-          : "bg-background border-transparent"
+          ? "bg-background/90 border-border/30 py-2"
+          : "bg-background border-transparent py-3 md:py-4"
       )}
     >
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between py-4">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="flex items-center gap-2 transition-all hover:opacity-90"
-          >
-            <Image
-              src="/logo/field-track-logo.png"
-              alt="Field Track Logo"
-              width={40}
-              height={40}
-              className="object-contain"
-            />
-            <span className="text-2xl font-bold merriweather-bold text-foreground">
-              Field Track LLC
-            </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-            <NavBar items={navItems} onSectionChange={() => {}} />
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleThemeChange}
-              className={themeButtonClasses}
-              title={tooltipText}
-              aria-label={tooltipText}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link
+              href="/"
+              onClick={handleLinkClick}
+              className="flex items-center gap-4 transition-all hover:opacity-90"
             >
-              <div className="relative w-5 h-5">
-                <div
-                  className={cn(
-                    "absolute inset-0 transform transition-all duration-500",
-                    theme === "dark"
-                      ? "scale-100 rotate-0 opacity-100"
-                      : "scale-0 rotate-180 opacity-0"
-                  )}
-                >
-                  <Sprout size={20} className="animate-pulse-slow" />
-                </div>
-                <div
-                  className={cn(
-                    "absolute inset-0 transform transition-all duration-500",
-                    theme === "dark"
-                      ? "scale-0 -rotate-180 opacity-0"
-                      : "scale-100 rotate-0 opacity-100"
-                  )}
-                >
-                  <Sun size={20} className="animate-spin-slow" />
-                </div>
-              </div>
-            </motion.button>
+              <span className="text-xl sm:text-2xl font-bold text-primary font-primary">
+                Field Track LLC
+              </span>
+            </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex items-center gap-4 md:hidden">
+          <div className="flex items-center gap-3 md:gap-6">
+            <CustomNavigation />
+
+            {/* Theme Toggle */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -220,11 +465,13 @@ export default function Header() {
                 </div>
               </div>
             </motion.button>
+
+            {/* Mobile Menu Button */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleMenuToggle}
-              className="p-2 text-foreground rounded-lg hover:bg-primary/5 transition-colors"
+              className="md:hidden p-2 text-foreground rounded-lg hover:bg-primary/5 transition-colors"
               aria-label="Toggle Menu"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -241,20 +488,105 @@ export default function Header() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden glass border-t border-border"
+            className="md:hidden bg-background border-t border-border/10 overflow-hidden"
           >
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.3 }}
-              className="container mx-auto px-4 py-6"
-            >
-              <NavBar
-                items={navItems}
-                className="flex-col items-start gap-6"
-                onSectionChange={() => setIsMenuOpen(false)}
-              />
-            </motion.div>
+            <div className="container mx-auto px-4 py-4">
+              <nav className="flex flex-col space-y-1">
+                {navItems.map((item, index) => (
+                  <div key={index} className="relative">
+                    {item.hasDropdown ? (
+                      <>
+                        <button
+                          onClick={() =>
+                            setActiveDropdown(
+                              activeDropdown === item.name ? null : item.name
+                            )
+                          }
+                          className={cn(
+                            "w-full flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                            activeSection === item.url.replace("/#", "") ||
+                              (item.url === "/" && activeSection === "home") ||
+                              (item.name === "Services" &&
+                                activeSection === "services")
+                              ? "bg-primary/10 text-primary"
+                              : "text-foreground hover:bg-muted"
+                          )}
+                        >
+                          <span className="flex items-center gap-2">
+                            <item.icon className="w-5 h-5" />
+                            {item.name}
+                          </span>
+                          <ChevronDown
+                            className={cn(
+                              "w-4 h-4 transition-transform",
+                              activeDropdown === item.name && "rotate-180"
+                            )}
+                          />
+                        </button>
+
+                        <AnimatePresence>
+                          {activeDropdown === item.name && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="pl-4 pr-2 py-2 space-y-1">
+                                {item.dropdownItems?.map(
+                                  (dropdownItem, idx) => (
+                                    <Link
+                                      key={idx}
+                                      href={dropdownItem.url}
+                                      onClick={() => {
+                                        handleLinkClick;
+                                        setIsMenuOpen(false);
+                                      }}
+                                      className="flex items-start gap-3 p-3 rounded-md hover:bg-primary/10 transition-colors"
+                                    >
+                                      <div className="mt-0.5 text-primary">
+                                        <dropdownItem.icon className="w-4 h-4" />
+                                      </div>
+                                      <div>
+                                        <div className="font-medium text-foreground">
+                                          {dropdownItem.name}
+                                        </div>
+                                        <div className="text-xs text-muted-foreground">
+                                          {dropdownItem.description}
+                                        </div>
+                                      </div>
+                                    </Link>
+                                  )
+                                )}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </>
+                    ) : (
+                      <Link
+                        href={item.url}
+                        onClick={e => {
+                          handleLinkClick(e);
+                          setIsMenuOpen(false);
+                        }}
+                        className={cn(
+                          "flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                          activeSection === item.url.replace("/#", "") ||
+                            (item.url === "/" && activeSection === "home")
+                            ? "bg-primary/10 text-primary"
+                            : "text-foreground hover:bg-muted"
+                        )}
+                      >
+                        <item.icon className="w-5 h-5" />
+                        {item.name}
+                      </Link>
+                    )}
+                  </div>
+                ))}
+              </nav>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

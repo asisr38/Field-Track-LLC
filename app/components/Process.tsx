@@ -2,30 +2,20 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import {
-  Ruler,
-  TestTube2,
-  ClipboardList,
-  HeadphonesIcon,
-  ArrowRight,
-  Database,
-  Lightbulb,
-  BarChart2,
-  FileText
-} from "lucide-react";
+import { Database, Lightbulb, BarChart2, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import Link from "next/link";
+import { useState, useEffect } from "react";
 
 const steps = [
   {
     title: "Strategy and Implementation",
     description:
-      "Our team works with you to develop and implement customized field trial strategies that address your specific agronomic questions and operational goals.",
+      "Field-specific trial strategies are developed to address unique soil conditions, crop requirements, and operational goals, ensuring precise implementation of variable rate prescriptions.",
     details: [
-      "Customized trial design",
-      "Variable rate application maps",
-      "Field-specific implementation plans"
+      "Precision soil sampling and field mapping",
+      "Variable rate prescription development",
+      "Equipment compatibility verification and calibration"
     ],
     icon: Lightbulb,
     image: "/images/implementation.jpg",
@@ -34,42 +24,41 @@ const steps = [
   {
     title: "Data Collection",
     description:
-      "We integrate with your existing farm management tools to collect comprehensive field data, including high-resolution aerial imagery and historical performance metrics.",
+      "Comprehensive field data is collected throughout the season by seamlessly integrating with existing farm management systems, combining soil analysis, aerial imagery, weather patterns, and historical yield information.",
     details: [
       "Integration with John Deere Operations Center and Climate FieldView",
-      "High-resolution drone imagery collection",
-      "Historical yield data analysis"
+      "High-resolution drone and satellite imagery analysis",
+      "Real-time weather monitoring and soil condition tracking"
     ],
     icon: Database,
     image: "/images/spatialImage2.jpeg",
-    alt: "Spatial field data visualization showing variable crop conditions across multiple fields"
+    alt: "Spatial field data visualization showing variable crop conditions"
   },
-
   {
     title: "Data Analysis",
     description:
-      "We apply advanced statistical methods to analyze trial data, identifying significant patterns and extracting actionable insights for your operation.",
+      "Advanced analytics are utilized to process multi-layered field data, identifying yield-limiting factors, nutrient efficiency opportunities, and zone-specific management strategies that optimize input investments.",
     details: [
-      "Multi-variate analysis",
-      "Yield performance mapping",
-      "Economic return calculations"
+      "Multi-variate statistical analysis of soil and yield patterns",
+      "Input efficiency and ROI calculations by management zone",
+      "Year-over-year performance tracking and trend identification"
     ],
     icon: BarChart2,
-    image: "/images/sateliteFarm.jpg",
-    alt: "Satellite imagery of agricultural fields with data overlay showing performance metrics"
+    image: "/images/spatialImage.jpg",
+    alt: "Spatial data analysis of agricultural fields"
   },
   {
     title: "Customized Reporting",
     description:
-      "Our detailed reports translate complex data into clear, actionable recommendations tailored to your specific operation and goals.",
+      "Clear, actionable reports are delivered that translate complex field data into practical recommendations, enabling confident decisions about fertilizer applications, soil amendments, and seasonal management practices.",
     details: [
-      "Visual data presentations",
-      "ROI analysis",
-      "Seasonal performance tracking"
+      "Field-specific application recommendations with timing guidelines",
+      "Economic comparison of uniform vs. variable rate strategies",
+      "Seasonal implementation plans with agronomist support"
     ],
     icon: FileText,
-    image: "/images/report.jpg",
-    alt: "Customized agricultural report with charts, graphs and field performance metrics"
+    image: "/images/onfield.jpg",
+    alt: "Farmer reviewing customized agricultural report in the field"
   }
 ];
 
@@ -79,6 +68,14 @@ export default function Process() {
     threshold: 0.1
   });
 
+  // Add client-side only state
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Only run animations after component is mounted on client
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <section
       id="process"
@@ -87,8 +84,10 @@ export default function Process() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={isMounted ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
+            whileInView={
+              isMounted ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }
+            }
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
             className="text-4xl md:text-5xl font-primary mb-6"
@@ -96,8 +95,10 @@ export default function Process() {
             Research <span className="text-primary">Process</span>
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={isMounted ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
+            whileInView={
+              isMounted ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }
+            }
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-xl text-muted-foreground max-w-3xl mx-auto"
@@ -111,26 +112,30 @@ export default function Process() {
           {steps.map((step, index) => (
             <motion.div
               key={step.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              initial={isMounted ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
+              animate={
+                isMounted && inView
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 1, y: 0 }
+              }
               transition={{ duration: 0.5, delay: index * 0.2 }}
               className="relative group"
             >
               <div
                 className={cn(
-                  "grid lg:grid-cols-2 gap-8 items-stretch min-h-[400px]",
+                  "grid lg:grid-cols-2 gap-8 items-stretch h-[500px]",
                   index % 2 === 1 && "lg:grid-flow-dense"
                 )}
               >
                 {/* Content Side */}
                 <div
                   className={cn(
-                    "p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/50 transition-all duration-300 h-full flex flex-col justify-center",
+                    "p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/50 transition-all duration-300 h-full flex flex-col justify-center overflow-auto",
                     index % 2 === 1 && "lg:col-start-2"
                   )}
                 >
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
                       <step.icon className="w-6 h-6" />
                     </div>
                     <h3 className="text-2xl font-bold">{step.title}</h3>
@@ -163,7 +168,12 @@ export default function Process() {
                     width={800}
                     height={600}
                     className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
-                    style={{ height: "100%", minHeight: "350px" }}
+                    style={{
+                      objectFit: "cover",
+                      width: "100%",
+                      height: "100%"
+                    }}
+                    priority={index === 0}
                   />
                   {index === 3 && (
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">

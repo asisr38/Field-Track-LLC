@@ -81,19 +81,19 @@ export default function About() {
                   title: "Field Research Expertise",
                   description:
                     "Experienced in designing and implementing both small plot research and large-scale field trials.",
-                  image: "/images/farmGrid.png"
+                  image: "/images/plotsdrone.jpg"
                 },
                 {
                   title: "Data Integration",
                   description:
                     "Seamlessly work with John Deere, Climate FieldView, and other precision ag platforms you already use.",
-                  image: "/images/topography.png"
+                  image: "/images/farmmobile.jpg"
                 },
                 {
                   title: "Practical Results",
                   description:
                     "Convert complex field data into clear, actionable insights for your operation.",
-                  image: "/images/farm3.jpg"
+                  image: "/images/analysisRepor.jpg"
                 }
               ].map((point, index) => (
                 <motion.div
