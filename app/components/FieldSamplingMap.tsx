@@ -103,9 +103,16 @@ const FieldSamplingMap = ({
     const fetchData = async () => {
       try {
         setIsLoading(true);
+        setError(null);
+
+        // Use relative paths for local development and absolute paths for production
+        const baseUrl = window.location.origin;
+        console.log("Base URL:", baseUrl);
 
         // Fetch boundary data
-        const boundaryResponse = await fetch("/data/Boundary_Demo.json");
+        const boundaryResponse = await fetch(
+          `${baseUrl}/data/Boundary_Demo.json`
+        );
         if (!boundaryResponse.ok) {
           throw new Error(
             `Failed to fetch boundary data: ${boundaryResponse.status}`
@@ -114,7 +121,7 @@ const FieldSamplingMap = ({
         const boundaryJson = await boundaryResponse.json();
 
         // Fetch point data
-        const pointResponse = await fetch("/data/Point_Demo.json");
+        const pointResponse = await fetch(`${baseUrl}/data/Point_Demo.json`);
         if (!pointResponse.ok) {
           throw new Error(
             `Failed to fetch point data: ${pointResponse.status}`
@@ -145,9 +152,9 @@ const FieldSamplingMap = ({
     fetchData();
   }, []);
 
+  // Initialize map and update when data changes
   useEffect(() => {
-    if (!mapContainerRef.current || isLoading || !boundaryData || !pointData)
-      return;
+    if (!mapContainerRef.current) return;
 
     // Initialize map if it doesn't exist
     if (!mapRef.current) {
@@ -180,43 +187,10 @@ const FieldSamplingMap = ({
         }
       ).addTo(map);
 
-      // Add field boundary to map
-      const boundaryLayer = L.geoJSON(boundaryData, {
-        style: {
-          fillColor: "#f8f9fa",
-          weight: 3,
-          opacity: 1,
-          color: "#495057",
-          fillOpacity: 0.2,
-          dashArray: "5"
-        },
-        interactive: false // Make boundary not clickable
-      }).addTo(map);
-
-      layersRef.current.boundaryLayer = boundaryLayer;
-
       // Add scale control
       L.control
         .scale({ position: "bottomleft", imperial: true, metric: true })
         .addTo(map);
-
-      // Fit map bounds to field boundary with padding
-      const bounds = boundaryLayer.getBounds();
-      map.fitBounds(bounds, {
-        padding: [20, 20],
-        maxZoom: 18
-      });
-
-      // Set max bounds with a small buffer around the field boundary to restrict panning
-      const southWest = bounds.getSouthWest();
-      const northEast = bounds.getNorthEast();
-      const bufferLat = 0.002; // Roughly 200m in latitude
-      const bufferLng = 0.002; // Roughly 200m in longitude
-      const maxBounds = L.latLngBounds(
-        L.latLng(southWest.lat - bufferLat, southWest.lng - bufferLng),
-        L.latLng(northEast.lat + bufferLat, northEast.lng + bufferLng)
-      );
-      map.setMaxBounds(maxBounds);
 
       // Add custom popup styles to the document
       const style = document.createElement("style");
@@ -346,8 +320,48 @@ const FieldSamplingMap = ({
       };
     }
 
-    // Update the map with the selected nutrient type
-    updateMapLayers(nutrientType);
+    // Update map when data is loaded
+    if (boundaryData && pointData && !isLoading) {
+      console.log("Data loaded, updating map...");
+
+      // Add boundary layer if not already added
+      if (!layersRef.current.boundaryLayer) {
+        const boundaryLayer = L.geoJSON(boundaryData, {
+          style: {
+            fillColor: "#f8f9fa",
+            weight: 3,
+            opacity: 1,
+            color: "#495057",
+            fillOpacity: 0.2,
+            dashArray: "5"
+          },
+          interactive: false // Make boundary not clickable
+        }).addTo(mapRef.current);
+
+        layersRef.current.boundaryLayer = boundaryLayer;
+
+        // Fit map bounds to field boundary with padding
+        const bounds = boundaryLayer.getBounds();
+        mapRef.current.fitBounds(bounds, {
+          padding: [20, 20],
+          maxZoom: 18
+        });
+
+        // Set max bounds with a small buffer around the field boundary to restrict panning
+        const southWest = bounds.getSouthWest();
+        const northEast = bounds.getNorthEast();
+        const bufferLat = 0.002; // Roughly 200m in latitude
+        const bufferLng = 0.002; // Roughly 200m in longitude
+        const maxBounds = L.latLngBounds(
+          L.latLng(southWest.lat - bufferLat, southWest.lng - bufferLng),
+          L.latLng(northEast.lat + bufferLat, northEast.lng + bufferLng)
+        );
+        mapRef.current.setMaxBounds(maxBounds);
+      }
+
+      // Update the map with the selected nutrient type
+      updateMapLayers(nutrientType);
+    }
 
     // Cleanup on unmount
     return () => {
@@ -361,7 +375,13 @@ const FieldSamplingMap = ({
 
   // Function to update map layers based on nutrient type
   const updateMapLayers = (nutrientType: string) => {
-    if (!mapRef.current || !boundaryData || !pointData) return;
+    if (!mapRef.current || !boundaryData || !pointData) {
+      console.log("Cannot update map layers: map or data not ready");
+      return;
+    }
+
+    console.log("Updating map layers with nutrient type:", nutrientType);
+    console.log("Point data features count:", pointData.features?.length || 0);
 
     const map = mapRef.current;
 
@@ -470,121 +490,128 @@ const FieldSamplingMap = ({
     layersRef.current.legend = legend;
 
     // Add sampling points to map with the selected nutrient colors
-    const pointsLayer = L.geoJSON(pointData, {
-      pointToLayer: (feature, latlng) => {
-        const value = feature.properties?.[selectedNutrient.property] || 0;
-        return L.circleMarker(latlng, {
-          radius: 8,
-          fillColor: getNutrientColor(value),
-          color: "white",
-          weight: 2,
-          opacity: 1,
-          fillOpacity: 0.8
-        });
-      },
-      onEachFeature: (feature, layer) => {
-        if (feature.properties) {
-          const props = feature.properties;
-          const sampleDate = props.SampleDate
-            ? new Date(props.SampleDate).toLocaleDateString()
-            : "N/A";
+    try {
+      console.log("Creating points layer with data:", pointData);
+      const pointsLayer = L.geoJSON(pointData, {
+        pointToLayer: (feature, latlng) => {
+          const value = feature.properties?.[selectedNutrient.property] || 0;
+          return L.circleMarker(latlng, {
+            radius: 8,
+            fillColor: getNutrientColor(value),
+            color: "white",
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.8
+          });
+        },
+        onEachFeature: (feature, layer) => {
+          if (feature.properties) {
+            const props = feature.properties;
+            const sampleDate = props.SampleDate
+              ? new Date(props.SampleDate).toLocaleDateString()
+              : "N/A";
 
-          layer.bindPopup(`
-            <div class="sample-popup">
-              <h3 class="sample-popup-title">Sample ${
-                props.SampleID || props.ID || "N/A"
-              }</h3>
-              
-              <div class="sample-popup-section">
-                <div class="sample-popup-label">Sample Date:</div>
-                <div class="sample-popup-value">${sampleDate}</div>
-              </div>
-              
-              <div class="sample-popup-card">
-                <div class="sample-popup-card-title">Primary Nutrients (NPK)</div>
-                <div class="sample-popup-card-grid">
-                  <div class="sample-popup-label">Nitrogen (N):</div>
-                  <div class="sample-popup-value">${
-                    props["N"] ||
-                    props["NO3-N"] ||
-                    props["NH4-N"] ||
-                    props["TotalN"] ||
-                    "Not tested"
-                  } ${props["N_Unit"] || props["N_Units"] || "ppm"}</div>
-                  
-                  <div class="sample-popup-label">Phosphorus (P):</div>
-                  <div class="sample-popup-value">${
-                    props["P (B1 1_7)"] ||
-                    props["P"] ||
-                    props["P_Bray"] ||
-                    props["P_Olsen"] ||
-                    "Not tested"
-                  } ${props["P_Unit"] || "ppm"}</div>
-                  
-                  <div class="sample-popup-label">Potassium (K):</div>
-                  <div class="sample-popup-value">${
-                    props["K (AA)"] || props["K"] || "Not tested"
-                  } ${props["K (AA)U"] || props["K_Unit"] || "ppm"}</div>
+            layer.bindPopup(`
+              <div class="sample-popup">
+                <h3 class="sample-popup-title">Sample ${
+                  props.SampleID || props.ID || "N/A"
+                }</h3>
+                
+                <div class="sample-popup-section">
+                  <div class="sample-popup-label">Sample Date:</div>
+                  <div class="sample-popup-value">${sampleDate}</div>
+                </div>
+                
+                <div class="sample-popup-card">
+                  <div class="sample-popup-card-title">Primary Nutrients (NPK)</div>
+                  <div class="sample-popup-card-grid">
+                    <div class="sample-popup-label">Nitrogen (N):</div>
+                    <div class="sample-popup-value">${
+                      props["N"] ||
+                      props["NO3-N"] ||
+                      props["NH4-N"] ||
+                      props["TotalN"] ||
+                      "Not tested"
+                    } ${props["N_Unit"] || props["N_Units"] || "ppm"}</div>
+                    
+                    <div class="sample-popup-label">Phosphorus (P):</div>
+                    <div class="sample-popup-value">${
+                      props["P (B1 1_7)"] ||
+                      props["P"] ||
+                      props["P_Bray"] ||
+                      props["P_Olsen"] ||
+                      "Not tested"
+                    } ${props["P_Unit"] || "ppm"}</div>
+                    
+                    <div class="sample-popup-label">Potassium (K):</div>
+                    <div class="sample-popup-value">${
+                      props["K (AA)"] || props["K"] || "Not tested"
+                    } ${props["K (AA)U"] || props["K_Unit"] || "ppm"}</div>
+                  </div>
+                </div>
+                
+                <div class="sample-popup-card">
+                  <div class="sample-popup-card-title">Soil Properties</div>
+                  <div class="sample-popup-card-grid">
+                    <div class="sample-popup-label">pH:</div>
+                    <div class="sample-popup-value">${
+                      props["pH (1_1)"] || props["pH"] || "Not tested"
+                    }</div>
+                    
+                    <div class="sample-popup-label">Organic Matter:</div>
+                    <div class="sample-popup-value">${
+                      props["OM (WB)"] || props["OM"] || "Not tested"
+                    }${props["OM (WB)U"] || props["OM_Unit"] || "%"}</div>
+                    
+                    <div class="sample-popup-label">CEC:</div>
+                    <div class="sample-popup-value">${
+                      props["CEC (AA)"] || props["CEC"] || "Not tested"
+                    } ${props["CEC (AA)U"] || "meq/100g"}</div>
+                    
+                    <div class="sample-popup-label">Depth:</div>
+                    <div class="sample-popup-value">${
+                      props.Depth || "Not specified"
+                    } ${props.DepthUnits || "in"}</div>
+                  </div>
+                </div>
+                
+                <div class="sample-popup-card">
+                  <div class="sample-popup-card-title">Secondary Nutrients</div>
+                  <div class="sample-popup-card-grid">
+                    <div class="sample-popup-label">Calcium (Ca):</div>
+                    <div class="sample-popup-value">${
+                      props["Ca (AA)"] || props["Ca"] || "Not tested"
+                    } ${props["Ca (AA)U"] || props["Ca_Unit"] || "ppm"}</div>
+                    
+                    <div class="sample-popup-label">Magnesium (Mg):</div>
+                    <div class="sample-popup-value">${
+                      props["Mg (AA)"] || props["Mg"] || "Not tested"
+                    } ${props["Mg (AA)U"] || props["Mg_Unit"] || "ppm"}</div>
+                    
+                    <div class="sample-popup-label">Sulfur (S):</div>
+                    <div class="sample-popup-value">${
+                      props["S"] || props["SO4-S"] || "Not tested"
+                    } ${props["S_Unit"] || "ppm"}</div>
+                  </div>
                 </div>
               </div>
-              
-              <div class="sample-popup-card">
-                <div class="sample-popup-card-title">Soil Properties</div>
-                <div class="sample-popup-card-grid">
-                  <div class="sample-popup-label">pH:</div>
-                  <div class="sample-popup-value">${
-                    props["pH (1_1)"] || props["pH"] || "Not tested"
-                  }</div>
-                  
-                  <div class="sample-popup-label">Organic Matter:</div>
-                  <div class="sample-popup-value">${
-                    props["OM (WB)"] || props["OM"] || "Not tested"
-                  }${props["OM (WB)U"] || props["OM_Unit"] || "%"}</div>
-                  
-                  <div class="sample-popup-label">CEC:</div>
-                  <div class="sample-popup-value">${
-                    props["CEC (AA)"] || props["CEC"] || "Not tested"
-                  } ${props["CEC (AA)U"] || "meq/100g"}</div>
-                  
-                  <div class="sample-popup-label">Depth:</div>
-                  <div class="sample-popup-value">${
-                    props.Depth || "Not specified"
-                  } ${props.DepthUnits || "in"}</div>
-                </div>
-              </div>
-              
-              <div class="sample-popup-card">
-                <div class="sample-popup-card-title">Secondary Nutrients</div>
-                <div class="sample-popup-card-grid">
-                  <div class="sample-popup-label">Calcium (Ca):</div>
-                  <div class="sample-popup-value">${
-                    props["Ca (AA)"] || props["Ca"] || "Not tested"
-                  } ${props["Ca (AA)U"] || props["Ca_Unit"] || "ppm"}</div>
-                  
-                  <div class="sample-popup-label">Magnesium (Mg):</div>
-                  <div class="sample-popup-value">${
-                    props["Mg (AA)"] || props["Mg"] || "Not tested"
-                  } ${props["Mg (AA)U"] || props["Mg_Unit"] || "ppm"}</div>
-                  
-                  <div class="sample-popup-label">Sulfur (S):</div>
-                  <div class="sample-popup-value">${
-                    props["S"] || props["SO4-S"] || "Not tested"
-                  } ${props["S_Unit"] || "ppm"}</div>
-                </div>
-              </div>
-            </div>
-          `);
+            `);
+          }
         }
-      }
-    }).addTo(map);
+      }).addTo(map);
 
-    layersRef.current.pointsLayer = pointsLayer;
+      console.log("Points layer created and added to map");
+      layersRef.current.pointsLayer = pointsLayer;
+    } catch (err) {
+      console.error("Error creating points layer:", err);
+      setError(`Error creating points layer: ${err}`);
+    }
   };
 
   return (
     <div className="space-y-4">
       <div
-        className="relative h-[400px] md:h-[600px] rounded-2xl overflow-hidden border border-border/50"
+        className="relative h-[600px] rounded-2xl overflow-hidden border border-border/50"
         style={{ zIndex: 1 }}
       >
         {isLoading ? (

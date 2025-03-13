@@ -27,38 +27,43 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Field Track",
+  title: {
+    default: "Field Track LLC",
+    template: "%s | Field Track LLC"
+  },
   description:
-    "Advancing agriculture through research-driven field trials and data-powered insights for optimal farm management",
+    "Technology-driven Strategies for Land Management Agronomic Research Consulting & Project Implementation",
   icons: {
-    icon: "/favicon.ico"
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png"
   },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL || "https://field-track-llc.vercel.app/"
   ),
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "/",
-    title: "Field Track",
+    title: "Field Track LLC",
     description:
-      "Advancing agriculture through research-driven field trials and data-powered insights for optimal farm management",
-    siteName: "Field Track",
+      "Technology-driven Strategies for Land Management Agronomic Research Consulting & Project Implementation",
+    url: "https://field-track-llc.vercel.app/",
+    siteName: "Field Track LLC",
     images: [
       {
-        url: "/api/og",
+        url: "https://field-track-llc.vercel.app/images/plotsdrone.jpg",
         width: 1200,
         height: 630,
-        alt: "Field Track - Agricultural Research and Field Trials"
+        alt: "Aerial view of agricultural field trials"
       }
-    ]
+    ],
+    locale: "en_US",
+    type: "website"
   },
   twitter: {
     card: "summary_large_image",
-    title: "Field Track",
+    title: "Field Track LLC",
     description:
-      "Advancing agriculture through research-driven field trials and data-powered insights for optimal farm management",
-    images: ["/api/og"]
+      "Technology-driven Strategies for Land Management Agronomic Research Consulting & Project Implementation",
+    images: ["https://field-track-llc.vercel.app/images/plotsdrone.jpg"]
   }
 };
 
