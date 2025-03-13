@@ -23,43 +23,43 @@ const Map = dynamic(() => import("./map-components/LeafletMap"), {
 
 // NDVI Color Scale Component
 const NDVIColorScale = () => (
-  <Card className="absolute bottom-4 right-4 p-4 bg-white/90 rounded-lg shadow-lg z-[1000] max-w-[200px]">
-    <h3 className="font-semibold mb-2 text-sm">NDVI Values</h3>
+  <Card className="absolute bottom-4 right-4 p-4 bg-white rounded-lg shadow-lg z-[1000] max-w-[200px]">
+    <h3 className="font-semibold mb-2 text-sm text-black">NDVI Values</h3>
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <div
           className="w-4 h-4 rounded-sm"
           style={{ backgroundColor: "#91cf60" }}
         ></div>
-        <span className="text-xs">≥ 0.8 (High Vigor)</span>
+        <span className="text-xs text-black">≥ 0.8 (High Vigor)</span>
       </div>
       <div className="flex items-center gap-2">
         <div
           className="w-4 h-4 rounded-sm"
           style={{ backgroundColor: "#d9ef8b" }}
         ></div>
-        <span className="text-xs">0.7 - 0.8</span>
+        <span className="text-xs text-black">0.7 - 0.8</span>
       </div>
       <div className="flex items-center gap-2">
         <div
           className="w-4 h-4 rounded-sm"
           style={{ backgroundColor: "#fee08b" }}
         ></div>
-        <span className="text-xs">0.5 - 0.7</span>
+        <span className="text-xs text-black">0.5 - 0.7</span>
       </div>
       <div className="flex items-center gap-2">
         <div
           className="w-4 h-4 rounded-sm"
           style={{ backgroundColor: "#fc8d59" }}
         ></div>
-        <span className="text-xs">0.3 - 0.5</span>
+        <span className="text-xs text-black">0.3 - 0.5</span>
       </div>
       <div className="flex items-center gap-2">
         <div
           className="w-4 h-4 rounded-sm"
           style={{ backgroundColor: "#d73027" }}
         ></div>
-        <span className="text-xs">≤ 0.3 (Low Vigor)</span>
+        <span className="text-xs text-black">≤ 0.3 (Low Vigor)</span>
       </div>
     </div>
   </Card>

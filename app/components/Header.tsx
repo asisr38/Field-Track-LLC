@@ -39,7 +39,7 @@ const serviceItems = [
     url: "/services/onfarm-research"
   },
   {
-    name: "Field Sampling",
+    name: "Basic Package™",
     description: "Professional soil and crop sampling services",
     icon: TestTube,
     url: "/services/field-sampling"
@@ -84,6 +84,15 @@ export default function Header() {
       if (path.startsWith("/services/")) {
         // On service pages, set activeSection to "services"
         setActiveSection("services");
+      } else if (path === "/process") {
+        // On process page, set activeSection to "process"
+        setActiveSection("process");
+      } else if (path === "/about") {
+        // On about page, set activeSection to "about"
+        setActiveSection("about");
+      } else if (path === "/contact") {
+        // On contact page, set activeSection to "contact"
+        setActiveSection("contact");
       } else if (path === "/") {
         // On homepage, determine section based on scroll position
         const sections = navItems
@@ -113,8 +122,14 @@ export default function Header() {
           setActiveSection("home");
         }
       } else {
-        // On other pages, don't highlight any section
-        setActiveSection(null);
+        // Extract the first part of the path to determine the section
+        const section = path.split("/")[1];
+        if (section) {
+          setActiveSection(section);
+        } else {
+          // On other pages, don't highlight any section
+          setActiveSection(null);
+        }
       }
     };
 
@@ -363,7 +378,7 @@ export default function Header() {
                     "relative px-4 py-2 rounded-full transition-all duration-300",
                     "flex items-center gap-2",
                     "text-base font-medium",
-                    isActive
+                    isActive || isServicesHighlighted
                       ? "text-primary font-semibold"
                       : "text-muted-foreground hover:text-foreground"
                   )}
@@ -445,7 +460,7 @@ export default function Header() {
                 "relative px-4 py-2 rounded-full transition-all duration-300",
                 "flex items-center gap-2",
                 "text-base font-medium",
-                isActive
+                isActive || isServicesHighlighted
                   ? "text-primary font-semibold"
                   : "text-muted-foreground hover:text-foreground"
               )}
@@ -655,7 +670,9 @@ export default function Header() {
                         className={cn(
                           "flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
                           activeSection === item.url.replace("/#", "") ||
-                            (item.url === "/" && activeSection === "home")
+                            (item.url === "/" && activeSection === "home") ||
+                            (item.name === "Services" &&
+                              activeSection === "services")
                             ? "bg-primary/10 text-primary"
                             : "text-foreground hover:bg-muted"
                         )}

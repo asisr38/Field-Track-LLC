@@ -28,7 +28,7 @@ const cropTypes = [
 const serviceTypes = [
   "SimpleSense - Aerial Imagery",
   "OnFarm Research",
-  "Basic Package -Field Sampling"
+  "Basic Package™ - Field Sampling"
 ];
 
 const globalConnections = [
