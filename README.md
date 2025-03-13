@@ -152,8 +152,8 @@ If the soil sampling map doesn't display data points:
 #### Common Issues and Solutions
 
 - **Map not showing**: Ensure Leaflet CSS is properly loaded. The component uses dynamic imports to avoid server-side rendering issues.
-- **Points not appearing**: This is usually due to timing issues with data loading or path issues. The component uses `window.location.origin` to ensure paths work in both development and production.
-- **Console errors**: If you see 404 errors for the JSON files, verify they exist in the correct location and are accessible.
+- **Points not appearing**: This is usually due to data loading issues. Make sure the JSON files are accessible.
+- **Console errors**: If you see 404 errors for the JSON files, verify they exist in the correct location.
 
 If you need to test the data files directly, try accessing them at:
 

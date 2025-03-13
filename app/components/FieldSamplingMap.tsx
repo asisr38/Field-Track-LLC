@@ -105,14 +105,8 @@ const FieldSamplingMap = ({
         setIsLoading(true);
         setError(null);
 
-        // Use relative paths for local development and absolute paths for production
-        const baseUrl = window.location.origin;
-        console.log("Base URL:", baseUrl);
-
-        // Fetch boundary data
-        const boundaryResponse = await fetch(
-          `${baseUrl}/data/Boundary_Demo.json`
-        );
+        // Simple approach - just fetch from public directory
+        const boundaryResponse = await fetch("/data/Boundary_Demo.json");
         if (!boundaryResponse.ok) {
           throw new Error(
             `Failed to fetch boundary data: ${boundaryResponse.status}`
@@ -120,8 +114,7 @@ const FieldSamplingMap = ({
         }
         const boundaryJson = await boundaryResponse.json();
 
-        // Fetch point data
-        const pointResponse = await fetch(`${baseUrl}/data/Point_Demo.json`);
+        const pointResponse = await fetch("/data/Point_Demo.json");
         if (!pointResponse.ok) {
           throw new Error(
             `Failed to fetch point data: ${pointResponse.status}`
@@ -133,13 +126,8 @@ const FieldSamplingMap = ({
         setBoundaryData(boundaryJson);
         setPointData(pointJson);
 
-        // Log the data for debugging
-        console.log("Boundary Data:", boundaryJson);
-        console.log("Point Data:", pointJson);
-        console.log(
-          "Number of point features:",
-          pointJson.features?.length || 0
-        );
+        console.log("Data loaded successfully");
+        console.log("Point features count:", pointJson.features?.length || 0);
 
         setIsLoading(false);
       } catch (err) {
@@ -311,6 +299,17 @@ const FieldSamplingMap = ({
 
       window.addEventListener("resize", handleResize);
 
+      // Wait for the map to be fully initialized
+      setTimeout(() => {
+        // Force a map redraw to ensure it's fully initialized
+        map.invalidateSize();
+
+        // If data is already loaded, add it to the map
+        if (boundaryData && pointData && !isLoading) {
+          addDataToMap(map, boundaryData, pointData, nutrientType);
+        }
+      }, 500);
+
       // Cleanup function
       return () => {
         window.removeEventListener("resize", handleResize);
@@ -321,46 +320,9 @@ const FieldSamplingMap = ({
     }
 
     // Update map when data is loaded
-    if (boundaryData && pointData && !isLoading) {
+    if (mapRef.current && boundaryData && pointData && !isLoading) {
       console.log("Data loaded, updating map...");
-
-      // Add boundary layer if not already added
-      if (!layersRef.current.boundaryLayer) {
-        const boundaryLayer = L.geoJSON(boundaryData, {
-          style: {
-            fillColor: "#f8f9fa",
-            weight: 3,
-            opacity: 1,
-            color: "#495057",
-            fillOpacity: 0.2,
-            dashArray: "5"
-          },
-          interactive: false // Make boundary not clickable
-        }).addTo(mapRef.current);
-
-        layersRef.current.boundaryLayer = boundaryLayer;
-
-        // Fit map bounds to field boundary with padding
-        const bounds = boundaryLayer.getBounds();
-        mapRef.current.fitBounds(bounds, {
-          padding: [20, 20],
-          maxZoom: 18
-        });
-
-        // Set max bounds with a small buffer around the field boundary to restrict panning
-        const southWest = bounds.getSouthWest();
-        const northEast = bounds.getNorthEast();
-        const bufferLat = 0.002; // Roughly 200m in latitude
-        const bufferLng = 0.002; // Roughly 200m in longitude
-        const maxBounds = L.latLngBounds(
-          L.latLng(southWest.lat - bufferLat, southWest.lng - bufferLng),
-          L.latLng(northEast.lat + bufferLat, northEast.lng + bufferLng)
-        );
-        mapRef.current.setMaxBounds(maxBounds);
-      }
-
-      // Update the map with the selected nutrient type
-      updateMapLayers(nutrientType);
+      addDataToMap(mapRef.current, boundaryData, pointData, nutrientType);
     }
 
     // Cleanup on unmount
@@ -372,6 +334,53 @@ const FieldSamplingMap = ({
       }
     };
   }, [nutrientType, isLoading, boundaryData, pointData]);
+
+  // Function to add data to the map
+  const addDataToMap = (
+    map: L.Map,
+    boundaryData: GeoJSON.FeatureCollection,
+    pointData: GeoJSON.FeatureCollection,
+    nutrientType: string
+  ) => {
+    // Add boundary layer if not already added
+    if (!layersRef.current.boundaryLayer) {
+      console.log("Adding boundary layer to map");
+      const boundaryLayer = L.geoJSON(boundaryData, {
+        style: {
+          fillColor: "#f8f9fa",
+          weight: 3,
+          opacity: 1,
+          color: "#495057",
+          fillOpacity: 0.2,
+          dashArray: "5"
+        },
+        interactive: false // Make boundary not clickable
+      }).addTo(map);
+
+      layersRef.current.boundaryLayer = boundaryLayer;
+
+      // Fit map bounds to field boundary with padding
+      const bounds = boundaryLayer.getBounds();
+      map.fitBounds(bounds, {
+        padding: [20, 20],
+        maxZoom: 18
+      });
+
+      // Set max bounds with a small buffer around the field boundary to restrict panning
+      const southWest = bounds.getSouthWest();
+      const northEast = bounds.getNorthEast();
+      const bufferLat = 0.002; // Roughly 200m in latitude
+      const bufferLng = 0.002; // Roughly 200m in longitude
+      const maxBounds = L.latLngBounds(
+        L.latLng(southWest.lat - bufferLat, southWest.lng - bufferLng),
+        L.latLng(northEast.lat + bufferLat, northEast.lng + bufferLng)
+      );
+      map.setMaxBounds(maxBounds);
+    }
+
+    // Update the map with the selected nutrient type
+    updateMapLayers(nutrientType);
+  };
 
   // Function to update map layers based on nutrient type
   const updateMapLayers = (nutrientType: string) => {
