@@ -32,6 +32,33 @@ export const metadata: Metadata = {
     "Advancing agriculture through research-driven field trials and data-powered insights for optimal farm management",
   icons: {
     icon: "/favicon.ico"
+  },
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "https://field-track-llc.vercel.app/"
+  ),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    title: "Field Track",
+    description:
+      "Advancing agriculture through research-driven field trials and data-powered insights for optimal farm management",
+    siteName: "Field Track",
+    images: [
+      {
+        url: "/api/og",
+        width: 1200,
+        height: 630,
+        alt: "Field Track - Agricultural Research and Field Trials"
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Field Track",
+    description:
+      "Advancing agriculture through research-driven field trials and data-powered insights for optimal farm management",
+    images: ["/api/og"]
   }
 };
 
