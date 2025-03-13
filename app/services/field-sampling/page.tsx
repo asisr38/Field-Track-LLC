@@ -511,7 +511,7 @@ export default function FieldSamplingPage() {
 
           <Card className="p-4 md:p-6 mb-12 overflow-hidden">
             <div className="bg-muted/50 rounded-lg p-2 md:p-4 shadow-inner mb-4 md:mb-6 overflow-hidden">
-              <div className="h-[400px] md:h-[600px] w-full rounded-lg overflow-hidden">
+              <div className="h-[500px] md:h-[700px] w-full rounded-lg overflow-hidden">
                 {isClient && (
                   <FieldSamplingMap nutrientType={selectedNutrient} />
                 )}

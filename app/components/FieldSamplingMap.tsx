@@ -584,7 +584,7 @@ const FieldSamplingMap = ({
   return (
     <div className="space-y-4">
       <div
-        className="relative h-[400px] rounded-2xl overflow-hidden border border-border/50"
+        className="relative h-[400px] md:h-[600px] rounded-2xl overflow-hidden border border-border/50"
         style={{ zIndex: 1 }}
       >
         {isLoading ? (
