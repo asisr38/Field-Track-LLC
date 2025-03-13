@@ -83,6 +83,22 @@ interface SampleProperties {
   [key: string]: any; // Allow for dynamic property access with string keys
 }
 
+// Define interfaces for analysis steps and details
+interface AnalysisStepDetail {
+  title: string;
+  description: string;
+  icon: React.ElementType;
+  component?: React.ReactNode | null;
+}
+
+interface AnalysisStep {
+  number: number;
+  title: string;
+  description: string;
+  component: React.ReactNode;
+  details: AnalysisStepDetail[];
+}
+
 // Soil analysis data
 const soilData = [
   {
@@ -1279,7 +1295,7 @@ export default function SampleReportContent() {
   } as const;
 
   // Define the steps for the soil analysis process
-  const analysisSteps = [
+  const analysisSteps: AnalysisStep[] = [
     {
       number: 1,
       title: "Field Mapping & Sample Collection",
@@ -1298,13 +1314,15 @@ export default function SampleReportContent() {
           title: "Sample Depth Consistency",
           description:
             "All samples are taken at consistent depths to ensure accurate comparison and analysis.",
-          icon: Ruler
+          icon: Ruler,
+          component: null
         },
         {
           title: "Field Boundary Mapping",
           description:
             "Complete field boundaries are mapped to create accurate management zones.",
-          icon: BoxSelect
+          icon: BoxSelect,
+          component: null
         }
       ]
     },
@@ -1338,7 +1356,7 @@ export default function SampleReportContent() {
           {activeStep === 1 && (
             <div className="space-y-6">
               {/* First Row - Quick Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                 {[
                   { label: "Average pH", value: "5.9", range: "4.6 - 7.2" },
                   { label: "Average CEC", value: "9.8", range: "5.2 - 24.4" },
@@ -1351,12 +1369,12 @@ export default function SampleReportContent() {
                 ].map(stat => (
                   <div
                     key={stat.label}
-                    className="bg-white dark:bg-card p-4 rounded-lg border border-border/50"
+                    className="bg-white dark:bg-card p-3 md:p-4 rounded-lg border border-border/50"
                   >
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs md:text-sm text-muted-foreground">
                       {stat.label}
                     </p>
-                    <p className="text-2xl font-semibold text-primary mt-1">
+                    <p className="text-xl md:text-2xl font-semibold text-primary mt-1">
                       {stat.value}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
@@ -1367,54 +1385,137 @@ export default function SampleReportContent() {
               </div>
 
               {/* Second Row - Detailed Analysis */}
-              <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm border border-border/50">
-                <div className="flex items-center justify-between mb-6">
+              <div className="bg-white dark:bg-card p-3 md:p-6 rounded-xl shadow-sm border border-border/50">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 md:mb-6 gap-2">
                   <div>
-                    <h4 className="text-lg font-medium">
+                    <h4 className="text-base md:text-lg font-medium">
                       Soil Properties & Nutrients
                     </h4>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-xs md:text-sm text-muted-foreground mt-1">
                       Analysis by A&L Labs • 48-72 hour turnaround
                     </p>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-xs md:text-sm text-muted-foreground">
                       Showing samples 1-14
                     </span>
                   </div>
                 </div>
 
-                <div className="overflow-auto max-h-[300px] rounded-lg">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Sample</TableHead>
-                        <TableHead>pH</TableHead>
-                        <TableHead>CEC</TableHead>
-                        <TableHead>OM</TableHead>
-                        <TableHead>P</TableHead>
-                        <TableHead>K</TableHead>
-                        <TableHead>Ca</TableHead>
-                        <TableHead>Mg</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {soilData.map(sample => (
-                        <TableRow key={sample.id}>
-                          <TableCell className="font-medium">
-                            {sample.id}
-                          </TableCell>
-                          <TableCell>{sample.ph}</TableCell>
-                          <TableCell>{sample.cec}</TableCell>
-                          <TableCell>{sample.om}</TableCell>
-                          <TableCell>{sample.p}</TableCell>
-                          <TableCell>{sample.k}</TableCell>
-                          <TableCell>{sample.ca_ppm}</TableCell>
-                          <TableCell>{sample.mg_ppm}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                {/* Desktop table view - hidden on mobile */}
+                <div className="hidden md:block">
+                  <div className="overflow-x-auto">
+                    <div className="max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                      <Table>
+                        <TableHeader className="sticky top-0 bg-white dark:bg-card z-10">
+                          <TableRow>
+                            <TableHead className="w-[60px] text-sm">
+                              Sample
+                            </TableHead>
+                            <TableHead className="w-[60px] text-sm">
+                              pH
+                            </TableHead>
+                            <TableHead className="w-[60px] text-sm">
+                              CEC
+                            </TableHead>
+                            <TableHead className="w-[60px] text-sm">
+                              OM
+                            </TableHead>
+                            <TableHead className="w-[60px] text-sm">
+                              P
+                            </TableHead>
+                            <TableHead className="w-[60px] text-sm">
+                              K
+                            </TableHead>
+                            <TableHead className="w-[60px] text-sm">
+                              Ca
+                            </TableHead>
+                            <TableHead className="w-[60px] text-sm">
+                              Mg
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {soilData.map(sample => (
+                            <TableRow key={sample.id}>
+                              <TableCell className="text-sm font-medium">
+                                {sample.id}
+                              </TableCell>
+                              <TableCell className="text-sm">
+                                {sample.ph}
+                              </TableCell>
+                              <TableCell className="text-sm">
+                                {sample.cec}
+                              </TableCell>
+                              <TableCell className="text-sm">
+                                {sample.om}
+                              </TableCell>
+                              <TableCell className="text-sm">
+                                {sample.p}
+                              </TableCell>
+                              <TableCell className="text-sm">
+                                {sample.k}
+                              </TableCell>
+                              <TableCell className="text-sm">
+                                {sample.ca_ppm}
+                              </TableCell>
+                              <TableCell className="text-sm">
+                                {sample.mg_ppm}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile-friendly card view - visible only on mobile */}
+                <div className="md:hidden space-y-4">
+                  <div className="flex justify-between items-center border-b border-border/30 pb-2 mb-2 sticky top-0 bg-white dark:bg-card z-10">
+                    <div className="font-medium text-xs w-12 text-center">
+                      Sample
+                    </div>
+                    <div className="font-medium text-xs w-8 text-center">
+                      pH
+                    </div>
+                    <div className="font-medium text-xs w-8 text-center">
+                      CEC
+                    </div>
+                    <div className="font-medium text-xs w-8 text-center">
+                      OM
+                    </div>
+                    <div className="font-medium text-xs w-8 text-center">P</div>
+                    <div className="font-medium text-xs w-8 text-center">K</div>
+                  </div>
+
+                  <div className="max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                    {soilData.map(sample => (
+                      <div
+                        key={sample.id}
+                        className="flex justify-between items-center border-b border-border/10 pb-2 mb-2"
+                      >
+                        <div className="text-xs font-medium w-12 text-center">
+                          {sample.id}
+                        </div>
+                        <div className="text-xs w-8 text-center">
+                          {sample.ph}
+                        </div>
+                        <div className="text-xs w-8 text-center">
+                          {sample.cec}
+                        </div>
+                        <div className="text-xs w-8 text-center">
+                          {sample.om}
+                        </div>
+                        <div className="text-xs w-8 text-center">
+                          {sample.p}
+                        </div>
+                        <div className="text-xs w-8 text-center">
+                          {sample.k}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1422,113 +1523,150 @@ export default function SampleReportContent() {
 
           {/* Base Saturation Tab */}
           {activeStep === 2 && (
-            <div className="grid grid-cols-1 gap-6">
-              {" "}
-              {/* Right Column - Ratio Cards */}
-              <div className="space-y-6">
-                {/* Ratio Cards */}
-                <div className="grid grid-cols-3 gap-4">
-                  {[
-                    {
-                      title: "K:Mg Ratio",
-                      value: "0.27:1",
-                      status: "Low",
-                      optimal: "0.3-0.5",
-                      description: "Consider additional K to improve ratio"
-                    },
-                    {
-                      title: "Ca:K Ratio",
-                      value: "16:1",
-                      status: "High",
-                      optimal: "13-17",
-                      description:
-                        "Monitor K levels to balance calcium dominance"
-                    },
-                    {
-                      title: "Ca:Mg Ratio",
-                      value: "4.4:1",
-                      status: "Optimal",
-                      optimal: "4-6",
-                      description: "Maintain current balance"
-                    }
-                  ].map((ratio, index) => (
-                    <div
-                      key={index}
-                      className="bg-white dark:bg-card p-4 rounded-lg border border-border/50"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <h5 className="font-medium">{ratio.title}</h5>
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            ratio.status === "Optimal"
-                              ? "bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400"
-                              : ratio.status === "Low"
-                              ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-400"
-                              : "bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400"
-                          }`}
-                        >
-                          {ratio.status}
-                        </span>
-                      </div>
-                      <div className="flex items-baseline gap-2 mb-2">
-                        <span className="text-2xl font-semibold">
-                          {ratio.value}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+            <div className="space-y-6">
+              {/* Ratio Cards */}
+              <div className="grid grid-cols-3 gap-3 md:gap-4">
+                <div className="bg-white dark:bg-card p-3 md:p-4 rounded-lg border border-border/50">
+                  <p className="text-xs md:text-sm font-medium">K:Mg Ratio</p>
+                  <p className="text-xl md:text-2xl font-semibold text-primary mt-1">
+                    0.27:1
+                  </p>
+                  <p className="text-xs text-red-500 font-medium mt-1">Low</p>
+                </div>
+
+                <div className="bg-white dark:bg-card p-3 md:p-4 rounded-lg border border-border/50">
+                  <p className="text-xs md:text-sm font-medium">Ca:K Ratio</p>
+                  <p className="text-xl md:text-2xl font-semibold text-primary mt-1">
+                    16:1
+                  </p>
+                  <p className="text-xs text-amber-500 font-medium mt-1">
+                    High
+                  </p>
+                </div>
+
+                <div className="bg-white dark:bg-card p-3 md:p-4 rounded-lg border border-border/50">
+                  <p className="text-xs md:text-sm font-medium">Ca:Mg Ratio</p>
+                  <p className="text-xl md:text-2xl font-semibold text-primary mt-1">
+                    4.4:1
+                  </p>
+                  <p className="text-xs text-green-500 font-medium mt-1">
+                    Optimal
+                  </p>
                 </div>
               </div>
-              {/* Left Column - Base Saturation Table */}
-              <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm border border-border/50">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h4 className="text-lg font-medium">
-                      Base Saturation Analysis
-                    </h4>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Cation balance and soil fertility indicators
-                    </p>
+
+              <div className="bg-white dark:bg-card p-3 md:p-6 rounded-xl shadow-sm border border-border/50">
+                <h4 className="text-base md:text-lg font-medium mb-4">
+                  Base Saturation Analysis
+                </h4>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Cation balance and soil fertility indicators
+                </p>
+
+                {/* Desktop table view - hidden on mobile */}
+                <div className="hidden md:block">
+                  <div className="overflow-x-auto">
+                    <div className="max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                      <Table>
+                        <TableHeader className="sticky top-0 bg-white dark:bg-card z-10">
+                          <TableRow>
+                            <TableHead className="text-sm">Variable</TableHead>
+                            <TableHead className="text-sm">Mean</TableHead>
+                            <TableHead className="text-sm">Min</TableHead>
+                            <TableHead className="text-sm">Max</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell className="text-sm font-medium">
+                              BS Ca (%)
+                            </TableCell>
+                            <TableCell className="text-sm">57.0</TableCell>
+                            <TableCell className="text-sm">15.8</TableCell>
+                            <TableCell className="text-sm">82.5</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="text-sm font-medium">
+                              BS K (%)
+                            </TableCell>
+                            <TableCell className="text-sm">3.6</TableCell>
+                            <TableCell className="text-sm">1.1</TableCell>
+                            <TableCell className="text-sm">6.7</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="text-sm font-medium">
+                              BS Mg (%)
+                            </TableCell>
+                            <TableCell className="text-sm">13.1</TableCell>
+                            <TableCell className="text-sm">4.5</TableCell>
+                            <TableCell className="text-sm">17.9</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="text-sm font-medium">
+                              BS H (%)
+                            </TableCell>
+                            <TableCell className="text-sm">33.4</TableCell>
+                            <TableCell className="text-sm">2.4</TableCell>
+                            <TableCell className="text-sm">78.7</TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
                   </div>
                 </div>
 
-                <div className="overflow-auto max-h-[400px] rounded-lg">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Variable</TableHead>
-                        <TableHead>Mean</TableHead>
-                        <TableHead>Min</TableHead>
-                        <TableHead>Max</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell className="font-medium">BS Ca (%)</TableCell>
-                        <TableCell>57.0</TableCell>
-                        <TableCell>15.8</TableCell>
-                        <TableCell>82.5</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">BS K (%)</TableCell>
-                        <TableCell>3.6</TableCell>
-                        <TableCell>1.1</TableCell>
-                        <TableCell>6.7</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">BS Mg (%)</TableCell>
-                        <TableCell>13.1</TableCell>
-                        <TableCell>4.5</TableCell>
-                        <TableCell>17.9</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">BS H (%)</TableCell>
-                        <TableCell>33.4</TableCell>
-                        <TableCell>2.4</TableCell>
-                        <TableCell>78.7</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+                {/* Mobile-friendly card view - visible only on mobile */}
+                <div className="md:hidden space-y-4">
+                  <div className="flex justify-between items-center border-b border-border/30 pb-2 mb-2 sticky top-0 bg-white dark:bg-card z-10">
+                    <div className="font-medium text-xs w-24 text-left">
+                      Variable
+                    </div>
+                    <div className="font-medium text-xs w-12 text-center">
+                      Mean
+                    </div>
+                    <div className="font-medium text-xs w-12 text-center">
+                      Min
+                    </div>
+                    <div className="font-medium text-xs w-12 text-center">
+                      Max
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center border-b border-border/10 pb-2">
+                    <div className="text-xs font-medium w-24 text-left">
+                      BS Ca (%)
+                    </div>
+                    <div className="text-xs w-12 text-center">57.0</div>
+                    <div className="text-xs w-12 text-center">15.8</div>
+                    <div className="text-xs w-12 text-center">82.5</div>
+                  </div>
+
+                  <div className="flex justify-between items-center border-b border-border/10 pb-2">
+                    <div className="text-xs font-medium w-24 text-left">
+                      BS K (%)
+                    </div>
+                    <div className="text-xs w-12 text-center">3.6</div>
+                    <div className="text-xs w-12 text-center">1.1</div>
+                    <div className="text-xs w-12 text-center">6.7</div>
+                  </div>
+
+                  <div className="flex justify-between items-center border-b border-border/10 pb-2">
+                    <div className="text-xs font-medium w-24 text-left">
+                      BS Mg (%)
+                    </div>
+                    <div className="text-xs w-12 text-center">13.1</div>
+                    <div className="text-xs w-12 text-center">4.5</div>
+                    <div className="text-xs w-12 text-center">17.9</div>
+                  </div>
+
+                  <div className="flex justify-between items-center border-b border-border/10 pb-2">
+                    <div className="text-xs font-medium w-24 text-left">
+                      BS H (%)
+                    </div>
+                    <div className="text-xs w-12 text-center">33.4</div>
+                    <div className="text-xs w-12 text-center">2.4</div>
+                    <div className="text-xs w-12 text-center">78.7</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1537,68 +1675,168 @@ export default function SampleReportContent() {
           {/* Summary Tab */}
           {activeStep === 3 && (
             <div className="space-y-6">
-              {/* First Row - Statistical Summary */}
-              <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm border border-border/50">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h4 className="text-lg font-medium">Statistical Summary</h4>
+              <div className="bg-white dark:bg-card p-3 md:p-6 rounded-xl shadow-sm border border-border/50">
+                <h4 className="text-base md:text-lg font-medium mb-4">
+                  Statistical Summary
+                </h4>
+
+                {/* Desktop table view - hidden on mobile */}
+                <div className="hidden md:block">
+                  <div className="overflow-x-auto">
+                    <div className="max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                      <Table>
+                        <TableHeader className="sticky top-0 bg-white dark:bg-card z-10">
+                          <TableRow>
+                            <TableHead className="text-sm">Variable</TableHead>
+                            <TableHead className="text-sm">Mean</TableHead>
+                            <TableHead className="text-sm">Min</TableHead>
+                            <TableHead className="text-sm">Max</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell className="text-sm font-medium">
+                              pH
+                            </TableCell>
+                            <TableCell className="text-sm">5.9</TableCell>
+                            <TableCell className="text-sm">4.6</TableCell>
+                            <TableCell className="text-sm">7.2</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="text-sm font-medium">
+                              CEC
+                            </TableCell>
+                            <TableCell className="text-sm">9.8</TableCell>
+                            <TableCell className="text-sm">5.2</TableCell>
+                            <TableCell className="text-sm">24.4</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="text-sm font-medium">
+                              OM (%)
+                            </TableCell>
+                            <TableCell className="text-sm">2.2</TableCell>
+                            <TableCell className="text-sm">1.7</TableCell>
+                            <TableCell className="text-sm">3.0</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="text-sm font-medium">
+                              P (ppm)
+                            </TableCell>
+                            <TableCell className="text-sm">35.0</TableCell>
+                            <TableCell className="text-sm">12.0</TableCell>
+                            <TableCell className="text-sm">76.0</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="text-sm font-medium">
+                              K (ppm)
+                            </TableCell>
+                            <TableCell className="text-sm">127.0</TableCell>
+                            <TableCell className="text-sm">60.0</TableCell>
+                            <TableCell className="text-sm">255.0</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="text-sm font-medium">
+                              Ca (ppm)
+                            </TableCell>
+                            <TableCell className="text-sm">1003.0</TableCell>
+                            <TableCell className="text-sm">566.0</TableCell>
+                            <TableCell className="text-sm">1497.0</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="text-sm font-medium">
+                              Mg (ppm)
+                            </TableCell>
+                            <TableCell className="text-sm">138.0</TableCell>
+                            <TableCell className="text-sm">90.0</TableCell>
+                            <TableCell className="text-sm">196.0</TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
                   </div>
                 </div>
-                <div className="overflow-auto rounded-lg">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Variable</TableHead>
-                        <TableHead>Mean</TableHead>
-                        <TableHead>Min</TableHead>
-                        <TableHead>Max</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell className="font-medium">pH</TableCell>
-                        <TableCell>5.9</TableCell>
-                        <TableCell>4.6</TableCell>
-                        <TableCell>7.2</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">CEC</TableCell>
-                        <TableCell>9.8</TableCell>
-                        <TableCell>5.2</TableCell>
-                        <TableCell>24.4</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">OM (%)</TableCell>
-                        <TableCell>2.2</TableCell>
-                        <TableCell>1.7</TableCell>
-                        <TableCell>3.0</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">P (ppm)</TableCell>
-                        <TableCell>35.0</TableCell>
-                        <TableCell>12.0</TableCell>
-                        <TableCell>76.0</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">K (ppm)</TableCell>
-                        <TableCell>127.0</TableCell>
-                        <TableCell>60.0</TableCell>
-                        <TableCell>255.0</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">Ca (ppm)</TableCell>
-                        <TableCell>1003.0</TableCell>
-                        <TableCell>566.0</TableCell>
-                        <TableCell>1497.0</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">Mg (ppm)</TableCell>
-                        <TableCell>138.0</TableCell>
-                        <TableCell>90.0</TableCell>
-                        <TableCell>196.0</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+
+                {/* Mobile-friendly card view - visible only on mobile */}
+                <div className="md:hidden space-y-4">
+                  <div className="flex justify-between items-center border-b border-border/30 pb-2 mb-2 sticky top-0 bg-white dark:bg-card z-10">
+                    <div className="font-medium text-xs w-24 text-left">
+                      Variable
+                    </div>
+                    <div className="font-medium text-xs w-12 text-center">
+                      Mean
+                    </div>
+                    <div className="font-medium text-xs w-12 text-center">
+                      Min
+                    </div>
+                    <div className="font-medium text-xs w-12 text-center">
+                      Max
+                    </div>
+                  </div>
+
+                  <div className="max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                    <div className="flex justify-between items-center border-b border-border/10 pb-2 mb-2">
+                      <div className="text-xs font-medium w-24 text-left">
+                        pH
+                      </div>
+                      <div className="text-xs w-12 text-center">5.9</div>
+                      <div className="text-xs w-12 text-center">4.6</div>
+                      <div className="text-xs w-12 text-center">7.2</div>
+                    </div>
+
+                    <div className="flex justify-between items-center border-b border-border/10 pb-2 mb-2">
+                      <div className="text-xs font-medium w-24 text-left">
+                        CEC
+                      </div>
+                      <div className="text-xs w-12 text-center">9.8</div>
+                      <div className="text-xs w-12 text-center">5.2</div>
+                      <div className="text-xs w-12 text-center">24.4</div>
+                    </div>
+
+                    <div className="flex justify-between items-center border-b border-border/10 pb-2 mb-2">
+                      <div className="text-xs font-medium w-24 text-left">
+                        OM (%)
+                      </div>
+                      <div className="text-xs w-12 text-center">2.2</div>
+                      <div className="text-xs w-12 text-center">1.7</div>
+                      <div className="text-xs w-12 text-center">3.0</div>
+                    </div>
+
+                    <div className="flex justify-between items-center border-b border-border/10 pb-2 mb-2">
+                      <div className="text-xs font-medium w-24 text-left">
+                        P (ppm)
+                      </div>
+                      <div className="text-xs w-12 text-center">35.0</div>
+                      <div className="text-xs w-12 text-center">12.0</div>
+                      <div className="text-xs w-12 text-center">76.0</div>
+                    </div>
+
+                    <div className="flex justify-between items-center border-b border-border/10 pb-2 mb-2">
+                      <div className="text-xs font-medium w-24 text-left">
+                        K (ppm)
+                      </div>
+                      <div className="text-xs w-12 text-center">127.0</div>
+                      <div className="text-xs w-12 text-center">60.0</div>
+                      <div className="text-xs w-12 text-center">255.0</div>
+                    </div>
+
+                    <div className="flex justify-between items-center border-b border-border/10 pb-2 mb-2">
+                      <div className="text-xs font-medium w-24 text-left">
+                        Ca (ppm)
+                      </div>
+                      <div className="text-xs w-12 text-center">1003.0</div>
+                      <div className="text-xs w-12 text-center">566.0</div>
+                      <div className="text-xs w-12 text-center">1497.0</div>
+                    </div>
+
+                    <div className="flex justify-between items-center border-b border-border/10 pb-2 mb-2">
+                      <div className="text-xs font-medium w-24 text-left">
+                        Mg (ppm)
+                      </div>
+                      <div className="text-xs w-12 text-center">138.0</div>
+                      <div className="text-xs w-12 text-center">90.0</div>
+                      <div className="text-xs w-12 text-center">196.0</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1607,53 +1845,25 @@ export default function SampleReportContent() {
       ),
       details: [
         {
-          title: "Professional Lab Analysis",
+          title: "Comprehensive Analysis",
           description:
-            "48-72 hour turnaround from A&L Labs for comprehensive soil testing including pH, CEC, OM, and nutrients",
-          icon: Calculator,
-          component: <></>
+            "Our lab analyzes over 15 different soil parameters to provide a complete picture of your soil health.",
+          icon: FileBarChart,
+          component: null
         },
         {
-          title: "Data Processing",
+          title: "Rapid Turnaround",
           description:
-            "Advanced data cleaning, normalization, and enrichment with historical and regional soil databases",
+            "Results are typically available within 48-72 hours of sample receipt at the lab.",
+          icon: Clock,
+          component: null
+        },
+        {
+          title: "Quality Control",
+          description:
+            "All samples undergo rigorous quality control checks to ensure accuracy and reliability.",
           icon: Shield,
-          component: <></>
-        },
-        {
-          title: "Results Integration",
-          description:
-            "Automated integration of lab results with field mapping data and statistical analysis",
-          icon: LineChart,
-          component: (
-            <>
-              {/* Quality Control Process */}
-              <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm border border-border/50">
-                <h4 className="text-base font-medium mb-4">
-                  Quality Control Process
-                </h4>
-                <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground">
-                    Our rigorous validation process includes:
-                  </p>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li className="flex items-start gap-2">
-                      <Shield className="w-4 h-4 text-primary mt-1" />
-                      <span>Outlier detection and verification</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <LineChart className="w-4 h-4 text-primary mt-1" />
-                      <span>Cross-reference with historical data</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Settings className="w-4 h-4 text-primary mt-1" />
-                      <span>Verification against regional soil databases</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </>
-          )
+          component: null
         }
       ]
     },
@@ -1691,14 +1901,14 @@ export default function SampleReportContent() {
         "Expert fertilizer and soil amendment recommendations tailored to your field's unique characteristics, focusing on practical solutions and sustainable management practices.",
       component: (
         <div className="space-y-6">
-          {/* Tabs Navigation */}
-          <div className="flex flex-wrap gap-2">
+          {/* Tabs Navigation - Improved for mobile */}
+          <div className="flex flex-wrap gap-2 justify-center md:justify-start">
             {["Nitrogen", "Phosphorus", "Potassium", "Lime"].map(
               (tab, index) => (
                 <button
                   key={tab}
                   onClick={() => setActiveStep(index + 1)}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  className={`px-3 py-2 text-xs md:text-sm font-medium rounded-lg transition-colors ${
                     activeStep === index + 1
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted hover:bg-muted/80 text-muted-foreground"
@@ -1710,15 +1920,59 @@ export default function SampleReportContent() {
             )}
           </div>
 
-          {/* Nitrogen Management Tab */}
+          {/* Nitrogen Management Tab - Mobile optimized */}
           {activeStep === 1 && (
-            <div className="grid grid-cols-1 gap-6">
-              <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm border border-border/50">
-                <h4 className="text-lg font-medium mb-4">
+            <div className="grid grid-cols-1 gap-4 md:gap-6">
+              <div className="bg-white dark:bg-card p-4 md:p-6 rounded-xl shadow-sm border border-border/50">
+                <h4 className="text-base md:text-lg font-medium mb-3 md:mb-4">
                   Nitrogen Management
                 </h4>
-                <div className="space-y-6">
-                  <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-4 md:space-y-6">
+                  {/* Mobile view - Application Details */}
+                  <div className="md:hidden space-y-4">
+                    <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                      <p className="text-xs font-medium mb-2">
+                        Application Details
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">Source:</span>
+                          <span className="text-xs">
+                            82-0-0, anhydrous ammonia
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">Area:</span>
+                          <span className="text-xs">75.04 ac</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">
+                            Yield Goal:
+                          </span>
+                          <span className="text-xs">175 bu/ac</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">VR Stats:</span>
+                          <span className="text-xs">
+                            Mean: 196 lb/ac (90-240 lb/ac)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3 bg-amber-50 dark:bg-amber-950/50 rounded-lg">
+                      <p className="text-xs font-medium text-amber-800 dark:text-amber-400 mb-1">
+                        Agronomist Notes
+                      </p>
+                      <p className="text-xs text-amber-700 dark:text-amber-300">
+                        Sample #12 shows unusually high CEC relative to the rest
+                        of the field, along with very low pH.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Desktop view - Application Details */}
+                  <div className="hidden md:grid md:grid-cols-2 gap-6">
                     <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
                       <p className="text-sm font-medium mb-4">
                         Application Details
@@ -1763,7 +2017,82 @@ export default function SampleReportContent() {
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                  {/* Mobile view - Comparison Table */}
+                  <div className="md:hidden">
+                    <p className="text-xs font-medium mb-2">
+                      Application Type Comparison
+                    </p>
+                    <div className="space-y-3">
+                      <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg">
+                        <div className="flex justify-between items-center border-b border-border/30 pb-1 mb-2">
+                          <span className="text-xs font-medium">Metric</span>
+                          <div className="flex gap-3">
+                            <span className="text-xs font-medium w-16 text-right">
+                              Uniform
+                            </span>
+                            <span className="text-xs font-medium w-16 text-right">
+                              Variable
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Total Product (lb)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                14,700
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                14,280
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Product Cost (USD)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                $5,145
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                $4,998
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Application (USD)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                $375
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                $525
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center pt-1 border-t border-border/30">
+                            <span className="text-xs font-medium">
+                              Field Total (USD)
+                            </span>
+                            <div className="flex gap-3">
+                              <span className="text-xs font-medium w-16 text-right">
+                                $5,520
+                              </span>
+                              <span className="text-xs font-medium w-16 text-right">
+                                $5,523
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Desktop view - Comparison Table */}
+                  <div className="hidden md:block bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
                     <p className="text-sm font-medium mb-4">
                       Application Type Comparison
                     </p>
@@ -1810,114 +2139,58 @@ export default function SampleReportContent() {
             </div>
           )}
 
-          {/* Phosphorus Management Tab */}
-          {activeStep === 2 && (
-            <div className="grid grid-cols-1 gap-6">
-              <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm border border-border/50">
-                <h4 className="text-lg font-medium mb-4">
-                  Phosphorus Management
-                </h4>
-                <div className="space-y-6">
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                      <p className="text-sm font-medium mb-4">
-                        Application Details
-                      </p>
-                      <Table>
-                        <TableBody>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              Source
-                            </TableCell>
-                            <TableCell>18-46-0, DAP</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">Area</TableCell>
-                            <TableCell>75.04 ac</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              Yield Goal
-                            </TableCell>
-                            <TableCell>175 bu/ac</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              VR Stats
-                            </TableCell>
-                            <TableCell>Mean: 41 lb/ac (0-180 lb/ac)</TableCell>
-                          </TableRow>
-                        </TableBody>
-                      </Table>
-                    </div>
-                    <div className="p-4 bg-amber-50 dark:bg-amber-950/50 rounded-lg">
-                      <p className="text-sm font-medium text-amber-800 dark:text-amber-400 mb-2">
-                        Agronomist Notes
-                      </p>
-                      <p className="text-sm text-amber-700 dark:text-amber-300">
-                        Much of the field has sufficient P levels, but the SW
-                        edge and Eastern finger could benefit from fertilizer or
-                        manure application.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
-                    <p className="text-sm font-medium mb-4">
-                      Application Type Comparison
-                    </p>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Metric</TableHead>
-                          <TableHead>Uniform</TableHead>
-                          <TableHead>Variable</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Total Product (lb)
-                          </TableCell>
-                          <TableCell>7,425</TableCell>
-                          <TableCell>7,271</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Product Cost (USD)
-                          </TableCell>
-                          <TableCell>$1,392</TableCell>
-                          <TableCell>$1,363</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Application (USD)
-                          </TableCell>
-                          <TableCell>$375</TableCell>
-                          <TableCell>$525</TableCell>
-                        </TableRow>
-                        <TableRow className="font-medium">
-                          <TableCell>Field Total (USD)</TableCell>
-                          <TableCell>$1,767</TableCell>
-                          <TableCell>$1,888</TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Potassium Management Tab */}
+          {/* Potassium Management Tab - Mobile optimized */}
           {activeStep === 3 && (
-            <div className="grid grid-cols-1 gap-6">
-              <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm border border-border/50">
-                <h4 className="text-lg font-medium mb-4">
+            <div className="grid grid-cols-1 gap-4 md:gap-6">
+              <div className="bg-white dark:bg-card p-4 md:p-6 rounded-xl shadow-sm border border-border/50">
+                <h4 className="text-base md:text-lg font-medium mb-3 md:mb-4">
                   Potassium Management
                 </h4>
-                <div className="space-y-6">
-                  <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-4 md:space-y-6">
+                  {/* Mobile view - Application Details */}
+                  <div className="md:hidden space-y-4">
+                    <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                      <p className="text-xs font-medium mb-2">
+                        Application Details
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">Source:</span>
+                          <span className="text-xs">0-0-60, Potash</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">Area:</span>
+                          <span className="text-xs">75.04 ac</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">
+                            Yield Goal:
+                          </span>
+                          <span className="text-xs">175 bu/ac</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">VR Stats:</span>
+                          <span className="text-xs">
+                            Mean: 97 lb/ac (0-180 lb/ac)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3 bg-amber-50 dark:bg-amber-950/50 rounded-lg">
+                      <p className="text-xs font-medium text-amber-800 dark:text-amber-400 mb-1">
+                        Agronomist Notes
+                      </p>
+                      <p className="text-xs text-amber-700 dark:text-amber-300">
+                        K levels are generally adequate but variable. Consider
+                        split application to improve efficiency and reduce
+                        leaching risk.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Desktop view - Application Details */}
+                  <div className="hidden md:grid md:grid-cols-2 gap-6">
                     <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
                       <p className="text-sm font-medium mb-4">
                         Application Details
@@ -1961,7 +2234,82 @@ export default function SampleReportContent() {
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                  {/* Mobile view - Comparison Table */}
+                  <div className="md:hidden">
+                    <p className="text-xs font-medium mb-2">
+                      Application Type Comparison
+                    </p>
+                    <div className="space-y-3">
+                      <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg">
+                        <div className="flex justify-between items-center border-b border-border/30 pb-1 mb-2">
+                          <span className="text-xs font-medium">Metric</span>
+                          <div className="flex gap-3">
+                            <span className="text-xs font-medium w-16 text-right">
+                              Uniform
+                            </span>
+                            <span className="text-xs font-medium w-16 text-right">
+                              Variable
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Total Product (lb)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                12,100
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                12,050
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Product Cost (USD)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                $2,420
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                $2,410
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Application (USD)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                $375
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                $525
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center pt-1 border-t border-border/30">
+                            <span className="text-xs font-medium">
+                              Field Total (USD)
+                            </span>
+                            <div className="flex gap-3">
+                              <span className="text-xs font-medium w-16 text-right">
+                                $2,795
+                              </span>
+                              <span className="text-xs font-medium w-16 text-right">
+                                $2,935
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Desktop view - Comparison Table */}
+                  <div className="hidden md:block bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
                     <p className="text-sm font-medium mb-4">
                       Application Type Comparison
                     </p>
@@ -2008,13 +2356,276 @@ export default function SampleReportContent() {
             </div>
           )}
 
-          {/* Lime Management Tab */}
+          {/* Phosphorus Management Tab - Mobile optimized */}
+          {activeStep === 2 && (
+            <div className="grid grid-cols-1 gap-4 md:gap-6">
+              <div className="bg-white dark:bg-card p-4 md:p-6 rounded-xl shadow-sm border border-border/50">
+                <h4 className="text-base md:text-lg font-medium mb-3 md:mb-4">
+                  Phosphorus Management
+                </h4>
+                <div className="space-y-4 md:space-y-6">
+                  {/* Mobile view - Application Details */}
+                  <div className="md:hidden space-y-4">
+                    <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                      <p className="text-xs font-medium mb-2">
+                        Application Details
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">Source:</span>
+                          <span className="text-xs">18-46-0, DAP</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">Area:</span>
+                          <span className="text-xs">75.04 ac</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">
+                            Yield Goal:
+                          </span>
+                          <span className="text-xs">175 bu/ac</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">VR Stats:</span>
+                          <span className="text-xs">
+                            Mean: 41 lb/ac (0-180 lb/ac)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3 bg-amber-50 dark:bg-amber-950/50 rounded-lg">
+                      <p className="text-xs font-medium text-amber-800 dark:text-amber-400 mb-1">
+                        Agronomist Notes
+                      </p>
+                      <p className="text-xs text-amber-700 dark:text-amber-300">
+                        Much of the field has sufficient P levels, but the SW
+                        edge and Eastern finger could benefit from fertilizer or
+                        manure application.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Desktop view - Application Details */}
+                  <div className="hidden md:grid md:grid-cols-2 gap-6">
+                    <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                      <p className="text-sm font-medium mb-4">
+                        Application Details
+                      </p>
+                      <Table>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              Source
+                            </TableCell>
+                            <TableCell>18-46-0, DAP</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">Area</TableCell>
+                            <TableCell>75.04 ac</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              Yield Goal
+                            </TableCell>
+                            <TableCell>175 bu/ac</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              VR Stats
+                            </TableCell>
+                            <TableCell>Mean: 41 lb/ac (0-180 lb/ac)</TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
+                    <div className="p-4 bg-amber-50 dark:bg-amber-950/50 rounded-lg">
+                      <p className="text-sm font-medium text-amber-800 dark:text-amber-400 mb-2">
+                        Agronomist Notes
+                      </p>
+                      <p className="text-sm text-amber-700 dark:text-amber-300">
+                        Much of the field has sufficient P levels, but the SW
+                        edge and Eastern finger could benefit from fertilizer or
+                        manure application.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Mobile view - Comparison Table */}
+                  <div className="md:hidden">
+                    <p className="text-xs font-medium mb-2">
+                      Application Type Comparison
+                    </p>
+                    <div className="space-y-3">
+                      <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg">
+                        <div className="flex justify-between items-center border-b border-border/30 pb-1 mb-2">
+                          <span className="text-xs font-medium">Metric</span>
+                          <div className="flex gap-3">
+                            <span className="text-xs font-medium w-16 text-right">
+                              Uniform
+                            </span>
+                            <span className="text-xs font-medium w-16 text-right">
+                              Variable
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Total Product (lb)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                7,425
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                7,271
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Product Cost (USD)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                $1,392
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                $1,363
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Application (USD)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                $375
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                $525
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center pt-1 border-t border-border/30">
+                            <span className="text-xs font-medium">
+                              Field Total (USD)
+                            </span>
+                            <div className="flex gap-3">
+                              <span className="text-xs font-medium w-16 text-right">
+                                $1,767
+                              </span>
+                              <span className="text-xs font-medium w-16 text-right">
+                                $1,888
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Desktop view - Comparison Table */}
+                  <div className="hidden md:block bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                    <p className="text-sm font-medium mb-4">
+                      Application Type Comparison
+                    </p>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Metric</TableHead>
+                          <TableHead>Uniform</TableHead>
+                          <TableHead>Variable</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Total Product (lb)
+                          </TableCell>
+                          <TableCell>7,425</TableCell>
+                          <TableCell>7,271</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Product Cost (USD)
+                          </TableCell>
+                          <TableCell>$1,392</TableCell>
+                          <TableCell>$1,363</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Application (USD)
+                          </TableCell>
+                          <TableCell>$375</TableCell>
+                          <TableCell>$525</TableCell>
+                        </TableRow>
+                        <TableRow className="font-medium">
+                          <TableCell>Field Total (USD)</TableCell>
+                          <TableCell>$1,767</TableCell>
+                          <TableCell>$1,888</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Lime Management Tab - Mobile optimized */}
           {activeStep === 4 && (
-            <div className="grid grid-cols-1 gap-6">
-              <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm border border-border/50">
-                <h4 className="text-lg font-medium mb-4">Lime Requirements</h4>
-                <div className="space-y-6">
-                  <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-4 md:gap-6">
+              <div className="bg-white dark:bg-card p-4 md:p-6 rounded-xl shadow-sm border border-border/50">
+                <h4 className="text-base md:text-lg font-medium mb-3 md:mb-4">
+                  Lime Requirements
+                </h4>
+                <div className="space-y-4 md:space-y-6">
+                  {/* Mobile view - Application Details */}
+                  <div className="md:hidden space-y-4">
+                    <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                      <p className="text-xs font-medium mb-2">
+                        Application Details
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">Source:</span>
+                          <span className="text-xs">Ag Lime (80% ECC)</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">Area:</span>
+                          <span className="text-xs">75.04 ac</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">
+                            Target pH:
+                          </span>
+                          <span className="text-xs">6.5</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">VR Stats:</span>
+                          <span className="text-xs">
+                            Mean: 2.8 tons/ac (0-4 tons/ac)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3 bg-red-50 dark:bg-red-950/50 rounded-lg">
+                      <p className="text-xs font-medium text-red-700 dark:text-red-400 mb-1">
+                        Important Note
+                      </p>
+                      <p className="text-xs text-red-600 dark:text-red-300">
+                        The eastern finger has very low pH levels. Do not exceed
+                        2 tons/ac of lime in a single application. Contact for
+                        assistance in amending the prescription for safe
+                        one-time application.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Desktop view - Application Details */}
+                  <div className="hidden md:grid md:grid-cols-2 gap-6">
                     <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
                       <p className="text-sm font-medium mb-4">
                         Application Details
@@ -2061,7 +2672,84 @@ export default function SampleReportContent() {
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                  {/* Mobile view - Comparison Table */}
+                  <div className="md:hidden">
+                    <p className="text-xs font-medium mb-2">
+                      Application Type Comparison
+                    </p>
+                    <div className="space-y-3">
+                      <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg">
+                        <div className="flex justify-between items-center border-b border-border/30 pb-1 mb-2">
+                          <span className="text-xs font-medium">Metric</span>
+                          <div className="flex gap-3">
+                            <span className="text-xs font-medium w-16 text-right">
+                              Uniform
+                            </span>
+                            <span className="text-xs font-medium w-16 text-right">
+                              Variable
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">
+                              Total Product (tons)
+                            </span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                215
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                211
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Product Cost (USD)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                $3,229
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                $3,167
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Application (USD)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                $375
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                $525
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center pt-1 border-t border-border/30">
+                            <span className="text-xs font-medium">
+                              Field Total (USD)
+                            </span>
+                            <div className="flex gap-3">
+                              <span className="text-xs font-medium w-16 text-right">
+                                $3,604
+                              </span>
+                              <span className="text-xs font-medium w-16 text-right">
+                                $3,692
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Desktop view - Comparison Table */}
+                  <div className="hidden md:block bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
                     <p className="text-sm font-medium mb-4">
                       Application Type Comparison
                     </p>
@@ -2190,7 +2878,7 @@ export default function SampleReportContent() {
 
   if (!isClient) {
     return (
-      <div className="w-full h-screen flex items-center justify-center">
+      <div className="w-full min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">
           Loading report...
         </div>

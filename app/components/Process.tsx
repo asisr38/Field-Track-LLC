@@ -123,22 +123,24 @@ export default function Process() {
             >
               <div
                 className={cn(
-                  "grid lg:grid-cols-2 gap-8 items-stretch h-[500px]",
+                  "grid lg:grid-cols-2 gap-8 items-stretch min-h-0 lg:min-h-[500px]",
                   index % 2 === 1 && "lg:grid-flow-dense"
                 )}
               >
                 {/* Content Side */}
                 <div
                   className={cn(
-                    "p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/50 transition-all duration-300 h-full flex flex-col justify-center overflow-auto",
+                    "p-6 sm:p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/50 transition-all duration-300 h-full flex flex-col justify-center",
                     index % 2 === 1 && "lg:col-start-2"
                   )}
                 >
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
-                      <step.icon className="w-6 h-6" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                      <step.icon className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
-                    <h3 className="text-2xl font-bold">{step.title}</h3>
+                    <h3 className="text-xl sm:text-2xl font-bold">
+                      {step.title}
+                    </h3>
                   </div>
                   <p className="text-muted-foreground mb-6">
                     {step.description}
@@ -158,7 +160,7 @@ export default function Process() {
                 {/* Image Side */}
                 <div
                   className={cn(
-                    "relative overflow-hidden rounded-2xl shadow-xl h-full",
+                    "relative overflow-hidden rounded-2xl shadow-xl h-[300px] sm:h-[400px] lg:h-full",
                     index % 2 === 1 && "lg:col-start-1"
                   )}
                 >

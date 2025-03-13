@@ -8,7 +8,7 @@ const SampleReportContent = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-screen flex items-center justify-center">
+      <div className="w-full min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">
           Loading report...
         </div>
@@ -21,7 +21,7 @@ export default function SampleReportPage() {
   return (
     <Suspense
       fallback={
-        <div className="w-full h-screen flex items-center justify-center">
+        <div className="w-full min-h-screen flex items-center justify-center">
           <div className="animate-pulse text-muted-foreground">
             Loading report...
           </div>

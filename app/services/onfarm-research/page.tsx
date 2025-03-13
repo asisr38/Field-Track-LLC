@@ -344,8 +344,8 @@ export default function OnFarmResearchPage() {
   }, [theme]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <section className="relative pt-32 pb-16 overflow-hidden">
+    <div className="min-h-screen bg-background pt-16">
+      <section className="relative pt-20 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-green-100/20 to-transparent" />
         <div className="container mx-auto px-4 relative">
           <motion.div
