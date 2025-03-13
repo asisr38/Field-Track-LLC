@@ -311,9 +311,9 @@ export default function SimpleSensePage() {
   }, [isPlaying]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-16">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-16 overflow-hidden">
+      <section className="relative pt-20 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-green-100/20 to-transparent" />
         <div className="container mx-auto px-4 relative">
           <motion.div
@@ -353,20 +353,20 @@ export default function SimpleSensePage() {
               <div className="space-y-8">
                 {/* Experimental Design Card - Full Width */}
                 <Card className="p-6">
-                  <div className="flex items-center gap-2 mb-6">
+                  <div className="flex flex-wrap items-center gap-2 mb-6">
                     <GitMerge className="w-5 h-5 text-primary" />
                     <h3 className="text-lg font-semibold">
                       Experimental Design
                     </h3>
-                    <span className="text-sm text-muted-foreground ml-2">
+                    <span className="text-sm text-muted-foreground ml-0 sm:ml-2">
                       Randomized Complete Block Factorial
                     </span>
                   </div>
 
                   {/* Layout Maps Grid */}
-                  <div className="grid grid-cols-2 gap-8 mb-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6">
                     <div>
-                      <h4 className="text-base font-medium mb-4">
+                      <h4 className="text-base font-medium mb-4 text-center md:text-left">
                         Treatment Layout
                       </h4>
                       <div className="relative">
@@ -377,7 +377,7 @@ export default function SimpleSensePage() {
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-base font-medium mb-4">
+                      <h4 className="text-base font-medium mb-4 text-center md:text-left">
                         Replication Layout
                       </h4>
                       <div className="relative">
@@ -443,7 +443,7 @@ export default function SimpleSensePage() {
                     <div className="space-y-3">
                       <div className="border-l-4 border-emerald-500 pl-3">
                         <h5 className="font-medium mb-1">Products</h5>
-                        <div className="text-sm grid grid-cols-3 gap-2">
+                        <div className="text-sm grid grid-cols-1 xs:grid-cols-3 gap-2">
                           <div>Product A</div>
                           <div>Product B</div>
                           <div>Product C</div>
@@ -451,7 +451,7 @@ export default function SimpleSensePage() {
                       </div>
                       <div className="border-l-4 border-blue-500 pl-3">
                         <h5 className="font-medium mb-1">Application Timing</h5>
-                        <div className="text-sm grid grid-cols-2 gap-2">
+                        <div className="text-sm grid grid-cols-1 xs:grid-cols-2 gap-2">
                           <div>Time 1: Early</div>
                           <div>Time 2: Mid</div>
                           <div>Time 3: Late</div>
@@ -492,15 +492,15 @@ export default function SimpleSensePage() {
                     </span>
                   </div>
 
-                  <div className="flex items-start gap-4 mb-6">
+                  <div className="flex flex-col md:flex-row items-start gap-4 mb-6">
                     <Image
                       src="/simple-sense/dji-mavic-3.jpg"
                       alt="DJI Mavic 3M"
                       width={200}
                       height={200}
-                      className="rounded-lg"
+                      className="rounded-lg mx-auto md:mx-0 mb-4 md:mb-0"
                     />
-                    <div className="space-y-4">
+                    <div className="space-y-4 w-full">
                       <p className="text-sm text-muted-foreground">
                         Multispectral Imaging System + RGB Highly integrated
                         imaging system Imaging system has one 20MP RGB camera
@@ -509,13 +509,13 @@ export default function SimpleSensePage() {
                         high-precision aerial surveying, crop growth monitoring,
                         and natural resource surveys.
                       </p>
-                      <div className="grid grid-cols-4 gap-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
                         <div className="p-3 bg-muted/50 rounded-lg text-center">
                           <div className="font-medium">20MP</div>
                           <div className="text-xs text-muted-foreground">
                             RGB Camera
                           </div>
-                        </div>{" "}
+                        </div>
                         <div className="p-3 bg-muted/50 rounded-lg text-center">
                           <div className="font-medium">1/2000s</div>
                           <div className="text-xs text-muted-foreground">
@@ -646,7 +646,7 @@ export default function SimpleSensePage() {
                     <div className="space-y-3">
                       <div className="border-l-4 border-emerald-500 pl-3">
                         <h5 className="font-medium mb-1">Flight Pattern</h5>
-                        <div className="text-sm grid grid-cols-2 gap-2">
+                        <div className="text-sm grid grid-cols-1 xs:grid-cols-2 gap-2">
                           <div>Double Grid</div>
                           <div>90° Crosshatch</div>
                           <div>Front Overlap: 80%</div>
@@ -655,7 +655,7 @@ export default function SimpleSensePage() {
                       </div>
                       <div className="border-l-4 border-blue-500 pl-3">
                         <h5 className="font-medium mb-1">Timing</h5>
-                        <div className="text-sm grid grid-cols-2 gap-2">
+                        <div className="text-sm grid grid-cols-1 xs:grid-cols-2 gap-2">
                           <div>Solar Noon ±2h</div>
                           <div>Clear Sky</div>
                           <div>Low Wind</div>
@@ -685,49 +685,51 @@ export default function SimpleSensePage() {
               {/* Processing Workflow */}
               <div className="bg-card rounded-lg p-6 border border-border/50">
                 <h4 className="font-semibold mb-6">Processing Workflow</h4>
-                <div className="grid grid-cols-7 gap-4">
-                  {[
-                    {
-                      icon: <Camera className="w-5 h-5" />,
-                      label: "Acquisition"
-                    },
-                    {
-                      icon: <Gauge className="w-5 h-5" />,
-                      label: "Radiometric Adjustment"
-                    },
-                    {
-                      icon: <GitMerge className="w-5 h-5" />,
-                      label: "Orthomosaic"
-                    },
-                    {
-                      icon: <Calculator className="w-5 h-5" />,
-                      label: "Vegetation Indices"
-                    },
-                    {
-                      icon: <Target className="w-5 h-5" />,
-                      label: "Zonal Statistics"
-                    },
-                    {
-                      icon: <Microscope className="w-5 h-5" />,
-                      label: "Analysis"
-                    },
-                    {
-                      icon: <LineChart className="w-5 h-5" />,
-                      label: "Visualization"
-                    }
-                  ].map((step, index) => (
-                    <div key={step.label} className="text-center space-y-2">
-                      <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                          <div className="text-primary">{step.icon}</div>
+                <div className="overflow-x-auto pb-2">
+                  <div className="grid grid-cols-7 gap-4 min-w-[700px]">
+                    {[
+                      {
+                        icon: <Camera className="w-5 h-5" />,
+                        label: "Acquisition"
+                      },
+                      {
+                        icon: <Gauge className="w-5 h-5" />,
+                        label: "Radiometric Adjustment"
+                      },
+                      {
+                        icon: <GitMerge className="w-5 h-5" />,
+                        label: "Orthomosaic"
+                      },
+                      {
+                        icon: <Calculator className="w-5 h-5" />,
+                        label: "Vegetation Indices"
+                      },
+                      {
+                        icon: <Target className="w-5 h-5" />,
+                        label: "Zonal Statistics"
+                      },
+                      {
+                        icon: <Microscope className="w-5 h-5" />,
+                        label: "Analysis"
+                      },
+                      {
+                        icon: <LineChart className="w-5 h-5" />,
+                        label: "Visualization"
+                      }
+                    ].map((step, index) => (
+                      <div key={step.label} className="text-center space-y-2">
+                        <div className="relative">
+                          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                            <div className="text-primary">{step.icon}</div>
+                          </div>
+                          {index < 6 && (
+                            <div className="absolute top-1/2 -right-2 w-4 h-0.5 bg-border" />
+                          )}
                         </div>
-                        {index < 6 && (
-                          <div className="absolute top-1/2 -right-2 w-4 h-0.5 bg-border" />
-                        )}
+                        <p className="text-xs font-medium">{step.label}</p>
                       </div>
-                      <p className="text-xs font-medium">{step.label}</p>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -932,14 +934,16 @@ export default function SimpleSensePage() {
 
                 <Card className="p-6">
                   <Tabs defaultValue="1" className="space-y-4">
-                    <TabsList>
-                      <TabsTrigger value="1">V4 Stage (Early)</TabsTrigger>
-                      <TabsTrigger value="2">V9 Stage (Mid)</TabsTrigger>
-                      <TabsTrigger value="3">R1 Stage (Silking)</TabsTrigger>
-                      <TabsTrigger value="4">R3 Stage (Milk)</TabsTrigger>
-                      <TabsTrigger value="5">R5 Stage (Dent)</TabsTrigger>
-                      <TabsTrigger value="6">R6 Stage (Maturity)</TabsTrigger>
-                    </TabsList>
+                    <div className="overflow-x-auto pb-2">
+                      <TabsList className="min-w-[700px]">
+                        <TabsTrigger value="1">V4 Stage (Early)</TabsTrigger>
+                        <TabsTrigger value="2">V9 Stage (Mid)</TabsTrigger>
+                        <TabsTrigger value="3">R1 Stage (Silking)</TabsTrigger>
+                        <TabsTrigger value="4">R3 Stage (Milk)</TabsTrigger>
+                        <TabsTrigger value="5">R5 Stage (Dent)</TabsTrigger>
+                        <TabsTrigger value="6">R6 Stage (Maturity)</TabsTrigger>
+                      </TabsList>
+                    </div>
 
                     <TabsContent value="1">
                       <TemporalNDVIMap

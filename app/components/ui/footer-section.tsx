@@ -54,7 +54,7 @@ function Footerdemo() {
     <footer className="relative border-t bg-background text-foreground transition-colors duration-300">
       <div className="container mx-auto px-4 py-12 md:px-6 lg:px-8">
         {/* Main Footer Grid */}
-        <div className="grid gap-12 md:grid-cols-2 border-b border-border pb-12">
+        <div className="grid gap-12 md:grid-cols-3 border-b border-border pb-12">
           {/* Column 1: Quick Links */}
           <div className="flex flex-col gap-6">
             <h3 className="text-lg font-semibold">Quick Links</h3>
@@ -85,8 +85,7 @@ function Footerdemo() {
               </a>
             </nav>
           </div>
-
-          {/* Column 2: Social Media
+          {/* Column 2: Social Media */}
           <div className="flex flex-col gap-6">
             <h3 className="text-lg font-semibold">Follow Us</h3>
             <div className="flex gap-3">
@@ -112,12 +111,13 @@ function Footerdemo() {
                 <Instagram className="h-4 w-4" />
               </Button>
             </div>
-          </div> */}
-
+          </div>
           {/* Column 3: Contact Information (replacing Newsletter) */}
           <div className="flex flex-col gap-6">
             <div className="space-y-4">
-              <h2 className="text-2xl font-bold">Contact Us</h2>
+              <a href="/#contact">
+                <h2 className="text-2xl font-bold hover:text-primary transition-colors">Contact Us</h2>
+              </a>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Have questions? We're here to help. Reach out to us through any
                 of our channels.

@@ -159,6 +159,37 @@ export default function Header() {
     }
   };
 
+  // Add a useEffect to ensure body scroll is restored when component unmounts
+  useEffect(() => {
+    // Cleanup function to ensure body scroll is restored
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  // Add another useEffect to handle body scroll when menu state changes
+  useEffect(() => {
+    // If menu is closed, ensure body scroll is restored
+    if (!isMenuOpen) {
+      document.body.style.overflow = "";
+    }
+  }, [isMenuOpen]);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setIsMenuOpen(false);
+      setActiveDropdown(null);
+      document.body.style.overflow = "";
+    };
+
+    window.addEventListener("popstate", handleRouteChange);
+
+    return () => {
+      window.removeEventListener("popstate", handleRouteChange);
+    };
+  }, []);
+
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const href = e.currentTarget.getAttribute("href");
 
@@ -169,7 +200,17 @@ export default function Header() {
         window.scrollTo({ top: 0, behavior: "smooth" });
         setActiveSection("home");
       }
-      setTimeout(() => setIsMenuOpen(false), 150);
+      // Ensure we restore body scroll when navigating
+      document.body.style.overflow = "";
+      setIsMenuOpen(false);
+      return;
+    }
+
+    // Handle service pages or other non-hash links
+    if (href && !href.startsWith("/#")) {
+      // Ensure we restore body scroll when navigating
+      document.body.style.overflow = "";
+      setIsMenuOpen(false);
       return;
     }
 
@@ -178,7 +219,11 @@ export default function Header() {
       const targetId = href.substring(2);
 
       if (window.location.pathname !== "/") {
+        // If we're not on the homepage, navigate to homepage with hash
         window.location.href = href;
+        // Ensure we restore body scroll when navigating
+        document.body.style.overflow = "";
+        setIsMenuOpen(false);
         return;
       }
 
@@ -188,13 +233,17 @@ export default function Header() {
         const offset = isMobile ? 80 : 70;
         const offsetTop =
           targetElement.getBoundingClientRect().top + window.scrollY - offset;
-        window.scrollTo({ top: offsetTop, behavior: "smooth" });
-        setActiveSection(targetId);
-      }
 
-      setTimeout(() => setIsMenuOpen(false), 150);
-    } else {
-      setIsMenuOpen(false);
+        // Ensure menu is closed before scrolling
+        setIsMenuOpen(false);
+        document.body.style.overflow = "";
+
+        // Small delay to ensure menu is closed before scrolling
+        setTimeout(() => {
+          window.scrollTo({ top: offsetTop, behavior: "smooth" });
+          setActiveSection(targetId);
+        }, 10);
+      }
     }
   };
 
@@ -307,26 +356,21 @@ export default function Header() {
                 onMouseEnter={() => handleMouseEnter(item.name)}
                 onMouseLeave={handleMouseLeave}
               >
-                <button
+                <Link
+                  href={item.url}
+                  onClick={handleLinkClick}
                   className={cn(
                     "relative px-4 py-2 rounded-full transition-all duration-300",
                     "flex items-center gap-2",
-                    "text-base font-medium border-0 bg-transparent",
-                    "focus:outline-none",
-                    isDropdownActive || isActive || isServicesHighlighted
+                    "text-base font-medium",
+                    isActive
                       ? "text-primary font-semibold"
                       : "text-muted-foreground hover:text-foreground"
                   )}
                 >
                   <item.icon className="w-5 h-5" />
                   <span>{item.name}</span>
-                  <ChevronDown
-                    className={cn(
-                      "w-4 h-4 transition-transform duration-300",
-                      isDropdownActive && "rotate-180"
-                    )}
-                  />
-                </button>
+                </Link>
 
                 {/* Dropdown for services */}
                 {isDropdownActive && (
@@ -353,6 +397,14 @@ export default function Header() {
                           <Link
                             key={idx}
                             href={dropdownItem.url}
+                            onClick={e => {
+                              // Close menu immediately
+                              setIsMenuOpen(false);
+                              setActiveDropdown(null);
+                              document.body.style.overflow = "";
+                              // Then handle the link click
+                              handleLinkClick(e);
+                            }}
                             className={cn(
                               "flex items-start gap-3 p-3 rounded-lg hover:bg-primary/10 transition-colors group",
                               isActiveService && "bg-primary/5"
@@ -410,7 +462,8 @@ export default function Header() {
   return (
     <header
       className={cn(
-        "fixed top-0 w-full backdrop-blur-md border-b z-50 transition-all duration-300",
+        "fixed top-0 w-full backdrop-blur-md border-b transition-all duration-300",
+        "z-[9999]",
         isScrolled
           ? "bg-background/90 border-border/30 py-2"
           : "bg-background border-transparent py-3 md:py-4"
@@ -539,20 +592,46 @@ export default function Header() {
                                     <Link
                                       key={idx}
                                       href={dropdownItem.url}
-                                      onClick={() => {
-                                        handleLinkClick;
+                                      onClick={e => {
+                                        // Close menu immediately
                                         setIsMenuOpen(false);
+                                        setActiveDropdown(null);
+                                        document.body.style.overflow = "";
+                                        // Then handle the link click
+                                        handleLinkClick(e);
                                       }}
-                                      className="flex items-start gap-3 p-3 rounded-md hover:bg-primary/10 transition-colors"
+                                      className={cn(
+                                        "flex items-start gap-3 p-3 rounded-lg hover:bg-primary/10 transition-colors group",
+                                        activeSection ===
+                                          item.url.replace("/#", "") ||
+                                          (item.url === "/" &&
+                                            activeSection === "home") ||
+                                          (item.name === "Services" &&
+                                            activeSection === "services")
+                                          ? "bg-primary/5"
+                                          : "text-foreground hover:bg-muted"
+                                      )}
                                     >
-                                      <div className="mt-0.5 text-primary">
-                                        <dropdownItem.icon className="w-4 h-4" />
+                                      <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                                        <dropdownItem.icon className="w-5 h-5" />
                                       </div>
-                                      <div>
-                                        <div className="font-medium text-foreground">
+                                      <div className="flex-1">
+                                        <div
+                                          className={cn(
+                                            "font-medium text-foreground group-hover:text-primary transition-colors",
+                                            activeSection ===
+                                              item.url.replace("/#", "") ||
+                                              (item.url === "/" &&
+                                                activeSection === "home") ||
+                                              (item.name === "Services" &&
+                                                activeSection === "services")
+                                              ? "text-primary"
+                                              : "text-foreground hover:text-primary"
+                                          )}
+                                        >
                                           {dropdownItem.name}
                                         </div>
-                                        <div className="text-xs text-muted-foreground">
+                                        <div className="text-sm text-muted-foreground">
                                           {dropdownItem.description}
                                         </div>
                                       </div>
@@ -570,6 +649,8 @@ export default function Header() {
                         onClick={e => {
                           handleLinkClick(e);
                           setIsMenuOpen(false);
+                          setActiveDropdown(null);
+                          document.body.style.overflow = "";
                         }}
                         className={cn(
                           "flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
@@ -580,7 +661,7 @@ export default function Header() {
                         )}
                       >
                         <item.icon className="w-5 h-5" />
-                        {item.name}
+                        <span>{item.name}</span>
                       </Link>
                     )}
                   </div>

@@ -23,6 +23,7 @@ import {
   FaVial,
   FaRuler
 } from "react-icons/fa";
+import Head from "next/head";
 
 // Dynamically import the FieldSamplingMap component to avoid SSR issues with Leaflet
 const FieldSamplingMap = dynamic(
@@ -231,8 +232,8 @@ export default function FieldSamplingPage() {
     nutrientColorScales[selectedNutrient as keyof typeof nutrientColorScales];
 
   return (
-    <div className="min-h-screen bg-background">
-      <section className="relative pt-32 pb-16 overflow-hidden">
+    <div className="min-h-screen bg-background pt-16 overflow-x-hidden">
+      <section className="relative pt-20 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-green-100/20 to-transparent" />
         <div className="container mx-auto px-4 relative">
           <motion.div
@@ -505,9 +506,9 @@ export default function FieldSamplingPage() {
             </p>
           </motion.div>
 
-          <Card className="p-6 mb-12">
-            <div className="bg-muted/50 rounded-lg p-4 shadow-inner mb-6">
-              <div className="h-[600px] w-full rounded-lg overflow-hidden">
+          <Card className="p-4 md:p-6 mb-12 overflow-hidden">
+            <div className="bg-muted/50 rounded-lg p-2 md:p-4 shadow-inner mb-4 md:mb-6 overflow-hidden">
+              <div className="h-[400px] md:h-[600px] w-full rounded-lg overflow-hidden">
                 {isClient && (
                   <FieldSamplingMap nutrientType={selectedNutrient} />
                 )}
@@ -515,7 +516,7 @@ export default function FieldSamplingPage() {
             </div>
 
             {/* Sample Information Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
               <DataCard title="Field Information" icon={<FaMapMarkedAlt />}>
                 <div className="space-y-2">
                   <DataRow label="Field Name" value="John Doe" />
@@ -549,9 +550,9 @@ export default function FieldSamplingPage() {
                       onClick={() => setDropdownOpen(!dropdownOpen)}
                       className="w-full flex items-center justify-between p-2 border border-border rounded-md bg-card hover:bg-muted transition-colors"
                     >
-                      <span>{currentNutrient?.label}</span>
+                      <span className="truncate">{currentNutrient?.label}</span>
                       <ChevronDown
-                        className={`w-4 h-4 transition-transform ${
+                        className={`w-4 h-4 flex-shrink-0 transition-transform ${
                           dropdownOpen ? "rotate-180" : ""
                         }`}
                       />
@@ -568,8 +569,10 @@ export default function FieldSamplingPage() {
                               setDropdownOpen(false);
                             }}
                           >
-                            <div className="font-medium">{option.label}</div>
-                            <div className="text-xs text-muted-foreground">
+                            <div className="font-medium truncate">
+                              {option.label}
+                            </div>
+                            <div className="text-xs text-muted-foreground truncate">
                               {option.description}
                             </div>
                           </button>
@@ -585,12 +588,12 @@ export default function FieldSamplingPage() {
                     {currentColorScale.ranges.map((range, index) => (
                       <div key={index} className="flex items-center gap-2 mb-1">
                         <div
-                          className="w-4 h-4 rounded-full"
+                          className="w-4 h-4 rounded-full flex-shrink-0"
                           style={{
                             backgroundColor: currentColorScale.colors[index]
                           }}
                         ></div>
-                        <span className="text-sm">
+                        <span className="text-sm truncate">
                           {index < currentColorScale.ranges.length - 1
                             ? `${range}-${
                                 currentColorScale.ranges[index + 1]
@@ -639,7 +642,7 @@ export default function FieldSamplingPage() {
                   optimize input costs.
                 </p>
                 <div className="flex justify-center">
-                  <a 
+                  <a
                     href="/#contact"
                     className="bg-primary text-primary-foreground px-6 py-3 rounded-md hover:bg-primary/80 transition-colors font-medium"
                   >

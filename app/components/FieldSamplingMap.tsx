@@ -112,11 +112,16 @@ const FieldSamplingMap = ({
         minZoom: 14,
         maxZoom: 20,
         zoomControl: true,
-        scrollWheelZoom: true,
+        scrollWheelZoom: false, // Disable scroll wheel zoom on mobile
         doubleClickZoom: true,
         dragging: true,
         maxBoundsViscosity: 1.0 // Completely restrict panning outside bounds
       });
+
+      // Enable scroll wheel zoom only on desktop
+      if (window.innerWidth >= 768) {
+        map.scrollWheelZoom.enable();
+      }
 
       mapRef.current = map;
 
@@ -182,6 +187,7 @@ const FieldSamplingMap = ({
         padding: 0;
         line-height: 1.5;
         width: 100% !important;
+        max-width: 280px;
       }
       
       .custom-popup .leaflet-popup-tip {
@@ -249,49 +255,49 @@ const FieldSamplingMap = ({
         margin-bottom: 12px;
       }
       
-      .sample-popup-card {
-        background-color: var(--popup-card-bg);
-        padding: 12px;
-        border-radius: 6px;
-        margin-bottom: 12px;
-      }
-      
-      .sample-popup-card:last-child {
-        margin-bottom: 0;
-      }
-      
-      .sample-popup-card-title {
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: var(--popup-title);
-        font-size: 14px;
-      }
-      
-      /* Light mode variables */
-      :root {
-        --popup-bg: #ffffff;
-        --popup-text: #333333;
-        --popup-title: #166534;
-        --popup-border: rgba(0,0,0,0.1);
-        --popup-label: #6b7280;
-        --popup-value: #111827;
-        --popup-card-bg: #f9fafb;
-      }
-      
-      /* Dark mode variables */
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --popup-bg: #1e1e1e;
-          --popup-text: #e0e0e0;
-          --popup-title: #4ade80;
-          --popup-border: rgba(255,255,255,0.1);
-          --popup-label: #9ca3af;
-          --popup-value: #f3f4f6;
-          --popup-card-bg: #2a2a2a;
+      /* Mobile optimizations */
+      @media (max-width: 640px) {
+        .custom-popup .leaflet-popup-content {
+          max-width: 240px;
+        }
+        
+        .field-popup, .sample-popup {
+          font-size: 12px;
+          padding: 12px;
+        }
+        
+        .field-popup-title, .sample-popup-title {
+          font-size: 14px;
+          margin-bottom: 8px;
+        }
+        
+        .field-popup-label, .sample-popup-label {
+          font-size: 11px;
         }
       }
     `;
       document.head.appendChild(style);
+
+      // Handle window resize to adjust map
+      const handleResize = () => {
+        map.invalidateSize();
+        // Enable/disable scroll wheel zoom based on screen width
+        if (window.innerWidth >= 768) {
+          map.scrollWheelZoom.enable();
+        } else {
+          map.scrollWheelZoom.disable();
+        }
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      // Cleanup function
+      return () => {
+        window.removeEventListener("resize", handleResize);
+        if (style.parentNode) {
+          style.parentNode.removeChild(style);
+        }
+      };
     }
 
     // Update the map with the selected nutrient type
