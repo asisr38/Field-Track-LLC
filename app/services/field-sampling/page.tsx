@@ -31,8 +31,11 @@ const FieldSamplingMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[600px] bg-muted/20 animate-pulse rounded-lg flex items-center justify-center">
-        <p className="text-muted-foreground">Loading field sampling map...</p>
+      <div className="w-full h-[400px] bg-muted/20 animate-pulse rounded-lg flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent mb-2"></div>
+          <p className="text-muted-foreground">Loading field sampling map...</p>
+        </div>
       </div>
     )
   }

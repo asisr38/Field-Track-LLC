@@ -1,24 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import boundaryData from "../data/Boundary_Demo.json";
-import pointData from "../data/Point_Demo.json";
 
 interface FieldSamplingMapProps {
   className?: string;
   nutrientType?: string;
 }
-
-// Type assertions for the GeoJSON data
-const typedBoundaryData = boundaryData as unknown as GeoJSON.FeatureCollection;
-const typedPointData = pointData as unknown as GeoJSON.FeatureCollection;
-
-// Log the data to help with debugging
-console.log("Boundary Data:", boundaryData);
-console.log("Point Data:", pointData);
-console.log("Number of point features:", typedPointData.features.length);
 
 // Define nutrient information with display names, property keys, and color scales
 const nutrientInfo = {
@@ -100,8 +89,65 @@ const FieldSamplingMap = ({
     legend?: L.Control;
   }>({});
 
+  // Add state for the data
+  const [boundaryData, setBoundaryData] =
+    useState<GeoJSON.FeatureCollection | null>(null);
+  const [pointData, setPointData] = useState<GeoJSON.FeatureCollection | null>(
+    null
+  );
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch the data
   useEffect(() => {
-    if (!mapContainerRef.current) return;
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+
+        // Fetch boundary data
+        const boundaryResponse = await fetch("/data/Boundary_Demo.json");
+        if (!boundaryResponse.ok) {
+          throw new Error(
+            `Failed to fetch boundary data: ${boundaryResponse.status}`
+          );
+        }
+        const boundaryJson = await boundaryResponse.json();
+
+        // Fetch point data
+        const pointResponse = await fetch("/data/Point_Demo.json");
+        if (!pointResponse.ok) {
+          throw new Error(
+            `Failed to fetch point data: ${pointResponse.status}`
+          );
+        }
+        const pointJson = await pointResponse.json();
+
+        // Set the data
+        setBoundaryData(boundaryJson);
+        setPointData(pointJson);
+
+        // Log the data for debugging
+        console.log("Boundary Data:", boundaryJson);
+        console.log("Point Data:", pointJson);
+        console.log(
+          "Number of point features:",
+          pointJson.features?.length || 0
+        );
+
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError(err instanceof Error ? err.message : String(err));
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (!mapContainerRef.current || isLoading || !boundaryData || !pointData)
+      return;
 
     // Initialize map if it doesn't exist
     if (!mapRef.current) {
@@ -135,7 +181,7 @@ const FieldSamplingMap = ({
       ).addTo(map);
 
       // Add field boundary to map
-      const boundaryLayer = L.geoJSON(typedBoundaryData, {
+      const boundaryLayer = L.geoJSON(boundaryData, {
         style: {
           fillColor: "#f8f9fa",
           weight: 3,
@@ -311,100 +357,112 @@ const FieldSamplingMap = ({
         layersRef.current = {};
       }
     };
-  }, [nutrientType]);
+  }, [nutrientType, isLoading, boundaryData, pointData]);
 
   // Function to update map layers based on nutrient type
   const updateMapLayers = (nutrientType: string) => {
-    if (!mapRef.current) return;
+    if (!mapRef.current || !boundaryData || !pointData) return;
 
     const map = mapRef.current;
-    const selectedNutrient =
-      nutrientInfo[nutrientType as keyof typeof nutrientInfo] ||
-      nutrientInfo.phosphorus;
 
-    // Remove existing points layer if it exists
+    // Remove existing layers
     if (layersRef.current.pointsLayer) {
       map.removeLayer(layersRef.current.pointsLayer);
     }
 
-    // Remove existing legend if it exists
     if (layersRef.current.legend) {
       map.removeControl(layersRef.current.legend);
     }
 
-    // Define color function for the selected nutrient
+    // Get the selected nutrient info
+    const selectedNutrient =
+      nutrientInfo[nutrientType as keyof typeof nutrientInfo];
+
+    // Create a function to get color based on nutrient value
     const getNutrientColor = (value: number) => {
       const { ranges, colors } = selectedNutrient;
 
       for (let i = 0; i < ranges.length - 1; i++) {
-        if (value < ranges[i + 1]) {
+        if (value >= ranges[i] && value < ranges[i + 1]) {
           return colors[i];
         }
       }
-      return colors[colors.length - 1]; // Return the last color for values above the highest range
+
+      // Return the last color if value is greater than the highest range
+      return colors[colors.length - 1];
     };
 
-    // Create legend for the selected nutrient
-    const legend = new L.Control({ position: "topright" });
+    // Create a legend control
+    const legend = new L.Control({ position: "bottomright" });
+
     legend.onAdd = () => {
       const div = L.DomUtil.create("div", "info legend sf_layer");
-      div.style.backgroundColor = "var(--card-bg, white)";
-      div.style.color = "var(--text-color, black)";
+
+      // Style the legend
+      div.style.backgroundColor = "white";
       div.style.padding = "10px";
-      div.style.borderRadius = "8px";
-      div.style.border = "1px solid var(--border-color, rgba(0,0,0,0.1))";
-      div.style.boxShadow = "var(--shadow, 0 1px 5px rgba(0,0,0,0.2))";
-      div.style.fontSize = "12px";
-      div.style.lineHeight = "18px";
-      div.style.backdropFilter = "blur(10px)";
+      div.style.borderRadius = "5px";
+      div.style.boxShadow = "0 1px 5px rgba(0,0,0,0.4)";
+      div.style.lineHeight = "1.5";
+      div.style.color = "#333";
+      div.style.maxWidth = "200px";
 
-      const { ranges, colors, labels, displayName, unit } = selectedNutrient;
-      const opacity = 0.8;
+      // Add title
+      const title = document.createElement("div");
+      title.innerHTML = `<strong>${selectedNutrient.displayName}</strong>`;
+      title.style.marginBottom = "8px";
+      title.style.borderBottom = "1px solid #ddd";
+      title.style.paddingBottom = "5px";
+      div.appendChild(title);
 
-      div.innerHTML = `<div style="margin-bottom:6px"><strong>${displayName}</strong></div>`;
-      for (let i = 0; i < ranges.length; i++) {
-        div.innerHTML += `<i style="background:${
-          colors[i]
-        };opacity:${opacity}"></i> ${
-          i < ranges.length - 1
-            ? `${ranges[i]}-${ranges[i + 1]}`
-            : `${ranges[i]}+`
-        } ${unit} <span style="float:right;font-style:italic;font-size:10px;">${
-          labels[i]
-        }</span><br>`;
+      // Add color scale
+      const { ranges, colors, labels } = selectedNutrient;
+
+      for (let i = 0; i < ranges.length - 1; i++) {
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.alignItems = "center";
+        row.style.marginBottom = "3px";
+
+        const colorBox = document.createElement("span");
+        colorBox.style.width = "15px";
+        colorBox.style.height = "15px";
+        colorBox.style.display = "inline-block";
+        colorBox.style.marginRight = "5px";
+        colorBox.style.backgroundColor = colors[i];
+        colorBox.style.opacity = "0.8";
+
+        const label = document.createElement("span");
+        label.innerHTML = `${ranges[i]} - ${ranges[i + 1]} ${
+          selectedNutrient.unit
+        } <small>(${labels[i]})</small>`;
+
+        row.appendChild(colorBox);
+        row.appendChild(label);
+        div.appendChild(row);
       }
 
-      // Add some custom styling for the legend items
-      div.innerHTML += `
-        <style>
-          .legend i {
-            width: 18px;
-            height: 18px;
-            float: left;
-            margin-right: 8px;
-            opacity: 0.7;
-            border-radius: 50%;
-          }
-          
-          @media (prefers-color-scheme: dark) {
-            .legend {
-              --card-bg: rgba(30, 30, 30, 0.8);
-              --text-color: #e0e0e0;
-              --border-color: rgba(255,255,255,0.1);
-              --shadow: 0 4px 12px rgba(0,0,0,0.5);
-            }
-          }
-          
-          @media (prefers-color-scheme: light) {
-            .legend {
-              --card-bg: rgba(255, 255, 255, 0.9);
-              --text-color: #333;
-              --border-color: rgba(0,0,0,0.1);
-              --shadow: 0 2px 8px rgba(0,0,0,0.1);
-            }
-          }
-        </style>
-      `;
+      // Add the last range
+      const lastRow = document.createElement("div");
+      lastRow.style.display = "flex";
+      lastRow.style.alignItems = "center";
+
+      const lastColorBox = document.createElement("span");
+      lastColorBox.style.width = "15px";
+      lastColorBox.style.height = "15px";
+      lastColorBox.style.display = "inline-block";
+      lastColorBox.style.marginRight = "5px";
+      lastColorBox.style.backgroundColor = colors[colors.length - 1];
+      lastColorBox.style.opacity = "0.8";
+
+      const lastLabel = document.createElement("span");
+      lastLabel.innerHTML = `> ${ranges[ranges.length - 1]} ${
+        selectedNutrient.unit
+      } <small>(${labels[labels.length - 1]})</small>`;
+
+      lastRow.appendChild(lastColorBox);
+      lastRow.appendChild(lastLabel);
+      div.appendChild(lastRow);
 
       return div;
     };
@@ -412,7 +470,7 @@ const FieldSamplingMap = ({
     layersRef.current.legend = legend;
 
     // Add sampling points to map with the selected nutrient colors
-    const pointsLayer = L.geoJSON(typedPointData, {
+    const pointsLayer = L.geoJSON(pointData, {
       pointToLayer: (feature, latlng) => {
         const value = feature.properties?.[selectedNutrient.property] || 0;
         return L.circleMarker(latlng, {
@@ -431,8 +489,7 @@ const FieldSamplingMap = ({
             ? new Date(props.SampleDate).toLocaleDateString()
             : "N/A";
 
-          layer.bindPopup(
-            `
+          layer.bindPopup(`
             <div class="sample-popup">
               <h3 class="sample-popup-title">Sample ${
                 props.SampleID || props.ID || "N/A"
@@ -516,15 +573,7 @@ const FieldSamplingMap = ({
                 </div>
               </div>
             </div>
-          `,
-            {
-              className: "custom-popup",
-              closeButton: true,
-              maxWidth: 300,
-              minWidth: 260,
-              maxHeight: 400
-            }
-          );
+          `);
         }
       }
     }).addTo(map);
@@ -533,12 +582,50 @@ const FieldSamplingMap = ({
   };
 
   return (
-    <div
-      ref={mapContainerRef}
-      className={`w-full h-[600px] rounded-lg overflow-hidden shadow-lg ${
-        className || ""
-      }`}
-    />
+    <div className="space-y-4">
+      <div
+        className="relative h-[400px] rounded-2xl overflow-hidden border border-border/50"
+        style={{ zIndex: 1 }}
+      >
+        {isLoading ? (
+          <div className="w-full h-full flex items-center justify-center bg-gray-100">
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent mb-2"></div>
+              <p className="text-sm text-muted-foreground">
+                Loading soil sampling data...
+              </p>
+            </div>
+          </div>
+        ) : error ? (
+          <div className="w-full h-full flex items-center justify-center bg-gray-100">
+            <div className="text-center p-4">
+              <p className="text-red-500 mb-2">Error loading data</p>
+              <p className="text-sm text-muted-foreground">{error}</p>
+            </div>
+          </div>
+        ) : (
+          <div
+            ref={mapContainerRef}
+            className="w-full h-full"
+            style={{ background: "#f0f0f0" }}
+          />
+        )}
+        <style jsx global>{`
+          .leaflet-control-container {
+            pointer-events: auto;
+          }
+          .leaflet-control-zoom {
+            pointer-events: auto;
+          }
+          .leaflet-control-zoom a {
+            pointer-events: auto;
+          }
+        `}</style>
+      </div>
+      <p className="text-sm text-center text-muted-foreground">
+        Each point represents a soil sample location in the field.
+      </p>
+    </div>
   );
 };
 

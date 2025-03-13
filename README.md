@@ -22,7 +22,7 @@ Field Track LLC specializes in optimizing soil health and crop yields with unbia
 - **Framework**: Next.js 14 (React 18)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS with custom theming
-- **Components**: 
+- **Components**:
   - Radix UI primitives
   - Shadcn UI components
 - **Animation**: Framer Motion
@@ -98,6 +98,46 @@ The following environment variables should be configured in a `.env.local` file:
 - `RECIPIENT_EMAIL`: Email address that receives contact form submissions
 - `CC_EMAIL`: Optional CC email address for contact form notifications
 - `BCC_EMAIL`: Optional BCC email address for contact form notifications
+- `NEXT_PUBLIC_APP_URL`: The URL of your deployed application (used for Open Graph images)
+
+## Open Graph Images
+
+The website includes dynamic Open Graph images that appear when links are shared on social media platforms, messaging apps, and other services.
+
+### How It Works
+
+- The Open Graph images are generated dynamically using the `/api/og` endpoint
+- The images include the Field Track logo, title, and description
+- The metadata is configured in `app/layout.tsx`
+
+### Customizing Open Graph Images
+
+To customize the Open Graph image:
+
+1. Edit the dynamic image generator in `app/api/og/route.tsx`
+2. For a static fallback, edit `app/api/og/static/route.tsx`
+3. Update the metadata in `app/layout.tsx` if needed
+
+When deploying, make sure to set the `NEXT_PUBLIC_APP_URL` environment variable to your actual domain.
+
+## Soil Sampling Map
+
+The website includes an interactive soil sampling map that displays soil nutrient data. This map uses GeoJSON data files to render field boundaries and sample points.
+
+### How It Works
+
+- The map data is stored in the `public/data` directory
+- The data is fetched dynamically when the map component loads
+- The map is rendered using Leaflet.js
+
+### Troubleshooting
+
+If the soil sampling map doesn't display data points in the deployed version:
+
+1. Make sure the data files exist in the `public/data` directory
+2. Check that `Boundary_Demo.json` and `Point_Demo.json` are properly formatted
+3. Verify that the data is being fetched correctly in the browser (check network requests)
+4. If needed, clear your browser cache or try a different browser
 
 ## License
 
