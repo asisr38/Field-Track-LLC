@@ -39,7 +39,7 @@ const serviceItems = [
     url: "/services/onfarm-research"
   },
   {
-    name: "Basic Package™",
+    name: "Field Services",
     description: "Professional soil and crop sampling services",
     icon: TestTube,
     url: "/services/field-sampling"
