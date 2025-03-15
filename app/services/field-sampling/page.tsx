@@ -246,8 +246,7 @@ export default function FieldSamplingPage() {
             className="text-center"
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              <span className="text-primary">Basic Package - </span> Field
-              Services
+              <span className="text-primary">Field Services</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Get a complete picture of your field's health with our integrated
