@@ -66,9 +66,11 @@ const OnFarmMap = ({ className }: OnFarmMapProps) => {
       const colors = ["#FEE4D8", "#FCB195", "#FB795A", "#EF3C2D", "#BB1419"];
       const opacity = 0.698;
 
-      div.innerHTML = `<div style="margin-bottom:3px"><strong>SeedRate</strong></div>`;
+      div.innerHTML = `<div style="margin-bottom:3px"><strong>Seed Rate</strong></div>`;
       for (let i = 0; i < seedRates.length; i++) {
-        div.innerHTML += `<i style="background:${colors[i]};opacity:${opacity}"></i> ${seedRates[i]}<br>`;
+        // Format with comma separators for thousands
+        const formattedRate = seedRates[i].toLocaleString();
+        div.innerHTML += `<i style="background:${colors[i]};opacity:${opacity}"></i> ${formattedRate}<br>`;
       }
 
       // Add some custom styling for the legend items

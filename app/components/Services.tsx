@@ -21,11 +21,11 @@ const services: ServiceItem[] = [
     link: "/services/simple-sense"
   },
   {
-    title: "OnFarm Research",
+    title: "On-Farm Research",
     description:
       "Comprehensive field trial services with advanced spatial analytics. From experimental design to harvest data collection, we help validate agricultural practices using Surgo soil data integration and detailed performance analysis.",
     icon: <Microscope className="w-5 h-5 sm:w-6 sm:h-6" />,
-    image: "/images/onfarm.jpg",
+    image: "/onfarm/onfarmmain.png",
     tags: [
       "Spatial Trial Design",
       "Variable Rate Testing",

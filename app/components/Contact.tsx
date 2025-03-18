@@ -27,7 +27,7 @@ const cropTypes = [
 
 const serviceTypes = [
   "SimpleSense - Aerial Imagery",
-  "OnFarm Research",
+  "On-Farm Research",
   "Field Services"
 ];
 

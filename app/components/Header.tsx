@@ -33,7 +33,7 @@ const serviceItems = [
     url: "/services/simple-sense"
   },
   {
-    name: "OnFarm Research",
+    name: "On-Farm Research",
     description: "Comprehensive field trial services with spatial analytics",
     icon: Microscope,
     url: "/services/onfarm-research"
