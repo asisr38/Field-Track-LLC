@@ -3,9 +3,9 @@
 import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import demoPlotData from "@/public/simple-sense/SmallPlots_Demo_v6_WGS_Plots_ExtractionZones.json";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { FeatureCollection, Feature, GeoJsonProperties } from "geojson";
-import { PathOptions, LatLngBounds, latLng } from "leaflet";
+import { PathOptions, LatLngBounds, latLng, PointTuple } from "leaflet";
 import { Card } from "@/components/ui/card";
 
 export type TrialLayoutProps = {
@@ -63,35 +63,48 @@ const getPlotColor = (property: string, view: "treatment" | "replication") => {
   }
 };
 
-// MapBoundsUpdater component to fit map to bounds
+// Add useIsMobile hook
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  return isMobile;
+};
+
+// Update MapBoundsUpdater component
 const MapBoundsUpdater = () => {
   const map = useMap();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const bounds = calculateBounds();
     if (bounds.isValid()) {
-      // First fit to bounds with minimal padding
+      // Add some padding around bounds to make it look nicer
+      const paddedBounds = bounds.pad(0.1);
+
+      // Set max bounds to restrict panning
+      map.setMaxBounds(paddedBounds);
+
+      // Use negative padding for mobile to zoom in more
+      const padding: PointTuple = isMobile ? [-20, -20] : [10, 10];
+
       map.fitBounds(bounds, {
-        padding: [10, 10],
-        // Set zoom after bounds are fit using the callback
-        // This avoids the _leaflet_pos error
-        animate: true
+        padding,
+        animate: true,
+        maxZoom: isMobile ? 18 : 20
       });
-
-      // Instead of setTimeout, add event listener
-      const onZoomEnd = () => {
-        // Use type assertion to access _loaded property
-        if (map && (map as any)._loaded) {
-          // Only set zoom if map is fully loaded
-          map.setZoom(20);
-          // Remove listener after first execution
-          map.off("zoomend", onZoomEnd);
-        }
-      };
-
-      map.on("zoomend", onZoomEnd);
     }
-  }, [map]);
+  }, [map, isMobile]);
 
   return null;
 };
@@ -140,9 +153,11 @@ const Legend = ({ view }: { view: "treatment" | "replication" }) => {
   );
 };
 
-// MapWrapper component to handle map instance
+// Update MapContainer props
 const MapWrapper = ({ view }: TrialLayoutProps) => {
   const center = getCenter();
+  const isMobile = useIsMobile();
+  const bounds = calculateBounds();
 
   const getStyle = useCallback(
     (feature?: Feature<any, GeoJsonProperties>): PathOptions => {
@@ -150,8 +165,8 @@ const MapWrapper = ({ view }: TrialLayoutProps) => {
 
       const property =
         view === "treatment"
-          ? feature.properties?.Trt || "" // Use Trt for treatment view
-          : String(feature.properties?.Rep || ""); // Convert Rep to string for replication view
+          ? feature.properties?.Trt || ""
+          : String(feature.properties?.Rep || "");
 
       return {
         fillColor: getPlotColor(property, view),
@@ -167,18 +182,19 @@ const MapWrapper = ({ view }: TrialLayoutProps) => {
   return (
     <MapContainer
       center={center}
-      zoom={20}
       style={{ height: "100%", width: "100%" }}
       scrollWheelZoom={false}
-      zoomControl={false}
+      zoomControl={true}
       doubleClickZoom={false}
       dragging={true}
-      touchZoom={false}
+      touchZoom={isMobile}
       boxZoom={false}
       keyboard={false}
-      maxZoom={20}
-      minZoom={20}
-      maxBounds={calculateBounds().pad(0.1)}
+      maxZoom={isMobile ? 19 : 20}
+      minZoom={isMobile ? 17 : 18}
+      maxBounds={bounds.pad(0.1)}
+      maxBoundsViscosity={1.0}
+      zoom={18}
     >
       <TileLayer
         attribution="© Esri"
