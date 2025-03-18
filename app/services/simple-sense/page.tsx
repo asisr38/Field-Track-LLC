@@ -6,31 +6,16 @@ import {
   Plane,
   Layers,
   LineChart,
-  Maximize,
-  Crop,
-  Map,
   Layout,
   Camera,
-  Ruler,
   Calendar,
   Target,
   Wind,
   ImagePlus,
   GitMerge,
-  Workflow,
-  Calculator,
-  Gauge,
   FileCheck,
-  Microscope,
   BarChart,
-  Table,
-  ArrowUpDown,
-  GripVertical,
-  Sigma,
-  Dices,
   Sprout,
-  Play,
-  PauseCircle,
   Eye,
   Layers3,
   FileBarChart,
@@ -38,24 +23,13 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
-import demoPlotData from "@/public/simple-sense/DemoSmallPlot_250130_v6.json";
+import demoPlotData from "@/public/simple-sense/SmallPlots_Demo_v6_WGS_Plots_ExtractionZones.json";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { ComponentType } from "react";
-import type { TrialLayoutProps } from "@/components/TrialLayout";
 import { IconContext } from "react-icons";
-import {
-  FaLeaf,
-  FaRuler,
-  FaMapMarkerAlt,
-  FaFlask,
-  FaSeedling,
-  FaCalendarAlt
-} from "react-icons/fa";
-import { MdScience } from "react-icons/md";
+import { FaLeaf, FaMapMarkerAlt, FaFlask } from "react-icons/fa";
 import {
   BarChart as RechartsBarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -63,19 +37,16 @@ import {
   Legend,
   LineChart as RechartsLineChart,
   Line,
-  ResponsiveContainer,
-  ScatterChart,
-  Scatter,
-  ZAxis
+  ResponsiveContainer
 } from "recharts";
-import plotData from "../../../public/simple-sense/DemoSmallPlot_250130_v6.json";
+import plotData from "../../../public/simple-sense/SmallPlots_Demo_v6_WGS_Plots_ExtractionZones.json";
 
-// Dynamically import the map component to avoid SSR issues with Leaflet
+// Dynamic import of TrialLayout component
 const TrialLayout = dynamic(() => import("@/components/TrialLayout"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[500px] bg-muted/20 animate-pulse rounded-lg flex items-center justify-center">
-      <p className="text-muted-foreground">Loading trial layout...</p>
+    <div className="h-[400px] bg-muted/20 animate-pulse rounded-lg flex items-center justify-center">
+      <p className="text-muted-foreground">Loading layout...</p>
     </div>
   )
 });
@@ -91,33 +62,6 @@ const TemporalNDVIMap = dynamic(
     )
   }
 );
-
-const features = [
-  {
-    title: "Multi-temporal Analysis",
-    description:
-      "Track crop development across multiple growth stages with time-series NDVI analysis",
-    icon: <LineChart className="w-6 h-6" />
-  },
-  {
-    title: "High Resolution Mapping",
-    description:
-      "Generate detailed field maps with centimeter-level precision for accurate decision making",
-    icon: <Map className="w-6 h-6" />
-  },
-  {
-    title: "Growth Stage Monitoring",
-    description:
-      "Monitor key crop development stages to optimize management decisions",
-    icon: <Crop className="w-6 h-6" />
-  },
-  {
-    title: "Spatial Analytics",
-    description:
-      "Identify field variability and patterns to guide precision agriculture practices",
-    icon: <Layers className="w-6 h-6" />
-  }
-];
 
 const DataCard = ({
   title,
@@ -295,6 +239,9 @@ export default function SimpleSensePage() {
   );
   const [isPlaying, setIsPlaying] = useState(false);
   const plotData = demoPlotData.features[0].properties;
+  const [layoutView, setLayoutView] = useState<"treatment" | "replication">(
+    "replication"
+  );
 
   // Animation interval for growth stages
   useEffect(() => {
@@ -325,9 +272,13 @@ export default function SimpleSensePage() {
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Simple<span className="text-primary">Sense</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Advanced aerial imagery analysis delivering precise field insights
-              through multi-temporal NDVI analysis for data-driven agriculture.
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Our research-grade analysis pipeline delivers precise field
+              insights through multi-temporal NDVI analysis, designed to meet
+              the rigorous demands of academic and industrial research. We
+              collect and process aerial imagery that seamlessly integrates into
+              your existing projects, enabling data-driven agricultural
+              decisions.
             </p>
           </motion.div>
         </div>
@@ -342,125 +293,129 @@ export default function SimpleSensePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="space-y-4"
+              className="space-y-6"
             >
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-3 mb-6">
                 <Layout className="w-8 h-8 text-primary" />
-                <h3 className="text-2xl font-bold">1. Trial Layout</h3>
+                <h2 className="text-2xl font-bold">1. Trial Layout</h2>
               </div>
 
-              {/* Trial Layout Cards */}
-              <div className="space-y-8">
-                {/* Experimental Design Card - Full Width */}
-                <Card className="p-6">
-                  <div className="flex flex-wrap items-center gap-2 mb-6">
-                    <GitMerge className="w-5 h-5 text-primary" />
-                    <h3 className="text-lg font-semibold">
-                      Experimental Design
-                    </h3>
-                    <span className="text-sm text-muted-foreground ml-0 sm:ml-2">
-                      Randomized Complete Block Factorial
-                    </span>
-                  </div>
-
-                  {/* Layout Maps Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6">
-                    <div>
-                      <h4 className="text-base font-medium mb-4 text-center md:text-left">
-                        Treatment Layout
-                      </h4>
-                      <div className="relative">
-                        <TrialLayout
-                          key={`treatment-${Date.now()}-${Math.random()}`}
-                          view="treatment"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="text-base font-medium mb-4 text-center md:text-left">
-                        Replication Layout
-                      </h4>
-                      <div className="relative">
-                        <TrialLayout
-                          key={`replication-${Date.now()}-${Math.random()}`}
-                          view="replication"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-
-                {/* Trial Information Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {/* Cropping System Card */}
-                  <DataCard title="Cropping System" icon={<FaLeaf />}>
-                    <DataRow label="Crop Type" value={plotData.Crop} />
-                    <DataRow label="Cultivar" value={plotData.Cultivar} />
-                    <DataRow
-                      label="Seed Rate"
-                      value={`${plotData.SeedRate.toLocaleString()} seeds/acre`}
-                    />
-                    <DataRow
-                      label="Planting Date"
-                      value={new Date(plotData.PlantDate).toLocaleDateString()}
-                    />
-                  </DataCard>
-
-                  {/* Study Area Card */}
-                  <DataCard title="Study Area" icon={<FaMapMarkerAlt />}>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-3 bg-gray-50 rounded-lg">
-                        <div className="text-lg font-semibold text-emerald-600">
-                          12
-                        </div>
-                        <div className="text-sm text-gray-600">Treatments</div>
-                      </div>
-                      <div className="text-center p-3 bg-gray-50 rounded-lg">
-                        <div className="text-lg font-semibold text-emerald-600">
-                          4
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          Replications
-                        </div>
-                      </div>
-                      <div className="text-center p-3 bg-gray-50 rounded-lg">
-                        <div className="text-lg font-semibold text-emerald-600">
-                          48
-                        </div>
-                        <div className="text-sm text-gray-600">Total Plots</div>
-                      </div>
-                      <div className="text-center p-3 bg-gray-50 rounded-lg">
-                        <div className="text-lg font-semibold text-emerald-600">
-                          30'x40'
-                        </div>
-                        <div className="text-sm text-gray-600">Plot Size</div>
-                      </div>
-                    </div>
-                  </DataCard>
-
-                  {/* Treatment Variables Card */}
-                  <DataCard title="Treatment Variables" icon={<FaFlask />}>
-                    <div className="space-y-3">
-                      <div className="border-l-4 border-emerald-500 pl-3">
-                        <h5 className="font-medium mb-1">Products</h5>
-                        <div className="text-sm grid grid-cols-1 xs:grid-cols-3 gap-2">
-                          <div>Product A</div>
-                          <div>Product B</div>
-                          <div>Product C</div>
-                        </div>
-                      </div>
-                      <div className="border-l-4 border-blue-500 pl-3">
-                        <h5 className="font-medium mb-1">Application Timing</h5>
-                        <div className="text-sm grid grid-cols-1 xs:grid-cols-2 gap-2">
-                          <div>Time 1: Early</div>
-                          <div>Time 2: Mid</div>
-                          <div>Time 3: Late</div>
-                          <div>Time 4: Final</div>
-                        </div>
-                      </div>
-                    </div>
-                  </DataCard>
+              {/* Layout Maps Grid */}
+              <Card className="p-6 mb-6">
+                <div className="flex flex-wrap items-center gap-2 mb-6">
+                  <GitMerge className="w-5 h-5 text-primary" />
+                  <h3 className="text-lg font-semibold">
+                    Create spatially consistent plot zones for your current
+                    trial.
+                  </h3>
+                  <span className="text-sm text-muted-foreground ml-2">
+                    Randomized Complete Block Factorial
+                  </span>
                 </div>
+
+                <div className="mb-0">
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-base font-medium">Trial Layout</h4>
+                    <div className="flex items-center space-x-3">
+                      <button
+                        className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-l-md ${
+                          layoutView === "replication"
+                            ? "bg-primary text-white"
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                        onClick={() => setLayoutView("replication")}
+                      >
+                        Replication
+                      </button>
+                      <button
+                        className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-r-md ${
+                          layoutView === "treatment"
+                            ? "bg-primary text-white"
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                        onClick={() => setLayoutView("treatment")}
+                      >
+                        Treatment
+                      </button>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <TrialLayout
+                      key={`layout-${layoutView}-${Date.now()}`}
+                      view={layoutView}
+                    />
+                  </div>
+                </div>
+              </Card>
+
+              {/* Trial Information Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Cropping System Card */}
+                <DataCard title="Cropping System" icon={<FaLeaf />}>
+                  <DataRow label="Crop Type" value={plotData.Crop} />
+                  <DataRow label="Cultivar" value={plotData.Cultivar} />
+                  <DataRow
+                    label="Seed Rate"
+                    value={`${plotData.SeedRate.toLocaleString()} seeds/acre`}
+                  />
+                  <DataRow
+                    label="Planting Date"
+                    value={new Date(plotData.PlantDate).toLocaleDateString()}
+                  />
+                </DataCard>
+
+                {/* Study Area Card */}
+                <DataCard title="Study Area" icon={<FaMapMarkerAlt />}>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="text-lg font-semibold text-emerald-600">
+                        12
+                      </div>
+                      <div className="text-sm text-gray-600">Treatments</div>
+                    </div>
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="text-lg font-semibold text-emerald-600">
+                        4
+                      </div>
+                      <div className="text-sm text-gray-600">Replications</div>
+                    </div>
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="text-lg font-semibold text-emerald-600">
+                        48
+                      </div>
+                      <div className="text-sm text-gray-600">Total Plots</div>
+                    </div>
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="text-lg font-semibold text-emerald-600">
+                        30'x40'
+                      </div>
+                      <div className="text-sm text-gray-600">Plot Size</div>
+                    </div>
+                  </div>
+                </DataCard>
+
+                {/* Treatment Variables Card */}
+                <DataCard title="Treatment Variables" icon={<FaFlask />}>
+                  <div className="space-y-3">
+                    <div className="border-l-4 border-emerald-500 pl-3">
+                      <h5 className="font-medium mb-1">Products</h5>
+                      <div className="text-sm grid grid-cols-1 xs:grid-cols-3 gap-2">
+                        <div>Product A</div>
+                        <div>Product B</div>
+                        <div>Product C</div>
+                      </div>
+                    </div>
+                    <div className="border-l-4 border-blue-500 pl-3">
+                      <h5 className="font-medium mb-1">Application Timing</h5>
+                      <div className="text-sm grid grid-cols-1 xs:grid-cols-2 gap-2">
+                        <div>Time 1: Early</div>
+                        <div>Time 2: Mid</div>
+                        <div>Time 3: Late</div>
+                        <div>Time 4: Final</div>
+                      </div>
+                    </div>
+                  </div>
+                </DataCard>
               </div>
             </motion.div>
           </div>
@@ -471,11 +426,11 @@ export default function SimpleSensePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="space-y-4"
+              className="space-y-6"
             >
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-3 mb-6">
                 <Camera className="w-8 h-8 text-primary" />
-                <h3 className="text-2xl font-bold">2. Data Acquisition</h3>
+                <h2 className="text-2xl font-bold">2. Data Acquisition</h2>
               </div>
 
               {/* Data Acquisition Cards */}
@@ -483,21 +438,17 @@ export default function SimpleSensePage() {
                 {/* Equipment Overview Card - Full Width */}
                 <Card className="p-6">
                   <div className="flex items-center gap-2 mb-6">
-                    <Camera className="w-5 h-5 text-primary" />
                     <h3 className="text-lg font-semibold">
                       Equipment Overview
                     </h3>
-                    <span className="text-sm text-muted-foreground ml-2">
-                      DJI Mavic 3M Multispectral
-                    </span>
                   </div>
 
                   <div className="flex flex-col md:flex-row items-start gap-4 mb-6">
                     <Image
-                      src="/simple-sense/dji-mavic-3.jpg"
+                      src="/hero/topleft.png"
                       alt="DJI Mavic 3M"
                       width={200}
-                      height={200}
+                      height={150}
                       className="rounded-lg mx-auto md:mx-0 mb-4 md:mb-0"
                     />
                     <div className="space-y-4 w-full">
@@ -605,7 +556,7 @@ export default function SimpleSensePage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center p-3 bg-muted/50 rounded-lg">
                         <div className="text-lg font-semibold text-emerald-600">
-                          24°C
+                          24°F
                         </div>
                         <div className="text-xs text-muted-foreground">
                           Temperature
@@ -613,7 +564,7 @@ export default function SimpleSensePage() {
                       </div>
                       <div className="text-center p-3 bg-muted/50 rounded-lg">
                         <div className="text-lg font-semibold text-emerald-600">
-                          3.2 m/s
+                          3.2 mph
                         </div>
                         <div className="text-xs text-muted-foreground">
                           Wind Speed
@@ -679,92 +630,33 @@ export default function SimpleSensePage() {
             >
               <div className="flex items-center gap-3 mb-6">
                 <ImagePlus className="w-8 h-8 text-primary" />
-                <h3 className="text-2xl font-bold">3. Image Processing</h3>
+                <h2 className="text-2xl font-bold">
+                  3. Image Processing & Analysis
+                </h2>
               </div>
 
-              {/* Processing Workflow */}
-              <div className="bg-card rounded-lg p-6 border border-border/50">
-                <h4 className="font-semibold mb-6">Processing Workflow</h4>
-                <div className="overflow-x-auto pb-2">
-                  <div className="grid grid-cols-7 gap-4 min-w-[700px]">
-                    {[
-                      {
-                        icon: <Camera className="w-5 h-5" />,
-                        label: "Acquisition"
-                      },
-                      {
-                        icon: <Gauge className="w-5 h-5" />,
-                        label: "Radiometric Adjustment"
-                      },
-                      {
-                        icon: <GitMerge className="w-5 h-5" />,
-                        label: "Orthomosaic"
-                      },
-                      {
-                        icon: <Calculator className="w-5 h-5" />,
-                        label: "Vegetation Indices"
-                      },
-                      {
-                        icon: <Target className="w-5 h-5" />,
-                        label: "Zonal Statistics"
-                      },
-                      {
-                        icon: <Microscope className="w-5 h-5" />,
-                        label: "Analysis"
-                      },
-                      {
-                        icon: <LineChart className="w-5 h-5" />,
-                        label: "Visualization"
-                      }
-                    ].map((step, index) => (
-                      <div key={step.label} className="text-center space-y-2">
-                        <div className="relative">
-                          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                            <div className="text-primary">{step.icon}</div>
-                          </div>
-                          {index < 6 && (
-                            <div className="absolute top-1/2 -right-2 w-4 h-0.5 bg-border" />
-                          )}
-                        </div>
-                        <p className="text-xs font-medium">{step.label}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* WebODM Processing */}
+              {/* Combined Processing & Analysis */}
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="bg-card rounded-lg p-6 border border-border/50">
-                  <h4 className="font-semibold mb-4">
-                    Advanced Image Processing
-                  </h4>
+                  <h3 className="text-lg font-semibold mb-4">
+                    Image Processing
+                  </h3>
                   <div className="space-y-4">
                     {[
                       {
                         title: "Radiometric Processing",
                         description:
-                          "Advanced sensor calibration techniques ensuring precise spectral measurements across varying conditions"
+                          "Sensor calibration for precise spectral measurements"
                       },
                       {
                         title: "Spatial Referencing",
                         description:
-                          "High-precision georeferencing system integrating multiple positioning technologies"
+                          "High-precision georeferencing with multiple positioning technologies"
                       },
                       {
                         title: "Image Integration",
                         description:
-                          "Sophisticated algorithms for seamless multi-sensor data fusion and visualization"
-                      },
-                      {
-                        title: "Terrain Modeling",
-                        description:
-                          "Advanced surface modeling incorporating multiple data sources for enhanced accuracy"
-                      },
-                      {
-                        title: "Quality Control",
-                        description:
-                          "Comprehensive multi-stage validation process ensuring data reliability and consistency"
+                          "Multi-sensor data fusion and visualization"
                       }
                     ].map(step => (
                       <div key={step.title} className="flex gap-4">
@@ -772,7 +664,7 @@ export default function SimpleSensePage() {
                           <FileCheck className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                          <h5 className="font-medium mb-1">{step.title}</h5>
+                          <h4 className="text-base">{step.title}</h4>
                           <p className="text-sm text-muted-foreground">
                             {step.description}
                           </p>
@@ -782,130 +674,54 @@ export default function SimpleSensePage() {
                   </div>
                 </div>
 
-                {/* Vegetation Indices */}
                 <div className="bg-card rounded-lg p-6 border border-border/50">
-                  <h4 className="font-semibold mb-4">Vegetation Indices</h4>
-                  <div className="space-y-6">
-                    {[
-                      {
-                        name: "NDVI",
-                        formula: "NDVI = (NIR₈₆₀ - RED₆₅₀) / (NIR₈₆₀ + RED₆₅₀)",
-                        description:
-                          "Measures vegetation health using NIR (860nm) and Red (650nm) bands"
-                      },
-                      {
-                        name: "NDRE",
-                        formula: "NDRE = (NIR - RE) / (NIR + RE)",
-                        description:
-                          "Uses red-edge band for enhanced sensitivity to chlorophyll content"
-                      },
-                      {
-                        name: "VARI",
-                        formula: "VARI = (GREEN - RED) / (GREEN + RED - BLUE)",
-                        description:
-                          "Atmospherically resistant index using visible spectrum"
-                      }
-                    ].map(index => (
-                      <div key={index.name} className="p-4 bg-muted rounded-lg">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Calculator className="w-4 h-4 text-primary" />
-                          <h5 className="font-medium">{index.name}</h5>
+                  <h3 className="text-lg font-semibold mb-4">
+                    Statistical Analysis
+                  </h3>
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      Advanced statistical modeling to identify significant
+                      differences between treatment groups, enabling data-driven
+                      decision making.
+                    </p>
+                    <div className="space-y-4">
+                      {[
+                        {
+                          title: "Variance Analysis",
+                          description:
+                            "Isolate treatment effects from environmental factors"
+                        },
+                        {
+                          title: "Treatment Evaluation",
+                          description:
+                            "Comparative analysis to identify patterns and relationships"
+                        },
+                        {
+                          title: "Temporal Analysis",
+                          description:
+                            "Multi-level confidence intervals with temporal variation"
+                        }
+                      ].map(step => (
+                        <div key={step.title} className="flex gap-4">
+                          <div className="mt-1">
+                            <BarChart className="w-5 h-5 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="text-base">{step.title}</h4>
+                            <p className="text-sm text-muted-foreground">
+                              {step.description}
+                            </p>
+                          </div>
                         </div>
-                        <div className="text-sm font-mono bg-background/50 p-2 rounded mb-2">
-                          {index.formula}
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {index.description}
-                        </p>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Statistical Analysis Section */}
-              <div className="mb-20">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="space-y-8"
-                >
-                  <div className="flex items-center gap-3 mb-6">
-                    <BarChart className="w-8 h-8 text-primary" />
-                    <h3 className="text-2xl font-bold">
-                      4. Statistical Analysis
-                    </h3>
-                  </div>
-
-                  {/* Analysis Methods */}
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div className="bg-card rounded-lg p-6 border border-border/50">
-                      <h4 className="font-semibold mb-6">
-                        Statistical Analysis
-                      </h4>
-                      <div className="space-y-6">
-                        <p className="text-sm text-muted-foreground">
-                          Advanced statistical modeling to identify significant
-                          differences in vegetation indices between treatment
-                          groups, enabling data-driven decision making.
-                        </p>
-                        <div className="bg-muted rounded-lg p-4">
-                          <h5 className="font-medium mb-3">
-                            Analysis Components
-                          </h5>
-                          <ul className="text-sm space-y-2 text-muted-foreground">
-                            <li>
-                              • Advanced variance decomposition to isolate
-                              treatment effects from env. factors
-                            </li>
-                            <li>
-                              • Comprehensive mean separation techniques for
-                              treatment evaluation
-                            </li>
-                            <li>
-                              • Multi-stage significance testing with
-                              environmental covariate adjustment
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-card rounded-lg p-6 border border-border/50">
-                      <h4 className="font-semibold mb-6">Post-hoc Analysis</h4>
-                      <div className="space-y-6">
-                        <p className="text-sm text-muted-foreground">
-                          Detailed comparative analysis between treatment groups
-                          to identify specific patterns and relationships in
-                          your data.
-                        </p>
-                        <div className="bg-muted rounded-lg p-4">
-                          <h5 className="font-medium mb-3">Key Features</h5>
-                          <ul className="text-sm space-y-2 text-muted-foreground">
-                            <li>
-                              • Pairwise treatment comparisons with spatial
-                              correlation adjustments
-                            </li>
-                            <li>
-                              • Standardized and unstandardized effect size
-                              estimation with confidence bounds
-                            </li>
-                            <li>
-                              • Multi-level confidence intervals incorporating
-                              temporal variation
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
               </div>
             </motion.div>
           </div>
 
-          {/* 5. Visualization and Reporting Section */}
+          {/* 4. Visualization and Reporting Section - Renumbered */}
           <div className="mb-20">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -915,18 +731,18 @@ export default function SimpleSensePage() {
             >
               <div className="flex items-center gap-3 mb-6">
                 <Eye className="w-8 h-8 text-primary" />
-                <h3 className="text-2xl font-bold">
-                  5. Visualization and Reporting
-                </h3>
+                <h2 className="text-2xl font-bold">
+                  4. Visualization and Reporting
+                </h2>
               </div>
 
               {/* Time Series Visualization */}
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-bold tracking-tight">
-                    Temporal NDVI Analysis
-                  </h2>
-                  <p className="text-muted-foreground">
+                  <h3 className="text-lg font-semibold">
+                    Multispectral Imagery
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
                     Interactive visualization of NDVI measurements across
                     different growth stages for the demo plot.
                   </p>
@@ -936,12 +752,24 @@ export default function SimpleSensePage() {
                   <Tabs defaultValue="1" className="space-y-4">
                     <div className="overflow-x-auto pb-2">
                       <TabsList className="min-w-[700px]">
-                        <TabsTrigger value="1">V4 Stage (Early)</TabsTrigger>
-                        <TabsTrigger value="2">V9 Stage (Mid)</TabsTrigger>
-                        <TabsTrigger value="3">R1 Stage (Silking)</TabsTrigger>
-                        <TabsTrigger value="4">R3 Stage (Milk)</TabsTrigger>
-                        <TabsTrigger value="5">R5 Stage (Dent)</TabsTrigger>
-                        <TabsTrigger value="6">R6 Stage (Maturity)</TabsTrigger>
+                        <TabsTrigger value="1" className="text-sm">
+                          V4 Stage (Early)
+                        </TabsTrigger>
+                        <TabsTrigger value="2" className="text-sm">
+                          V9 Stage (Mid)
+                        </TabsTrigger>
+                        <TabsTrigger value="3" className="text-sm">
+                          R1 Stage (Silking)
+                        </TabsTrigger>
+                        <TabsTrigger value="4" className="text-sm">
+                          R3 Stage (Milk)
+                        </TabsTrigger>
+                        <TabsTrigger value="5" className="text-sm">
+                          R5 Stage (Dent)
+                        </TabsTrigger>
+                        <TabsTrigger value="6" className="text-sm">
+                          R6 Stage (Maturity)
+                        </TabsTrigger>
                       </TabsList>
                     </div>
 
@@ -994,7 +822,9 @@ export default function SimpleSensePage() {
               {/* Analysis Summary */}
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="bg-card rounded-lg p-6 border border-border/50">
-                  <h4 className="font-semibold mb-6">Growth Stage Analysis</h4>
+                  <h3 className="text-lg font-semibold mb-4">
+                    Growth Stage Analysis
+                  </h3>
                   <div className="space-y-6">
                     {[
                       {
@@ -1027,7 +857,9 @@ export default function SimpleSensePage() {
                         </div>
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <h5 className="font-medium">Stage {stage.stage}</h5>
+                            <h4 className="text-base font-medium">
+                              Stage {stage.stage}
+                            </h4>
                             <span className="text-xs text-muted-foreground">
                               NDVI: {stage.range}
                             </span>
@@ -1042,10 +874,12 @@ export default function SimpleSensePage() {
                 </div>
 
                 <div className="bg-card rounded-lg p-6 border border-border/50">
-                  <h4 className="font-semibold mb-6">Key Findings</h4>
+                  <h4 className="text-base font-medium mb-3">Key Findings</h4>
                   <div className="space-y-6">
                     <div className="p-4 bg-muted rounded-lg">
-                      <h5 className="font-medium mb-3">Temporal Patterns</h5>
+                      <h5 className="text-sm font-medium mb-3">
+                        Temporal Patterns
+                      </h5>
                       <ul className="space-y-2 text-sm text-muted-foreground">
                         <li className="flex items-start gap-2">
                           <FileBarChart className="w-4 h-4 text-primary mt-1" />
@@ -1072,7 +906,9 @@ export default function SimpleSensePage() {
                     </div>
 
                     <div className="p-4 bg-muted rounded-lg">
-                      <h5 className="font-medium mb-3">Index Comparisons</h5>
+                      <h5 className="text-sm font-medium mb-3">
+                        Index Comparisons
+                      </h5>
                       <ul className="space-y-2 text-sm text-muted-foreground">
                         <li className="flex items-start gap-2">
                           <FileBarChart className="w-4 h-4 text-primary mt-1" />
@@ -1098,28 +934,220 @@ export default function SimpleSensePage() {
                 </div>
               </div>
 
+              {/* 5. Treatment NDVI Line Chart Section - New section */}
+              <div className="mb-20">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-8"
+                >
+                  <div className="flex items-center gap-3 mb-6">
+                    <LineChart className="w-8 h-8 text-primary" />
+                    <h2 className="text-2xl font-bold">
+                      5. Treatment Performance Analysis
+                    </h2>
+                  </div>
+
+                  <div className="bg-card rounded-lg p-6 border border-border/50">
+                    <h3 className="text-lg font-semibold mb-4">
+                      NDVI Progression Across Growth Stages
+                    </h3>
+                    <div className="space-y-4">
+                      <p className="text-sm text-muted-foreground">
+                        This visualization shows the temporal progression of
+                        NDVI values for different treatments throughout the
+                        growing season. Tracking these patterns helps identify
+                        which treatments perform best at each crop development
+                        stage.
+                      </p>
+                      <div className="h-[400px] w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <RechartsLineChart
+                            data={(() => {
+                              // Function to extract NDVI data directly from the GeoJSON
+                              const extractNDVIData = () => {
+                                // Get unique treatments
+                                const treatments = [
+                                  ...new Set(
+                                    demoPlotData.features.map(
+                                      feature => feature.properties.Trt
+                                    )
+                                  )
+                                ]
+                                  .sort()
+                                  .slice(0, 6); // Get first 6 treatments (A-F)
+
+                                // Initialize data array for the 6 measurement points
+                                const ndviData = [];
+
+                                // For each measurement (1-6)
+                                for (let i = 1; i <= 6; i++) {
+                                  // Fix TypeScript error by properly typing the dataPoint object
+                                  const dataPoint: {
+                                    timing: number;
+                                    [key: string]: number;
+                                  } = { timing: i };
+
+                                  // For each treatment, calculate average NDVI
+                                  treatments.forEach(treatment => {
+                                    // Get all plots with this treatment
+                                    const plots = demoPlotData.features.filter(
+                                      feature =>
+                                        feature.properties.Trt === treatment
+                                    );
+
+                                    if (plots.length > 0) {
+                                      // Calculate average NDVI, explicitly parsing string to number
+                                      const ndviValues = plots.map(plot => {
+                                        const ndviValue =
+                                          plot.properties[
+                                            `NDVI_M_${i}` as keyof typeof plot.properties
+                                          ];
+                                        // Convert string to number (parseFloat handles the string format)
+                                        return typeof ndviValue === "string"
+                                          ? parseFloat(ndviValue)
+                                          : ndviValue;
+                                      });
+
+                                      // Calculate average and add to data point
+                                      const avgNDVI =
+                                        ndviValues.reduce(
+                                          (sum, val) => sum + val,
+                                          0
+                                        ) / ndviValues.length;
+
+                                      // Now TypeScript knows dataPoint can have string keys
+                                      dataPoint[treatment] = Number(
+                                        avgNDVI.toFixed(2)
+                                      );
+                                    }
+                                  });
+
+                                  ndviData.push(dataPoint);
+                                }
+
+                                console.log(
+                                  "Real NDVI data from GeoJSON:",
+                                  ndviData
+                                );
+                                return ndviData;
+                              };
+
+                              // Get the actual data
+                              return extractNDVIData();
+                            })()}
+                            margin={{
+                              top: 20,
+                              right: 30,
+                              left: 20,
+                              bottom: 20
+                            }}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                              dataKey="timing"
+                              label={{
+                                value: "Timing",
+                                position: "insideBottom",
+                                offset: -5
+                              }}
+                              domain={[0, 7]}
+                              tick={{ fontSize: 12 }}
+                            />
+                            <YAxis
+                              domain={[0, 1.0]}
+                              label={{
+                                value: "NDVI",
+                                angle: -90,
+                                position: "insideLeft",
+                                offset: 10
+                              }}
+                              tick={{ fontSize: 12 }}
+                            />
+                            <Tooltip
+                              formatter={value => [
+                                Number(value).toFixed(2),
+                                "NDVI"
+                              ]}
+                              labelFormatter={label => `Timing: ${label}`}
+                            />
+                            <Legend verticalAlign="top" height={36} />
+                            {(() => {
+                              // Get the treatments directly from the data
+                              const treatments = [
+                                ...new Set(
+                                  demoPlotData.features.map(
+                                    feature => feature.properties.Trt
+                                  )
+                                )
+                              ]
+                                .sort()
+                                .slice(0, 6);
+
+                              // Color palette matching the reference image
+                              const colors = [
+                                "#1f77b4",
+                                "#ff7f0e",
+                                "#2ca02c",
+                                "#00a2ff",
+                                "#9467bd",
+                                "#8c564b"
+                              ];
+
+                              return treatments.map((treatment, index) => (
+                                <Line
+                                  key={treatment}
+                                  type="monotone"
+                                  dataKey={treatment}
+                                  name={`Treatment ${treatment}`}
+                                  stroke={colors[index % colors.length]}
+                                  activeDot={{ r: 8 }}
+                                  strokeWidth={2}
+                                  dot={{ strokeWidth: 2 }}
+                                />
+                              ));
+                            })()}
+                          </RechartsLineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
               {/* Report Generation */}
               <div className="bg-card rounded-lg p-6 border border-border/50">
-                <h4 className="font-semibold mb-6">Report Generation</h4>
+                <h3 className="text-lg font-semibold mb-4">
+                  Report Generation
+                </h3>
+                <p className="text-sm text-muted-foreground pb-6">
+                  We make remote sensing data easy to use, providing clear
+                  insights that integrate seamlessly with your existing
+                  datasets. Our reports include everything you need to support
+                  your research, from datasets in your preferred format to
+                  ready-to-use figures and tables for publications.
+                </p>
                 <div className="grid md:grid-cols-3 gap-6">
                   <button className="p-6 bg-muted rounded-lg hover:bg-muted/70 transition-colors text-center">
                     <FileBarChart className="w-6 h-6 text-primary mx-auto mb-3" />
-                    <h5 className="font-medium mb-1">Statistical Summary</h5>
-                    <p className="text-sm text-muted-foreground">
+                    <h5 className="text-sm font-medium mb-1">
+                      Statistical Summary
+                    </h5>
+                    <p className="text-xs text-muted-foreground">
                       Complete analysis with statistical tests
                     </p>
                   </button>
                   <button className="p-6 bg-muted rounded-lg hover:bg-muted/70 transition-colors text-center">
                     <Layers3 className="w-6 h-6 text-primary mx-auto mb-3" />
                     <h5 className="font-medium mb-1">Spatial Analysis</h5>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs text-muted-foreground">
                       Maps and spatial patterns report
                     </p>
                   </button>
                   <button className="p-6 bg-muted rounded-lg hover:bg-muted/70 transition-colors text-center">
                     <Download className="w-6 h-6 text-primary mx-auto mb-3" />
                     <h5 className="font-medium mb-1"> Data Export</h5>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs text-muted-foreground">
                       Download processed data files
                     </p>
                   </button>

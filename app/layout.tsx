@@ -34,9 +34,34 @@ export const metadata: Metadata = {
   description:
     "Technology-driven Strategies for Land Management Agronomic Research Consulting & Project Implementation",
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png"
+    icon: [
+      { url: "/favicon_io/favicon.ico" },
+      {
+        url: "/favicon_io/favicon-16x16.png",
+        sizes: "16x16",
+        type: "image/png"
+      },
+      {
+        url: "/favicon_io/favicon-32x32.png",
+        sizes: "32x32",
+        type: "image/png"
+      }
+    ],
+    apple: { url: "/favicon_io/apple-touch-icon.png" },
+    other: [
+      {
+        rel: "manifest",
+        url: "/favicon_io/site.webmanifest"
+      },
+      {
+        rel: "android-chrome-192x192",
+        url: "/favicon_io/android-chrome-192x192.png"
+      },
+      {
+        rel: "android-chrome-512x512",
+        url: "/favicon_io/android-chrome-512x512.png"
+      }
+    ]
   },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL || "https://field-track-llc.vercel.app/"
@@ -85,6 +110,7 @@ export default function RootLayout({
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossOrigin="anonymous"
         />
+        <link rel="manifest" href="/favicon_io/site.webmanifest" />
         <script
           src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="

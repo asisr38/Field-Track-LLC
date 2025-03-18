@@ -92,8 +92,8 @@ export default function Hero() {
               <div className="space-y-2 sm:space-y-4">
                 <div className="relative aspect-square rounded-lg sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-2xl">
                   <Image
-                    src="/simple-sense/drone-flight.jpg"
-                    alt="Agricultural field visualization"
+                    src="/hero/topleft.png"
+                    alt="Agricultural drone visualization"
                     fill
                     sizes="(max-width: 640px) 45vw, (max-width: 768px) 40vw, (max-width: 1024px) 30vw, 25vw"
                     className="object-cover"
@@ -104,7 +104,7 @@ export default function Hero() {
                 <div className="relative aspect-square rounded-lg sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-2xl">
                   <Image
                     src="/images/farmmobile.jpg"
-                    alt="Field grid analysis"
+                    alt="Field mobile analysis"
                     fill
                     sizes="(max-width: 640px) 45vw, (max-width: 768px) 40vw, (max-width: 1024px) 30vw, 25vw"
                     className="object-cover"
@@ -117,8 +117,8 @@ export default function Hero() {
               <div className="space-y-2 sm:space-y-4 mt-4 sm:mt-8">
                 <div className="relative aspect-square rounded-lg sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-2xl">
                   <Image
-                    src="/simple-sense/r3stage.png"
-                    alt="Field topography"
+                    src="/hero/topright.png"
+                    alt="Field Small Plots"
                     fill
                     sizes="(max-width: 640px) 45vw, (max-width: 768px) 40vw, (max-width: 1024px) 30vw, 25vw"
                     className="object-cover"
@@ -128,7 +128,7 @@ export default function Hero() {
                 </div>
                 <div className="relative aspect-square rounded-lg sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-2xl">
                   <Image
-                    src="/images/satelliteview.webp"
+                    src="/hero/bottomright.jpg"
                     alt="Agricultural technology"
                     fill
                     sizes="(max-width: 640px) 45vw, (max-width: 768px) 40vw, (max-width: 1024px) 30vw, 25vw"

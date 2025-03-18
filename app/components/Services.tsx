@@ -8,15 +8,15 @@ const services: ServiceItem[] = [
   {
     title: "SimpleSense",
     description:
-      "Our advanced aerial imagery pipeline that delivers precise field insights through multi-temporal NDVI analysis. Track crop health, monitor growth stages, and identify field variability with research-grade accuracy.",
+      "A research-grade aerial imagery pipeline optimized for plot trials. Leveraging calibrated reflectance data and machine learning, we deliver precise canopy metrics, plant height measurements, and temporal analysis with rigorous QA/QC. Our publication-quality reports include advanced derivatives like canopy cover, plant consistency, and supervised classification.",
     icon: <Plane className="w-5 h-5 sm:w-6 sm:h-6" />,
-    image: "/simple-sense/dji-mavic-3.jpg",
+    image: "/hero/topright.png",
     tags: [
-      "Multi-temporal Analysis",
-      "Growth Stage Tracking",
-      "Precision Mapping"
+      "Calibrated Reflectance",
+      "Machine Learning Analysis",
+      "Plot-Level Precision"
     ],
-    meta: "Advanced Aerial Imagery",
+    meta: "Remote Sensing Pipeline for Plot Research",
     cta: "Explore More",
     link: "/services/simple-sense"
   },
