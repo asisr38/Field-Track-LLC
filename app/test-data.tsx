@@ -5,12 +5,7 @@ import boundaryData from "./data/Boundary_Demo.json";
 import pointData from "./data/Point_Demo.json";
 
 export default function TestData() {
-  useEffect(() => {
-    console.log("Boundary Data:", boundaryData);
-    console.log("Point Data:", pointData);
-    console.log("Number of point features:", pointData.features.length);
-    console.log("Point features:", pointData.features);
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <div className="p-8">

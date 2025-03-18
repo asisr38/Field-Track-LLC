@@ -126,9 +126,6 @@ const FieldSamplingMap = ({
         setBoundaryData(boundaryJson);
         setPointData(pointJson);
 
-        console.log("Data loaded successfully");
-        console.log("Point features count:", pointJson.features?.length || 0);
-
         setIsLoading(false);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -146,8 +143,6 @@ const FieldSamplingMap = ({
 
     // Initialize map if it doesn't exist
     if (!mapRef.current) {
-      console.log("Initializing map...");
-
       // Initialize map
       const map = L.map(mapContainerRef.current, {
         minZoom: 14,
@@ -321,7 +316,6 @@ const FieldSamplingMap = ({
 
     // Update map when data is loaded
     if (mapRef.current && boundaryData && pointData && !isLoading) {
-      console.log("Data loaded, updating map...");
       addDataToMap(mapRef.current, boundaryData, pointData, nutrientType);
     }
 
@@ -344,7 +338,6 @@ const FieldSamplingMap = ({
   ) => {
     // Add boundary layer if not already added
     if (!layersRef.current.boundaryLayer) {
-      console.log("Adding boundary layer to map");
       const boundaryLayer = L.geoJSON(boundaryData, {
         style: {
           fillColor: "#f8f9fa",
@@ -385,12 +378,8 @@ const FieldSamplingMap = ({
   // Function to update map layers based on nutrient type
   const updateMapLayers = (nutrientType: string) => {
     if (!mapRef.current || !boundaryData || !pointData) {
-      console.log("Cannot update map layers: map or data not ready");
       return;
     }
-
-    console.log("Updating map layers with nutrient type:", nutrientType);
-    console.log("Point data features count:", pointData.features?.length || 0);
 
     const map = mapRef.current;
 
@@ -500,7 +489,6 @@ const FieldSamplingMap = ({
 
     // Add sampling points to map with the selected nutrient colors
     try {
-      console.log("Creating points layer with data:", pointData);
       const pointsLayer = L.geoJSON(pointData, {
         pointToLayer: (feature, latlng) => {
           const value = feature.properties?.[selectedNutrient.property] || 0;
@@ -609,7 +597,6 @@ const FieldSamplingMap = ({
         }
       }).addTo(map);
 
-      console.log("Points layer created and added to map");
       layersRef.current.pointsLayer = pointsLayer;
     } catch (err) {
       console.error("Error creating points layer:", err);

@@ -492,8 +492,8 @@ export default function Header() {
               onClick={handleLinkClick}
               className="flex items-center gap-4 transition-all hover:opacity-90"
             >
-              <span className="text-xl sm:text-2xl font-bold text-primary font-primary">
-                Field Track LLC
+              <span className="text-2xl sm:text-3xl font-bold text-primary font-primary">
+                Field Track <span className="text-sm sm:text-base">LLC</span>
               </span>
             </Link>
           </div>
