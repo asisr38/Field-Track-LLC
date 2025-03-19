@@ -36,7 +36,7 @@ const services: ServiceItem[] = [
     link: "/services/onfarm-research"
   },
   {
-    title: "Field Services - Field Sampling",
+    title: "Field Services",
     description:
       "Professional field sampling services that give you the full picture of your land's health. From soil conditions to crop status, we collect the data that drives better decisions with scientific rigor.",
     icon: <TestTube className="w-5 h-5 sm:w-6 sm:h-6" />,

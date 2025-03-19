@@ -24,7 +24,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-background to-background/95 pt-16 pb-8 md:py-0">
+    <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-background to-background/95 pt-24 pb-8 md:pt-32 md:pb-16">
       {/* Waves Background */}
       <div className="absolute inset-0 z-0">
         {/* Removing the background image and keeping only the waves */}
@@ -52,8 +52,8 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 z-10 py-8 sm:py-12 md:py-20">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+      <div className="container mx-auto px-4 z-20 py-8 sm:py-12 md:py-16">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mt-4 md:mt-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
