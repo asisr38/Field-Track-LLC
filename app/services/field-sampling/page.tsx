@@ -96,7 +96,7 @@ const features = [
   {
     name: "Precision Soil Sampling",
     description:
-      "GPS-guided soil sampling with strategic grid patterns for comprehensive field analysis",
+      "GPS guided soil, plant tissue and sap analysis with strategic patterns for analysis",
     icon: FaMapMarkedAlt
   },
   {
@@ -108,7 +108,7 @@ const features = [
   {
     name: "Spatial Mapping",
     description:
-      "Advanced visualization of soil properties across your fields for targeted management",
+      "Integration of proxy layers (Vegetative reflectance, TWI, SSurgo, etc) ",
     icon: FaChartLine
   },
   {
@@ -299,7 +299,7 @@ export default function FieldSamplingPage() {
               Understanding Your Field Through Data
             </h3>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="space-y-4">
                 <div className="aspect-video relative rounded-lg overflow-hidden">
                   <Image
@@ -340,53 +340,6 @@ export default function FieldSamplingPage() {
                   <li className="flex items-start gap-2 text-sm text-muted-foreground">
                     <span className="text-primary mt-1">•</span>
                     <span>Track changes in soil health over time</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="space-y-4">
-                <div className="aspect-video relative rounded-lg overflow-hidden">
-                  <Image
-                    src="/images/plotsdrone.jpg"
-                    alt="Nitrogen sampling"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <h4 className="font-semibold text-lg">Nitrogen Sampling</h4>
-                <p className="text-muted-foreground text-sm">
-                  Nitrogen is a critical nutrient that requires special
-                  attention due to its mobility in soil. Our nitrogen sampling
-                  helps:
-                </p>
-                <ul className="space-y-1">
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>
-                      Determine available nitrogen levels at different soil
-                      depths
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>
-                      Assess nitrogen mineralization potential from organic
-                      matter
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>
-                      Identify zones with different nitrogen requirements
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Optimize nitrogen application rates and timing</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Reduce nitrogen losses and environmental impact</span>
                   </li>
                 </ul>
               </div>

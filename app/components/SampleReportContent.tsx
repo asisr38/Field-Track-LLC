@@ -1330,7 +1330,7 @@ export default function SampleReportContent() {
       number: 2,
       title: "Laboratory Analysis",
       description:
-        "Through our partnership with A&L Labs, we deliver rapid and reliable soil analysis results.",
+        "We work with certified soil testing laboratories to deliver rapid and reliable soil analysis results.",
       component: (
         <div className="space-y-6">
           {/* Tabs Navigation */}
@@ -1391,9 +1391,6 @@ export default function SampleReportContent() {
                     <h4 className="text-base md:text-lg font-medium">
                       Soil Properties & Nutrients
                     </h4>
-                    <p className="text-xs md:text-sm text-muted-foreground mt-1">
-                      Analysis by A&L Labs • 48-72 hour turnaround
-                    </p>
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-xs md:text-sm text-muted-foreground">
@@ -1845,16 +1842,16 @@ export default function SampleReportContent() {
       ),
       details: [
         {
-          title: "Comprehensive Analysis",
+          title: "Comprehensive Testing",
           description:
-            "Our lab analyzes over 15 different soil parameters to provide a complete picture of your soil health.",
+            "We coordinate with certified regional laboratories to analyze essential soil parameters tailored to your specific crop and region needs.",
           icon: FileBarChart,
           component: null
         },
         {
-          title: "Rapid Turnaround",
+          title: "Flexible Processing",
           description:
-            "Results are typically available within 48-72 hours of sample receipt at the lab.",
+            "Sample processing timelines are optimized based on your location and selected laboratory partners to ensure timely decision-making.",
           icon: Clock,
           component: null
         },
@@ -1920,7 +1917,7 @@ export default function SampleReportContent() {
             )}
           </div>
 
-          {/* Nitrogen Management Tab - Mobile optimized */}
+          {/* Nitrogen Management Tab  */}
           {activeStep === 1 && (
             <div className="grid grid-cols-1 gap-4 md:gap-6">
               <div className="bg-white dark:bg-card p-4 md:p-6 rounded-xl shadow-sm border border-border/50">
@@ -1945,12 +1942,7 @@ export default function SampleReportContent() {
                           <span className="text-xs font-medium">Area:</span>
                           <span className="text-xs">75.04 ac</span>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs font-medium">
-                            Yield Goal:
-                          </span>
-                          <span className="text-xs">175 bu/ac</span>
-                        </div>
+
                         <div className="flex justify-between">
                           <span className="text-xs font-medium">VR Stats:</span>
                           <span className="text-xs">

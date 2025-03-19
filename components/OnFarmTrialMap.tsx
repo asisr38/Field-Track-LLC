@@ -131,6 +131,39 @@ const MapBoundsUpdater = () => {
         animate: true,
         maxZoom: isMobile ? 16 : 17 // Lower max zoom to ensure it's not too zoomed in
       });
+
+      // Add custom popup styles
+      const style = document.createElement("style");
+      style.innerHTML = `
+        .custom-popup .leaflet-popup-content-wrapper {
+          border-radius: 8px;
+          padding: 0;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          overflow: hidden;
+        }
+        .custom-popup .leaflet-popup-content {
+          margin: 0;
+          width: auto !important;
+        }
+        .custom-popup .leaflet-popup-tip {
+          background-color: white;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .custom-popup .leaflet-popup-close-button {
+          top: 6px;
+          right: 6px;
+          color: #6b7280;
+          font-size: 16px;
+          padding: 4px;
+          height: 20px;
+          width: 20px;
+          transition: color 0.2s;
+        }
+        .custom-popup .leaflet-popup-close-button:hover {
+          color: #111827;
+        }
+      `;
+      document.head.appendChild(style);
     }
   }, [map, isMobile]);
 
@@ -285,36 +318,57 @@ const MapWrapper = ({ view }: OnFarmTrialMapProps) => {
             // Create a popup with the plot details
             if (props) {
               const popupContent = `
-                <div style="font-family: system-ui, -apple-system, sans-serif; width: 180px; font-size: 12px;">
-                  <h3 style="margin: 0 0 6px; font-size: 14px; border-bottom: 1px solid #eee; padding-bottom: 4px; color: #166534;">Plot Details</h3>
-                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 8px;">
-                    <div style="color: #6b7280; font-size: 11px;">Plot ID:</div>
-                    <div style="text-align: right; font-weight: 500;">${
-                      props.id
-                    }</div>
+                <div style="font-family: system-ui, -apple-system, sans-serif; width: 200px; font-size: 12px; padding: 2px;">
+                  <div style="background-color: #f9fafb; border-radius: 6px 6px 0 0; padding: 8px 10px; border-bottom: 2px solid #10b981;">
+                    <h3 style="margin: 0; font-size: 14px; font-weight: 600; color: #047857;">Plot Details</h3>
+                  </div>
+                  
+                  <div style="padding: 10px;">
+                    <div style="margin-bottom: 10px;">
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; background-color: #f0fdf4; padding: 6px 8px; border-radius: 4px;">
+                        <span style="font-weight: 600; color: #166534;">Plot ID</span>
+                        <span style="font-weight: 600; color: #047857; font-size: 14px;">${
+                          props.id
+                        }</span>
+                      </div>
+                    </div>
                     
-                    <div style="color: #6b7280; font-size: 11px;">Treatment:</div>
-                    <div style="text-align: right; font-weight: 500;">${
-                      props.Treatment
-                    }</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px;">
+                      <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px;">
+                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Treatment</div>
+                        <div style="font-weight: 500; color: #111827; margin-top: 2px;">${
+                          props.Treatment
+                        }</div>
+                      </div>
+                      
+                      <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px;">
+                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Replication</div>
+                        <div style="font-weight: 500; color: #111827; margin-top: 2px;">${
+                          props.Replicatio
+                        }</div>
+                      </div>
+                    </div>
                     
-                    <div style="color: #6b7280; font-size: 11px;">Replication:</div>
-                    <div style="text-align: right; font-weight: 500;">${
-                      props.Replicatio
-                    }</div>
+                    <div style="margin-bottom: 8px; background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px;">
+                      <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Product</div>
+                      <div style="font-weight: 500; color: #111827; margin-top: 2px;">${
+                        props.Product
+                      }</div>
+                    </div>
                     
-                    <div style="color: #6b7280; font-size: 11px;">Product:</div>
-                    <div style="text-align: right; font-weight: 500;">${
-                      props.Product
-                    }</div>
-                    
-                    <div style="color: #6b7280; font-size: 11px;">Seed Rate:</div>
-                    <div style="text-align: right; font-weight: 500;">${props.SeedRate.toLocaleString()} seeds/ac</div>
-                    
-                    <div style="color: #6b7280; font-size: 11px;">Yield:</div>
-                    <div style="text-align: right; font-weight: 500;">${
-                      props.Yield
-                    } bu/ac</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                      <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px;">
+                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Seed Rate</div>
+                        <div style="font-weight: 500; color: #111827; margin-top: 2px;">${props.SeedRate.toLocaleString()} seeds/ac</div>
+                      </div>
+                      
+                      <div style="background-color: #ecfdf5; padding: 6px 8px; border-radius: 4px;">
+                        <div style="color: #065f46; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Yield</div>
+                        <div style="font-weight: 600; color: #047857; margin-top: 2px;">${
+                          props.Yield
+                        } bu/ac</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               `;
@@ -323,8 +377,8 @@ const MapWrapper = ({ view }: OnFarmTrialMapProps) => {
                 .bindPopup(popupContent, {
                   className: "custom-popup",
                   closeButton: true,
-                  maxWidth: 220,
-                  minWidth: 180
+                  maxWidth: 250,
+                  minWidth: 220
                 })
                 .openPopup();
             }

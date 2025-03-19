@@ -17,11 +17,13 @@ const fieldSizes = [
 
 const cropTypes = [
   "Corn",
-  "Soybeans",
+  "Soybean",
   "Cotton",
   "Rice",
   "Wheat",
   "Mixed Crops",
+  "Peanuts",
+  "Grain Sorghum",
   "Other"
 ];
 
