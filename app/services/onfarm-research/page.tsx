@@ -1251,17 +1251,28 @@ export default function OnFarmResearchPage() {
                 defaultValue="product-efficacy"
                 onValueChange={setSelectedAnalysisTab}
               >
-                <TabsList className="mb-6">
-                  <TabsTrigger value="product-efficacy">
-                    Product Efficacy
-                  </TabsTrigger>
-                  <TabsTrigger value="validate-practices">
-                    Validate Practices
-                  </TabsTrigger>
-                  <TabsTrigger value="spatial-integration">
-                    Spatial Integration
-                  </TabsTrigger>
-                </TabsList>
+                <div className="overflow-x-auto pb-2">
+                  <TabsList className="mb-6 w-full flex flex-nowrap min-w-max md:w-auto">
+                    <TabsTrigger
+                      className="flex-1 text-xs sm:text-sm whitespace-nowrap"
+                      value="product-efficacy"
+                    >
+                      Product Efficacy
+                    </TabsTrigger>
+                    <TabsTrigger
+                      className="flex-1 text-xs sm:text-sm whitespace-nowrap"
+                      value="validate-practices"
+                    >
+                      Validate Practices
+                    </TabsTrigger>
+                    <TabsTrigger
+                      className="flex-1 text-xs sm:text-sm whitespace-nowrap"
+                      value="spatial-integration"
+                    >
+                      Spatial Integration
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
 
                 <TabsContent value="product-efficacy">
                   <ProductEfficacyTab
