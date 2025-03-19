@@ -9,48 +9,48 @@ import { useState, useEffect } from "react";
 
 const steps = [
   {
-    title: "Strategy and Implementation",
+    title: "Plan and Set-Up",
     description:
-      "Field-specific trial strategies are developed to address unique soil conditions, crop requirements, and operational goals, ensuring precise implementation of variable rate prescriptions.",
+      "Field- and product-specific strategies are designed to align with your equipment, enabling effective farm data collection to achieve your research goals.",
     details: [
-      "Precision soil sampling and field mapping",
-      "Variable rate prescription development",
-      "Equipment compatibility verification and calibration"
+      "Trial procurement and placement",
+      "Prescriptions and guidance layers",
+      "Sampling strategies for trial"
     ],
     icon: Lightbulb,
-    image: "/images/implementation.jpg",
+    image: "/research/plan.png",
     alt: "Field implementation of agricultural strategy with equipment in operation"
   },
   {
     title: "Data Collection",
     description:
-      "Comprehensive field data is collected throughout the season by seamlessly integrating with existing farm management systems, combining soil analysis, aerial imagery, weather patterns, and historical yield information.",
+      "Spatially collected farm data is integrated with field samples, aerial imagery, and weather patterns, providing relevant insights for informed decision-making.",
     details: [
-      "Integration with John Deere Operations Center and Climate FieldView",
-      "High-resolution drone and satellite imagery analysis",
-      "Real-time weather monitoring and soil condition tracking"
+      "Integration with your farm management software",
+      "Precise and repeatable field sampling and imagery metrics",
+      "Spatial decision-support layers and weather tracking"
     ],
     icon: Database,
-    image: "/images/spatialImage2.jpeg",
+    image: "/research/datacollect.jpg",
     alt: "Spatial field data visualization showing variable crop conditions"
   },
   {
     title: "Data Analysis",
     description:
-      "Advanced analytics are utilized to process multi-layered field data, identifying yield-limiting factors, nutrient efficiency opportunities, and zone-specific management strategies that optimize input investments.",
+      "Our customizable, science-driven software processes multi-layered field data to evaluate treatment responses to specific products or application rates, providing tailored, insightful solutions for agricultural decision-making.",
     details: [
       "Multi-variate statistical analysis of soil and yield patterns",
       "Input efficiency and ROI calculations by management zone",
       "Year-over-year performance tracking and trend identification"
     ],
     icon: BarChart2,
-    image: "/images/spatialImage.jpg",
+    image: "/images/implementation.jpg",
     alt: "Spatial data analysis of agricultural fields"
   },
   {
     title: "Customized Reporting",
     description:
-      "Clear, actionable reports are delivered that translate complex field data into practical recommendations, enabling confident decisions about fertilizer applications, soil amendments, and seasonal management practices.",
+      "Clear reports transform complex data into practical insight and recommendations, empowering confident decisions.",
     details: [
       "Field-specific application recommendations with timing guidelines",
       "Economic comparison of uniform vs. variable rate strategies",

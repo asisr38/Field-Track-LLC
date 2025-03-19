@@ -40,7 +40,7 @@ const services: ServiceItem[] = [
     description:
       "Professional field sampling services that give you the full picture of your land's health. From soil conditions to crop status, we collect the data that drives better decisions with scientific rigor.",
     icon: <TestTube className="w-5 h-5 sm:w-6 sm:h-6" />,
-    image: "/images/soilsampling.webp",
+    image: "/field-sampling/sample.png",
     tags: ["Soil Analysis", "Crop Health Assessment", "Resource Mapping"],
     meta: "Professional Services",
     cta: "Learn More",

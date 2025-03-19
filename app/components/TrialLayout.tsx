@@ -106,15 +106,13 @@ const TrialLayout = ({ className }: TrialLayoutProps) => {
         if (feature.properties) {
           layer.bindPopup(
             `
-            <div style="font-family: system-ui, -apple-system, sans-serif; min-width: 180px; max-width: 200px; font-size: 12px;">
+            <div style="font-family: system-ui, -apple-system, sans-serif; width: 180px; font-size: 12px;">
               <h3 style="margin: 0 0 6px; font-size: 14px; border-bottom: 1px solid #eee; padding-bottom: 4px; color: #166534;">Plot Details</h3>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 8px;">
                 <div style="color: #6b7280; font-size: 11px;">Plot ID:</div>
                 <div style="text-align: right; font-weight: 500;">${feature.properties.ID_1}</div>
-                
                 <div style="color: #6b7280; font-size: 11px;">Seed Rate:</div>
                 <div style="text-align: right; font-weight: 500;">${feature.properties.tgt_seed} seeds/ac</div>
-                
                 <div style="color: #6b7280; font-size: 11px;">Yield:</div>
                 <div style="text-align: right; font-weight: 500;">${feature.properties.Yield} bu/ac</div>
               </div>

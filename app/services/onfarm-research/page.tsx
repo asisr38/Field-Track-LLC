@@ -1223,7 +1223,6 @@ export default function OnFarmResearchPage() {
                       label="Top Product"
                       value="Product B (77.0 bu/$)"
                     />
-                    <DataRow label="CV (%)" value="4.8%" />
                   </div>
                 </DataCard>
               </div>
@@ -1259,9 +1258,6 @@ export default function OnFarmResearchPage() {
                   <TabsTrigger value="validate-practices">
                     Validate Practices
                   </TabsTrigger>
-                  <TabsTrigger value="optimize-rates">
-                    Optimize Rates
-                  </TabsTrigger>
                   <TabsTrigger value="spatial-integration">
                     Spatial Integration
                   </TabsTrigger>
@@ -1288,111 +1284,115 @@ export default function OnFarmResearchPage() {
                     opportunities for improvement.
                   </span>
 
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <Card className="p-4">
-                      <h5 className="text-base font-medium mb-3">
-                        Product Performance
-                      </h5>
-                      <div className="flex flex-col space-y-3">
-                        {productData.map((item, index) => (
-                          <div
-                            key={index}
-                            className="flex justify-between items-center"
-                          >
-                            <span>{item.name}</span>
-                            <span className="font-medium">
-                              {Number(item.yield).toFixed(1)} bu/ac
-                            </span>
-                          </div>
-                        ))}
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <Card className="p-5 hover:border-primary/50 transition-colors">
+                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
+                        <Beaker className="w-6 h-6 text-primary" />
                       </div>
+                      <h5 className="font-medium text-base mb-2">
+                        Seed Treatments
+                      </h5>
+                      <p className="text-sm text-muted-foreground">
+                        Evaluate the effectiveness of different seed treatments
+                        under your specific field conditions to maximize
+                        germination and early-season crop health.
+                      </p>
                     </Card>
 
-                    <Card className="p-4">
-                      <h5 className="text-base font-medium mb-3">
-                        Product ROI Analysis
-                      </h5>
-                      <div className="flex flex-col space-y-3">
-                        {productData.map((item, index) => (
-                          <div
-                            key={index}
-                            className="flex justify-between items-center"
-                          >
-                            <span>{item.name}</span>
-                            <span className="font-medium">
-                              ${Number(item.yieldProd).toFixed(1)}/ac
-                            </span>
-                          </div>
-                        ))}
+                    <Card className="p-5 hover:border-primary/50 transition-colors">
+                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
+                        <SplitSquareHorizontal className="w-6 h-6 text-primary" />
                       </div>
+                      <h5 className="font-medium text-base mb-2">
+                        Split Applications
+                      </h5>
+                      <p className="text-sm text-muted-foreground">
+                        Test multiple application timings against standard
+                        practices to determine if split applications improve
+                        nutrient use efficiency in your soils.
+                      </p>
+                    </Card>
+
+                    <Card className="p-5 hover:border-primary/50 transition-colors">
+                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
+                        <Microscope className="w-6 h-6 text-primary" />
+                      </div>
+                      <h5 className="font-medium text-base mb-2">
+                        Biological Products
+                      </h5>
+                      <p className="text-sm text-muted-foreground">
+                        Assess the performance of microbial and biological
+                        products in your cropping system to determine their
+                        impact on soil health and crop yield.
+                      </p>
+                    </Card>
+
+                    <Card className="p-5 hover:border-primary/50 transition-colors">
+                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
+                        <SlidersHorizontal className="w-6 h-6 text-primary" />
+                      </div>
+                      <h5 className="font-medium text-base mb-2">
+                        Rate Optimization
+                      </h5>
+                      <p className="text-sm text-muted-foreground">
+                        Find the optimal input rates for your specific
+                        environment through side-by-side comparisons of
+                        different application rates.
+                      </p>
                     </Card>
                   </div>
-                </TabsContent>
 
-                <TabsContent value="optimize-rates" className="space-y-6">
-                  <div className="flex items-center gap-2 mb-1">
-                    <SlidersHorizontal className="w-5 h-5 text-primary" />
-                    <h4 className="text-base font-medium">
-                      Product Yield Breakdown
-                    </h4>
-                  </div>
+                  <div className="mt-8">
+                    <Card className="p-6 bg-muted/10">
+                      <h5 className="text-base font-medium mb-4 flex items-center gap-2">
+                        <Target className="w-5 h-5 text-primary" />
+                        <span>Practice Validation Process</span>
+                      </h5>
 
-                  <span className="text-sm text-muted-foreground block mb-6">
-                    Detailed analysis of product performance across treatments,
-                    showing yield results from actual field trials.
-                  </span>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {Object.keys(productStats).map(product => (
-                      <Card key={product} className="p-4">
-                        <h5 className="text-base font-medium mb-3 flex items-center gap-2">
-                          <div
-                            className="w-3 h-3 rounded-full"
-                            style={{
-                              backgroundColor:
-                                product === "Product A"
-                                  ? "#e6194B"
-                                  : product === "Product B"
-                                  ? "#3cb44b"
-                                  : product === "Product C"
-                                  ? "#ffe119"
-                                  : "#808080"
-                            }}
-                          />
-                          {product}
-                        </h5>
-                        <div className="grid grid-cols-2 gap-y-2">
-                          <span className="text-sm text-muted-foreground">
-                            Yield Range:
-                          </span>
-                          <span className="text-sm">
-                            {productStats[product]?.min} -{" "}
-                            {productStats[product]?.max} bu/ac
-                          </span>
-
-                          <span className="text-sm text-muted-foreground">
-                            Average Yield:
-                          </span>
-                          <span className="text-sm">
-                            {productStats[product]?.avgYield} bu/ac
-                          </span>
-
-                          <span className="text-sm text-muted-foreground">
-                            ROI:
-                          </span>
-                          <span className="text-sm">
-                            ${productStats[product]?.avgYieldProd}/ac
-                          </span>
-
-                          <span className="text-sm text-muted-foreground">
-                            Plots:
-                          </span>
-                          <span className="text-sm">
-                            {productStats[product]?.count}
-                          </span>
+                      <div className="grid md:grid-cols-3 gap-6">
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <div className="rounded-full bg-primary/20 w-8 h-8 flex items-center justify-center text-primary font-medium">
+                              1
+                            </div>
+                            <h6 className="font-medium">Design</h6>
+                          </div>
+                          <p className="text-sm text-muted-foreground pl-10">
+                            We work with you to identify practices you want to
+                            validate and design trials with proper controls and
+                            replications.
+                          </p>
                         </div>
-                      </Card>
-                    ))}
+
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <div className="rounded-full bg-primary/20 w-8 h-8 flex items-center justify-center text-primary font-medium">
+                              2
+                            </div>
+                            <h6 className="font-medium">Implementation</h6>
+                          </div>
+                          <p className="text-sm text-muted-foreground pl-10">
+                            Trials are established in your fields using
+                            precision equipment to ensure accurate application
+                            and data collection.
+                          </p>
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <div className="rounded-full bg-primary/20 w-8 h-8 flex items-center justify-center text-primary font-medium">
+                              3
+                            </div>
+                            <h6 className="font-medium">Analysis</h6>
+                          </div>
+                          <p className="text-sm text-muted-foreground pl-10">
+                            Results are analyzed using statistical methods to
+                            determine significant differences and provide
+                            actionable recommendations.
+                          </p>
+                        </div>
+                      </div>
+                    </Card>
                   </div>
                 </TabsContent>
 
@@ -1411,62 +1411,60 @@ export default function OnFarmResearchPage() {
                   </span>
 
                   <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <Card className="p-3 flex flex-col items-center hover:border-primary cursor-pointer transition-colors">
-                      <div className="bg-muted/40 rounded-lg w-full h-40 mb-3 overflow-hidden">
-                        <Image
-                          src="/onfarm/onfarmmain.png"
-                          alt="Web Soil Survey"
-                          width={200}
-                          height={200}
-                          className="w-full h-full object-cover"
-                        />
+                    <Card className="p-4 flex flex-col h-full hover:border-primary transition-colors">
+                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-3 flex items-center justify-center">
+                        <Layers3 className="w-6 h-6 text-primary" />
                       </div>
-                      <span className="font-medium text-sm">WSS Soil Type</span>
+                      <h5 className="font-medium text-sm mb-2">
+                        WSS Soil Types
+                      </h5>
+                      <p className="text-xs text-muted-foreground mt-auto">
+                        Overlay trial data with USDA soil survey maps to
+                        understand how different soil types affect product
+                        performance and yield response.
+                      </p>
                     </Card>
 
-                    <Card className="p-3 flex flex-col items-center hover:border-primary cursor-pointer transition-colors">
-                      <div className="bg-muted/40 rounded-lg w-full h-40 mb-3 overflow-hidden">
-                        <Image
-                          src="/onfarm/onfarmmain.png"
-                          alt="Terrain Indices"
-                          width={200}
-                          height={200}
-                          className="w-full h-full object-cover opacity-80"
-                        />
+                    <Card className="p-4 flex flex-col h-full hover:border-primary transition-colors">
+                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-3 flex items-center justify-center">
+                        <ArrowUpDown className="w-6 h-6 text-primary" />
                       </div>
-                      <span className="font-medium text-sm">
+                      <h5 className="font-medium text-sm mb-2">
                         Terrain Indices
-                      </span>
+                      </h5>
+                      <p className="text-xs text-muted-foreground mt-auto">
+                        Analyze how elevation, slope, and water flow affect
+                        treatment efficacy and identify optimal management zones
+                        based on topography.
+                      </p>
                     </Card>
 
-                    <Card className="p-3 flex flex-col items-center hover:border-primary cursor-pointer transition-colors">
-                      <div className="bg-muted/40 rounded-lg w-full h-40 mb-3 overflow-hidden">
-                        <Image
-                          src="/onfarm/onfarmmain.png"
-                          alt="NDVI"
-                          width={200}
-                          height={200}
-                          className="w-full h-full object-cover opacity-70"
-                        />
+                    <Card className="p-4 flex flex-col h-full hover:border-primary transition-colors">
+                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-3 flex items-center justify-center">
+                        <Sprout className="w-6 h-6 text-primary" />
                       </div>
-                      <span className="font-medium text-sm">
+                      <h5 className="font-medium text-sm mb-2">
                         Vegetative Reflectance (NDVI)
-                      </span>
+                      </h5>
+                      <p className="text-xs text-muted-foreground mt-auto">
+                        Correlate seasonal crop health imagery with treatment
+                        responses to identify patterns in plant vigor across
+                        different management practices.
+                      </p>
                     </Card>
 
-                    <Card className="p-3 flex flex-col items-center hover:border-primary cursor-pointer transition-colors">
-                      <div className="bg-muted/40 rounded-lg w-full h-40 mb-3 overflow-hidden">
-                        <Image
-                          src="/onfarm/onfarmmain.png"
-                          alt="Custom Zones"
-                          width={200}
-                          height={200}
-                          className="w-full h-full object-cover opacity-60"
-                        />
+                    <Card className="p-4 flex flex-col h-full hover:border-primary transition-colors">
+                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-3 flex items-center justify-center">
+                        <Grid className="w-6 h-6 text-primary" />
                       </div>
-                      <span className="font-medium text-sm">
+                      <h5 className="font-medium text-sm mb-2">
                         Custom Management Zones
-                      </span>
+                      </h5>
+                      <p className="text-xs text-muted-foreground mt-auto">
+                        Create tailored management zones based on multiple data
+                        layers to optimize inputs and maximize ROI across
+                        variable field conditions.
+                      </p>
                     </Card>
                   </div>
                 </TabsContent>
