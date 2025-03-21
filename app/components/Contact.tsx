@@ -7,14 +7,6 @@ import { Check, AlertCircle } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 
-const fieldSizes = [
-  "Under 500 acres",
-  "500-1,000 acres",
-  "1,000-2,500 acres",
-  "2,500-5,000 acres",
-  "Over 5,000 acres"
-];
-
 const cropTypes = [
   "Corn",
   "Soybean",
@@ -167,7 +159,6 @@ export default function Contact() {
           email: formData.email,
           phone: formData.phone,
           message: `
-Field Size: ${formData.acres || "Not specified"}
 Crop Types: ${formData.cropTypes || "Not specified"}
 Service Type: ${formData.serviceType || "Not specified"}
 Preferred Contact: ${formData.preferredContact}
@@ -364,29 +355,6 @@ ${formData.message}
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="acres"
-                        className="block text-sm font-medium text-foreground"
-                      >
-                        Field Size
-                      </label>
-                      <select
-                        id="acres"
-                        name="acres"
-                        value={formData.acres}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 text-sm sm:text-base bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                      >
-                        <option value="">Select field size</option>
-                        {fieldSizes.map(size => (
-                          <option key={size} value={size}>
-                            {size}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
                     <div className="space-y-2">
                       <label
                         htmlFor="cropTypes"

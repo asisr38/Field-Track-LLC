@@ -40,7 +40,7 @@ function ServiceGrid({ items }: ServiceGridProps) {
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
             {/* Image Section - Full width on mobile, half width on desktop */}
-            <div className="relative h-48 sm:h-full overflow-hidden">
+            <div className="relative h-48 sm:h-64 lg:h-full overflow-hidden">
               {item.image && (
                 <Image
                   src={item.image}
@@ -73,7 +73,7 @@ function ServiceGrid({ items }: ServiceGridProps) {
                 </div>
 
                 {/* Description */}
-                <p className="text-xs sm:text-sm md:text-[14px] text-muted-foreground leading-relaxed line-clamp-3 sm:line-clamp-3">
+                <p className="text-xs sm:text-sm md:text-[14px] text-muted-foreground leading-relaxed mb-4">
                   {item.description}
                 </p>
 

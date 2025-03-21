@@ -171,49 +171,41 @@ const nutrientColorScales = {
   phosphorus: {
     ranges: [0, 20, 40, 60, 80],
     colors: ["#FF5252", "#FF9800", "#FFEB3B", "#8BC34A", "#4CAF50"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"],
     unit: "ppm"
   },
   potassium: {
     ranges: [0, 100, 150, 200, 250],
     colors: ["#F44336", "#FB8C00", "#FFD54F", "#7CB342", "#2E7D32"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"],
     unit: "ppm"
   },
   magnesium: {
     ranges: [0, 200, 300, 400, 500],
     colors: ["#E53935", "#F57C00", "#FDD835", "#8BC34A", "#388E3C"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"],
     unit: "ppm"
   },
   calcium: {
     ranges: [0, 1000, 1500, 2000, 2500],
     colors: ["#D32F2F", "#EF6C00", "#FBC02D", "#7CB342", "#388E3C"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"],
     unit: "ppm"
   },
   ph: {
     ranges: [5.5, 6.0, 6.5, 7.0, 7.5],
     colors: ["#F44336", "#FF9800", "#4CAF50", "#FF9800", "#F44336"],
-    labels: ["Very Acidic", "Acidic", "Optimal", "Alkaline", "Very Alkaline"],
     unit: ""
   },
   organicMatter: {
     ranges: [0, 1, 2, 3, 4],
     colors: ["#FFCDD2", "#FFAB91", "#A5D6A7", "#66BB6A", "#388E3C"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"],
     unit: "%"
   },
   zinc: {
     ranges: [0, 5, 10, 15, 20],
     colors: ["#EF9A9A", "#FFCC80", "#FFF59D", "#A5D6A7", "#81C784"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"],
     unit: "ppm"
   },
   manganese: {
     ranges: [0, 20, 40, 60, 80],
     colors: ["#FFCDD2", "#FFAB91", "#FFCC80", "#C5E1A5", "#A5D6A7"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"],
     unit: "ppm"
   }
 };
@@ -487,9 +479,9 @@ export default function FieldSamplingPage() {
                 icon={<Target className="text-primary" />}
               >
                 <div className="space-y-2">
-                  <DataRow label="Sample Date" value="December 11, 2020" />
+                  <DataRow label="Sample Date" value="October 12, 2024" />
                   <DataRow label="Number of Points" value="20+" />
-                  <DataRow label="Sampling Depth" value="8 inches" />
+                  <DataRow label="Sampling Depth" value="6 inches" />
                   <DataRow label="Sampling Pattern" value="Grid" />
                   <DataRow label="Crop Year" value="2020" />
                 </div>
@@ -554,9 +546,6 @@ export default function FieldSamplingPage() {
                                 currentColorScale.ranges[index + 1]
                               } ${currentColorScale.unit}`
                             : `${range}+ ${currentColorScale.unit}`}
-                          <span className="text-xs text-muted-foreground ml-1">
-                            ({currentColorScale.labels[index]})
-                          </span>
                         </span>
                       </div>
                     ))}
