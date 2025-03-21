@@ -345,7 +345,7 @@ const ProductEfficacyTab = ({
                   label={{
                     value: "Treatment (Product)",
                     position: "bottom",
-                    offset: 0
+                    offset: 2
                   }}
                 />
                 <YAxis
@@ -353,7 +353,8 @@ const ProductEfficacyTab = ({
                   label={{
                     value: "Yield (Bu/Ac)",
                     angle: -90,
-                    position: "insideLeft"
+                    position: "insideLeft",
+                    offset: 2
                   }}
                   tickCount={7}
                 />
@@ -446,8 +447,6 @@ const ProductEfficacyTab = ({
                         {productStats[product]?.min} -{" "}
                         {productStats[product]?.max} bu/ac
                       </span>
-                      <span className="text-muted-foreground">ROI:</span>
-                      <span>${productStats[product]?.avgYieldProd}/ac</span>
                     </div>
                   </div>
                 ))}
@@ -593,7 +592,7 @@ export default function OnFarmResearchPage() {
   const [boxPlotData, setBoxPlotData] = useState<any[]>([]);
   const [combinedData, setCombinedData] = useState<any[]>([]);
   const [onFarmView, setOnFarmView] = useState<
-    "treatment" | "replication" | "product" | "yield"
+    "treatment" | "replication" | "yield"
   >("treatment");
   const [selectedAnalysisTab, setSelectedAnalysisTab] =
     useState("product-efficacy");
@@ -989,6 +988,15 @@ export default function OnFarmResearchPage() {
             // Calculate statistics based on the actual data
             const stats: any = {};
             const chartData = Object.keys(productGroups)
+              .sort((a, b) => {
+                const order = [
+                  "Product A",
+                  "Product B",
+                  "Product C",
+                  "Untreated"
+                ];
+                return order.indexOf(a) - order.indexOf(b);
+              })
               .map(product => {
                 const yields = productGroups[product].map(
                   (item: any) => item.yield
@@ -1085,891 +1093,904 @@ export default function OnFarmResearchPage() {
           </motion.div>
         </div>
       </section>
-      {/* On-Farm Trial Design Section - Add this after the Seed Rate Trial Design section */}
-      <section className="bg-background py-10">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-4"
-          >
-            <div className="flex items-center gap-3 mb-1">
-              <Map className="w-8 h-8 text-primary" />
-              <h3 className="text-lg font-semibold">On-Farm Research Trials</h3>
-            </div>
 
-            <Card className="p-6">
-              <span className="text-sm text-muted-foreground ml-2">
-                Real-world field trials with different treatments and products
-                to evaluate performance under actual farming conditions. These
-                trials provide valuable insights for making informed decisions.
-              </span>
-
-              <div className="bg-muted/50 rounded-lg p-4 shadow-inner mb-6 mt-4">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
-                  <h4 className="text-base font-medium">Trial Layout</h4>
-                  <div className="grid grid-cols-2 sm:flex sm:flex-row sm:items-center gap-1 sm:space-x-0">
-                    <button
-                      className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-tl-md sm:rounded-tl-md sm:rounded-tr-none ${
-                        onFarmView === "treatment"
-                          ? "bg-primary text-white"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                      onClick={() => setOnFarmView("treatment")}
-                    >
-                      Treatment
-                    </button>
-                    <button
-                      className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-tr-md sm:rounded-none ${
-                        onFarmView === "replication"
-                          ? "bg-primary text-white"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                      onClick={() => setOnFarmView("replication")}
-                    >
-                      Replication
-                    </button>
-                    <button
-                      className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-bl-md sm:rounded-none ${
-                        onFarmView === "product"
-                          ? "bg-primary text-white"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                      onClick={() => setOnFarmView("product")}
-                    >
-                      Product
-                    </button>
-                    <button
-                      className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-br-md sm:rounded-none sm:rounded-tr-md sm:rounded-br-md ${
-                        onFarmView === "yield"
-                          ? "bg-primary text-white"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                      onClick={() => setOnFarmView("yield")}
-                    >
-                      Yield
-                    </button>
-                  </div>
-                </div>
-                <div className="h-[600px] w-full rounded-lg overflow-hidden">
-                  {isClient && <OnFarmTrialMap view={onFarmView} />}
-                </div>
-              </div>
-
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <DataCard
-                  title="Trial Information"
-                  icon={<FileBarChart className="w-5 h-5" />}
-                >
-                  <div className="space-y-2">
-                    <DataRow label="Location" value="Southeast Missouri" />
-                    <DataRow label="Crop" value="Corn" />
-                    <DataRow label="Planting Date" value="April 2, 2023" />
-                    <DataRow label="Harvest Date" value="September 15, 2023" />
-                    <DataRow label="Number of Plots" value={12} />
-                  </div>
-                </DataCard>
-
-                <DataCard
-                  title="Study Design"
-                  icon={<Target className="w-5 h-5" />}
-                >
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-3 bg-muted/50 rounded-lg">
-                      <div className="text-lg font-semibold text-primary">
-                        4
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Treatments
-                      </div>
-                    </div>
-                    <div className="text-center p-3 bg-muted/50 rounded-lg">
-                      <div className="text-lg font-semibold text-primary">
-                        3
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Replications
-                      </div>
-                    </div>
-                    <div className="text-center p-3 bg-muted/50 rounded-lg">
-                      <div className="text-lg font-semibold text-primary">
-                        12
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Total Plots
-                      </div>
-                    </div>
-                    <div className="text-center p-3 bg-muted/50 rounded-lg">
-                      <div className="text-lg font-semibold text-primary">
-                        60'x300'
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Plot Size
-                      </div>
-                    </div>
-                  </div>
-                </DataCard>
-
-                <DataCard
-                  title="Trial Summary"
-                  icon={<BarChart2 className="w-5 h-5" />}
-                >
-                  <div className="space-y-2">
-                    <DataRow label="Average Yield" value="222.1 bu/ac" />
-                    <DataRow label="Yield Range" value="198 - 233 bu/ac" />
-                    <DataRow label="Top Treatment" value="Treatment 3" />
-                    <DataRow
-                      label="Top Product"
-                      value="Product B (77.0 bu/$)"
-                    />
-                  </div>
-                </DataCard>
-              </div>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
-      {/* On-Farm Research Analysis Section - Add after the On-Farm Trial Design section */}
-      <section className="bg-muted/30 py-16">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-4"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <FileBarChart className="w-8 h-8 text-primary" />
-              <h3 className="text-xl font-semibold">
-                On-Farm Trial Results Analysis
-              </h3>
-            </div>
-
-            <Card className="p-6">
-              <Tabs
-                defaultValue="product-efficacy"
-                onValueChange={setSelectedAnalysisTab}
-              >
-                <div className="overflow-x-auto pb-2">
-                  <TabsList className="mb-6 w-full flex flex-nowrap min-w-max md:w-auto">
-                    <TabsTrigger
-                      className="flex-1 text-xs sm:text-sm whitespace-nowrap"
-                      value="product-efficacy"
-                    >
-                      Product Efficacy
-                    </TabsTrigger>
-                    <TabsTrigger
-                      className="flex-1 text-xs sm:text-sm whitespace-nowrap"
-                      value="validate-practices"
-                    >
-                      Validate Practices
-                    </TabsTrigger>
-                    <TabsTrigger
-                      className="flex-1 text-xs sm:text-sm whitespace-nowrap"
-                      value="spatial-integration"
-                    >
-                      Spatial Integration
-                    </TabsTrigger>
-                  </TabsList>
-                </div>
-
-                <TabsContent value="product-efficacy">
-                  <ProductEfficacyTab
-                    productData={productData}
-                    productStats={productStats}
-                  />
-                </TabsContent>
-
-                <TabsContent value="validate-practices" className="space-y-6">
-                  <div className="flex items-center gap-2 mb-1">
-                    <CheckIcon className="w-5 h-5 text-primary" />
-                    <h4 className="text-base font-medium">
-                      Validate Current Practices
-                    </h4>
-                  </div>
-
-                  <span className="text-sm text-muted-foreground block mb-6">
-                    Compare your current management practices against
-                    alternatives to confirm effectiveness and identify
-                    opportunities for improvement.
-                  </span>
-
-                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <Card className="p-5 hover:border-primary/50 transition-colors">
-                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
-                        <Beaker className="w-6 h-6 text-primary" />
-                      </div>
-                      <h5 className="font-medium text-base mb-2">
-                        Seed Treatments
-                      </h5>
-                      <p className="text-sm text-muted-foreground">
-                        Evaluate the effectiveness of different seed treatments
-                        under your specific field conditions to maximize
-                        germination and early-season crop health.
-                      </p>
-                    </Card>
-
-                    <Card className="p-5 hover:border-primary/50 transition-colors">
-                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
-                        <SplitSquareHorizontal className="w-6 h-6 text-primary" />
-                      </div>
-                      <h5 className="font-medium text-base mb-2">
-                        Split Applications
-                      </h5>
-                      <p className="text-sm text-muted-foreground">
-                        Test multiple application timings against standard
-                        practices to determine if split applications improve
-                        nutrient use efficiency in your soils.
-                      </p>
-                    </Card>
-
-                    <Card className="p-5 hover:border-primary/50 transition-colors">
-                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
-                        <Microscope className="w-6 h-6 text-primary" />
-                      </div>
-                      <h5 className="font-medium text-base mb-2">
-                        Biological Products
-                      </h5>
-                      <p className="text-sm text-muted-foreground">
-                        Assess the performance of microbial and biological
-                        products in your cropping system to determine their
-                        impact on soil health and crop yield.
-                      </p>
-                    </Card>
-
-                    <Card className="p-5 hover:border-primary/50 transition-colors">
-                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
-                        <SlidersHorizontal className="w-6 h-6 text-primary" />
-                      </div>
-                      <h5 className="font-medium text-base mb-2">
-                        Rate Optimization
-                      </h5>
-                      <p className="text-sm text-muted-foreground">
-                        Find the optimal input rates for your specific
-                        environment through side-by-side comparisons of
-                        different application rates.
-                      </p>
-                    </Card>
-                  </div>
-
-                  <div className="mt-8">
-                    <Card className="p-6 bg-muted/10">
-                      <h5 className="text-base font-medium mb-4 flex items-center gap-2">
-                        <Target className="w-5 h-5 text-primary" />
-                        <span>Practice Validation Process</span>
-                      </h5>
-
-                      <div className="grid md:grid-cols-3 gap-6">
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-2">
-                            <div className="rounded-full bg-primary/20 w-8 h-8 flex items-center justify-center text-primary font-medium">
-                              1
-                            </div>
-                            <h6 className="font-medium">Design</h6>
-                          </div>
-                          <p className="text-sm text-muted-foreground pl-10">
-                            We work with you to identify practices you want to
-                            validate and design trials with proper controls and
-                            replications.
-                          </p>
-                        </div>
-
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-2">
-                            <div className="rounded-full bg-primary/20 w-8 h-8 flex items-center justify-center text-primary font-medium">
-                              2
-                            </div>
-                            <h6 className="font-medium">Implementation</h6>
-                          </div>
-                          <p className="text-sm text-muted-foreground pl-10">
-                            Trials are established in your fields using
-                            precision equipment to ensure accurate application
-                            and data collection.
-                          </p>
-                        </div>
-
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-2">
-                            <div className="rounded-full bg-primary/20 w-8 h-8 flex items-center justify-center text-primary font-medium">
-                              3
-                            </div>
-                            <h6 className="font-medium">Analysis</h6>
-                          </div>
-                          <p className="text-sm text-muted-foreground pl-10">
-                            Results are analyzed using statistical methods to
-                            determine significant differences and provide
-                            actionable recommendations.
-                          </p>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="spatial-integration" className="space-y-6">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Layers3 className="w-5 h-5 text-primary" />
-                    <h4 className="text-base font-medium">
-                      Spatial Data Integration
-                    </h4>
-                  </div>
-
-                  <span className="text-sm text-muted-foreground block mb-6">
-                    Combine trial results with other spatial data layers to
-                    understand performance in the context of field variability
-                    and environmental factors.
-                  </span>
-
-                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <Card className="p-4 flex flex-col h-full hover:border-primary transition-colors">
-                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-3 flex items-center justify-center">
-                        <Layers3 className="w-6 h-6 text-primary" />
-                      </div>
-                      <h5 className="font-medium text-sm mb-2">
-                        WSS Soil Types
-                      </h5>
-                      <p className="text-xs text-muted-foreground mt-auto">
-                        Overlay trial data with USDA soil survey maps to
-                        understand how different soil types affect product
-                        performance and yield response.
-                      </p>
-                    </Card>
-
-                    <Card className="p-4 flex flex-col h-full hover:border-primary transition-colors">
-                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-3 flex items-center justify-center">
-                        <ArrowUpDown className="w-6 h-6 text-primary" />
-                      </div>
-                      <h5 className="font-medium text-sm mb-2">
-                        Terrain Indices
-                      </h5>
-                      <p className="text-xs text-muted-foreground mt-auto">
-                        Analyze how elevation, slope, and water flow affect
-                        treatment efficacy and identify optimal management zones
-                        based on topography.
-                      </p>
-                    </Card>
-
-                    <Card className="p-4 flex flex-col h-full hover:border-primary transition-colors">
-                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-3 flex items-center justify-center">
-                        <Sprout className="w-6 h-6 text-primary" />
-                      </div>
-                      <h5 className="font-medium text-sm mb-2">
-                        Vegetative Reflectance (NDVI)
-                      </h5>
-                      <p className="text-xs text-muted-foreground mt-auto">
-                        Correlate seasonal crop health imagery with treatment
-                        responses to identify patterns in plant vigor across
-                        different management practices.
-                      </p>
-                    </Card>
-
-                    <Card className="p-4 flex flex-col h-full hover:border-primary transition-colors">
-                      <div className="bg-muted/20 rounded-full w-12 h-12 mb-3 flex items-center justify-center">
-                        <Grid className="w-6 h-6 text-primary" />
-                      </div>
-                      <h5 className="font-medium text-sm mb-2">
-                        Custom Management Zones
-                      </h5>
-                      <p className="text-xs text-muted-foreground mt-auto">
-                        Create tailored management zones based on multiple data
-                        layers to optimize inputs and maximize ROI across
-                        variable field conditions.
-                      </p>
-                    </Card>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
-      {/* Map Section */}
-      <section className="bg-muted/30 ">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-4"
-          >
-            <div className="flex items-center gap-3 mb-1">
-              <Map className="w-8 h-8 text-primary" />
-              <h3 className="text-lg font-semibold">
-                Seed Rate Trial Design
-              </h3>{" "}
-            </div>
-
-            <Card className="p-6">
-              <span className="text-sm text-muted-foreground ml-2">
-                Discover the optimal seed rates for your fields through
-                data-driven field trials and real-world performance analysis.
-              </span>
-
-              <div className="bg-muted/50 rounded-lg p-4 shadow-inner mb-6 mt-4">
-                <div className="h-[600px] w-full rounded-lg overflow-hidden">
-                  {isClient && <OnFarmMap />}
-                </div>
-              </div>
-
-              {/* Trial Information Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Trial Information Card */}
-                <DataCard
-                  title="Trial Information"
-                  icon={<FileBarChart className="w-5 h-5" />}
-                >
-                  <div className="space-y-2">
-                    <DataRow label="Location" value="Central Illinois" />
-                    <DataRow label="Crop" value="Corn" />
-                    <DataRow label="Planting Date" value="April 15, 2025" />
-                    <DataRow label="Harvest Date" value="October 10, 2025" />
-                    <DataRow
-                      label="Number of Plots"
-                      value={trialData.features.length.toString()}
-                    />
-                  </div>
-                </DataCard>
-                {/* Study Design Card */}
-                <DataCard
-                  title="Study Design"
-                  icon={<Target className="w-5 h-5" />}
-                >
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-3 bg-muted/50 rounded-lg">
-                      <div className="text-lg font-semibold text-primary">
-                        5
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Seed Rates
-                      </div>
-                    </div>
-                    <div className="text-center p-3 bg-muted/50 rounded-lg">
-                      <div className="text-lg font-semibold text-primary">
-                        32
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Replications
-                      </div>
-                    </div>
-                    <div className="text-center p-3 bg-muted/50 rounded-lg">
-                      <div className="text-lg font-semibold text-primary">
-                        {trialData.features.length}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Total Plots
-                      </div>
-                    </div>
-                    <div className="text-center p-3 bg-muted/50 rounded-lg">
-                      <div className="text-lg font-semibold text-primary">
-                        300'x35ft
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Plot Size
-                      </div>
-                    </div>
-                  </div>
-                </DataCard>
-                {/* Map Legend Card */}
-                <DataCard
-                  title="Map Legend"
-                  icon={<Layers3 className="w-5 h-5" />}
-                >
-                  <p className="text-sm text-muted-foreground mb-3">
-                    The map uses color coding to represent different seed rates:
-                  </p>
-                  <div className="grid grid-cols-1 gap-2">
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 bg-[#FEE4D8] mr-2"></div>
-                      <span className="text-sm">26,000 seeds/acre</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 bg-[#FCB195] mr-2"></div>
-                      <span className="text-sm">28,000 seeds/acre</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 bg-[#FB795A] mr-2"></div>
-                      <span className="text-sm">30,000 seeds/acre</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 bg-[#EF3C2D] mr-2"></div>
-                      <span className="text-sm">32,000 seeds/acre</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 bg-[#BB1419] mr-2"></div>
-                      <span className="text-sm">34,000 seeds/acre</span>
-                    </div>
-                  </div>
-                </DataCard>
-              </div>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Trial Results Analysis */}
-      <section className="bg-background py-10 sm:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
-            {/* Average Yield by Seed Rate */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <Card className="h-full overflow-hidden border-border shadow-sm dark:bg-card/95">
-                <div className="p-4 sm:p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <BarChart2 className="w-5 h-5 text-primary" />
-                    <h3 className="text-lg font-semibold text-foreground">
-                      Average Yield by Seed Rate
+      {/* Main Content Section */}
+      <div className="container mx-auto px-4 pb-12">
+        <div className="space-y-12">
+          {/* Trial Example #1 */}
+          <Card className="p-8">
+            <div className="space-y-8">
+              {/* Trial Layout Section */}
+              <div className="space-y-6">
+                {/* Header */}
+                <div className="flex items-center gap-3 border-b border-border pb-4">
+                  <Map className="w-7 h-7 text-primary" />
+                  <div>
+                    <h3 className="text-lg font-semibold">
+                      On-Farm Strip Trial
                     </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Real-world field trials with different treatments and
+                      products to evaluate performance under actual farming
+                      conditions.
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    This chart shows the average yield achieved at each seed
-                    rate, helping identify which planting density produces the
-                    highest overall yields.
-                  </p>
-                  <div className="h-[350px] sm:h-[400px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RechartsBarChart
-                        data={trialResults}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
+                </div>
+                <div className="bg-muted/50 rounded-lg p-4 shadow-inner">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
+                    <div className="grid grid-cols-2 sm:flex sm:flex-row sm:items-center gap-1 sm:space-x-0">
+                      <button
+                        className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-bl-md sm:rounded-none ${
+                          onFarmView === "treatment"
+                            ? "bg-primary text-white"
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                        onClick={() => setOnFarmView("treatment")}
                       >
-                        <CartesianGrid
-                          strokeDasharray="3 3"
-                          stroke={chartColors.grid}
-                        />
-                        <XAxis
-                          dataKey="seedRate"
-                          tickFormatter={value => `${value / 1000}K`}
-                          padding={{ left: 20, right: 20 }}
-                          tick={{ fontSize: 12, fill: chartColors.text }}
-                          stroke={chartColors.axis}
-                        >
-                          <Label
-                            value="Seed Rate (seeds/acre)"
-                            position="bottom"
-                            offset={20}
-                            style={{
-                              fill: chartColors.text,
-                              textAnchor: "middle",
-                              fontSize: 13,
-                              fontWeight: 500
-                            }}
-                          />
-                        </XAxis>
-                        <YAxis
-                          tick={{ fontSize: 12, fill: chartColors.text }}
-                          tickFormatter={value => `${value}`}
-                          stroke={chartColors.axis}
-                        >
-                          <Label
-                            value="Average Yield (bu/ac)"
-                            angle={-90}
-                            position="left"
-                            offset={-10}
-                            style={{
-                              fill: chartColors.text,
-                              textAnchor: "middle",
-                              fontSize: 13,
-                              fontWeight: 500
-                            }}
-                          />
-                        </YAxis>
-                        <RechartsTooltip
-                          formatter={(value: any) => [
-                            `${value.toFixed(1)}`,
-                            "bu/ac"
-                          ]}
-                          labelFormatter={value =>
-                            `${Number(
-                              value / 1000
-                            ).toLocaleString()}K seeds/acre`
-                          }
-                          contentStyle={{
-                            backgroundColor: chartColors.tooltip.bg,
-                            borderColor: chartColors.tooltip.border,
-                            color: chartColors.tooltip.text,
-                            borderRadius: "0.375rem",
-                            padding: "0.5rem 0.75rem",
-                            fontSize: "0.875rem",
-                            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
-                          }}
-                        />
-                        <RechartsLegend
-                          wrapperStyle={{
-                            color: chartColors.text,
-                            fontSize: "0.875rem",
-                            paddingTop: "40px"
-                          }}
-                        />
-                        <Bar
-                          dataKey="avgYield"
-                          fill={"#90be6d"}
-                          name="Average Yield"
-                          barSize={40}
-                          radius={[4, 4, 0, 0]}
-                        />
-                      </RechartsBarChart>
-                    </ResponsiveContainer>
+                        Treatment
+                      </button>{" "}
+                      <button
+                        className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-tr-md sm:rounded-none ${
+                          onFarmView === "replication"
+                            ? "bg-primary text-white"
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                        onClick={() => setOnFarmView("replication")}
+                      >
+                        Replication
+                      </button>
+                      <button
+                        className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-br-md sm:rounded-none sm:rounded-tr-md sm:rounded-br-md ${
+                          onFarmView === "yield"
+                            ? "bg-primary text-white"
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                        onClick={() => setOnFarmView("yield")}
+                      >
+                        Yield
+                      </button>
+                    </div>
+                  </div>
+                  <div className="h-[600px] w-full rounded-lg overflow-hidden">
+                    {isClient && <OnFarmTrialMap view={onFarmView} />}
                   </div>
                 </div>
-              </Card>
-            </motion.div>
 
-            {/* Box Plot with Scatter Points */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <Card className="h-full overflow-hidden border-border shadow-sm dark:bg-card/95">
-                <div className="p-4 sm:p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Sigma className="w-5 h-5 text-primary" />
-                    <h3 className="text-lg font-semibold text-foreground">
-                      Yield Distribution by Seed Rate
-                    </h3>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    This chart shows the yield distribution statistics for each
-                    seed rate, including minimum, lower quartile, median, upper
-                    quartile, and maximum values. Higher bars indicate better
-                    yield performance across different field conditions.
-                  </p>
-                  <div className="h-[350px] sm:h-[400px]">
-                    {isClient && (
-                      <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart
-                          margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
-                          data={boxPlotData}
-                          barCategoryGap="20%"
-                        >
-                          <CartesianGrid
-                            strokeDasharray="3 3"
-                            stroke={chartColors.grid}
-                          />
-                          <XAxis
-                            dataKey="seedRate"
-                            tickFormatter={value => `${value / 1000}K`}
-                            stroke={chartColors.axis}
-                            padding={{ left: 20, right: 20 }}
-                            tick={{ fontSize: 12, fill: chartColors.text }}
-                          >
-                            <Label
-                              value="Seed Rate (seeds/acre)"
-                              position="bottom"
-                              offset={20}
-                              style={{
-                                fill: chartColors.text,
-                                textAnchor: "middle",
-                                fontSize: 13,
-                                fontWeight: 500
-                              }}
-                            />
-                          </XAxis>
-                          <YAxis
-                            domain={[195, 235]}
-                            stroke={chartColors.axis}
-                            tick={{ fontSize: 12, fill: chartColors.text }}
-                            tickFormatter={value => `${value}`}
-                          >
-                            <Label
-                              value="Yield (bu/ac)"
-                              angle={-90}
-                              position="left"
-                              offset={-10}
-                              style={{
-                                fill: chartColors.text,
-                                textAnchor: "middle",
-                                fontSize: 13,
-                                fontWeight: 500
-                              }}
-                            />
-                          </YAxis>
-                          <RechartsTooltip
-                            formatter={(value: any) => [
-                              `${value.toFixed(1)} bu/ac`,
-                              ""
-                            ]}
-                            labelFormatter={value =>
-                              `${Number(
-                                value / 1000
-                              ).toLocaleString()}K seeds/acre`
-                            }
-                            contentStyle={{
-                              backgroundColor: chartColors.tooltip.bg,
-                              borderColor: chartColors.tooltip.border,
-                              color: chartColors.tooltip.text,
-                              borderRadius: "0.375rem",
-                              padding: "0.5rem 0.75rem",
-                              fontSize: "0.875rem",
-                              boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
-                            }}
-                            itemStyle={{
-                              color: chartColors.text,
-                              fontSize: "0.875rem",
-                              padding: "2px 0"
-                            }}
-                          />
-                          <RechartsLegend
-                            wrapperStyle={{
-                              color: chartColors.text,
-                              fontSize: "0.875rem",
-                              paddingTop: "40px"
-                            }}
-                          />
-                          <Bar
-                            dataKey="min"
-                            name="Minimum Yield"
-                            fill={theme === "dark" ? "#8ecae6" : "#023e8a"}
-                            radius={[4, 4, 0, 0]}
-                            maxBarSize={35}
-                          />
-                          <Bar
-                            dataKey="q1"
-                            name="Lower Quartile"
-                            fill={theme === "dark" ? "#a8dadc" : "#0077b6"}
-                            radius={[4, 4, 0, 0]}
-                            maxBarSize={35}
-                          />
-                          <Bar
-                            dataKey="median"
-                            name="Median Yield"
-                            fill={theme === "dark" ? "#90be6d" : "#2a9d8f"}
-                            radius={[4, 4, 0, 0]}
-                            maxBarSize={35}
-                          />
-                          <Bar
-                            dataKey="q3"
-                            name="Upper Quartile"
-                            fill={theme === "dark" ? "#f9c74f" : "#e76f51"}
-                            radius={[4, 4, 0, 0]}
-                            maxBarSize={35}
-                          />
-                          <Bar
-                            dataKey="max"
-                            name="Maximum Yield"
-                            fill={theme === "dark" ? "#f8961e" : "#d62828"}
-                            radius={[4, 4, 0, 0]}
-                            maxBarSize={35}
-                          />
-                          <Line
-                            type="monotone"
-                            dataKey="median"
-                            name="Median Trend"
-                            stroke={theme === "dark" ? "#ffffff" : "#000000"}
-                            strokeWidth={2}
-                            dot={{
-                              r: 5,
-                              fill: theme === "dark" ? "#ffffff" : "#000000"
-                            }}
-                            activeDot={{ r: 7 }}
-                          />
-                        </ComposedChart>
-                      </ResponsiveContainer>
-                    )}
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-          </div>
-
-          {/* Insights Cards */}
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <Card className="h-full border-border shadow-sm dark:bg-card/95">
-                <div className="p-4 sm:p-5 bg-primary/5 dark:bg-primary/10 rounded-lg h-full">
-                  <h4 className="text-sm font-medium mb-2 flex items-center gap-2 text-foreground">
-                    <Target className="h-4 w-4 text-primary" />
-                    Key Insights
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    The 30K and 32K seed rates show the highest median yields,
-                    suggesting an optimal balance between plant population and
-                    resource utilization.
-                  </p>
-                </div>
-              </Card>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-            >
-              <Card className="h-full border-border shadow-sm dark:bg-card/95">
-                <div className="p-4 sm:p-5 bg-primary/5 dark:bg-primary/10 rounded-lg h-full">
-                  <h4 className="text-sm font-medium mb-2 flex items-center gap-2 text-foreground">
-                    <BarChart2 className="h-4 w-4 text-primary" />
-                    Variability Analysis
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    Lower seed rates (26K) show greater yield variability,
-                    indicating higher sensitivity to environmental conditions
-                    and field variations.
-                  </p>
-                </div>
-              </Card>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-            >
-              <Card className="h-full border-border shadow-sm dark:bg-card/95">
-                <div className="p-4 sm:p-5 bg-primary/5 dark:bg-primary/10 rounded-lg h-full">
-                  <h4 className="text-sm font-medium mb-2 flex items-center gap-2 text-foreground">
-                    <LineChart className="h-4 w-4 text-primary" />
-                    Recommendation
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    For consistent performance across variable field conditions,
-                    the 30K-32K seed rate range offers the best combination of
-                    yield potential and stability.
-                  </p>
-                </div>
-              </Card>
-            </motion.div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.7 }}
-            className="mx-auto mt-12 sm:mt-16 max-w-3xl"
-          >
-            <Card className="border-border shadow-sm dark:bg-card/95">
-              <div className="p-5 sm:p-6 bg-gradient-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 rounded-lg">
-                <h3 className="text-xl font-semibold text-center mb-4 text-foreground">
-                  Why On-Farm Research Matters
-                </h3>
-                <p className="text-center text-muted-foreground mb-6">
-                  Every field is unique, with its own soil characteristics,
-                  moisture patterns, and yield potential. Generic
-                  recommendations often fall short because they don't account
-                  for your specific conditions. On-farm research trials allow
-                  you to make data-driven decisions based on results from your
-                  own fields, helping you optimize inputs, maximize returns, and
-                  build long-term sustainability.
-                </p>
-                <div className="flex justify-center">
-                  <a
-                    href="/#contact"
-                    className="bg-primary text-primary-foreground px-6 py-3 rounded-md hover:bg-primary/80 transition-colors font-medium"
+                {/* Trial Information Grid */}
+                <div className="grid sm:grid-cols-3 gap-6">
+                  <DataCard
+                    title="Trial Information"
+                    icon={<FileBarChart className="w-5 h-5" />}
                   >
-                    Learn More About Our Trials
-                  </a>
+                    <div className="space-y-2">
+                      <DataRow label="Location" value="Southeast Missouri" />
+                      <DataRow label="Crop" value="Corn" />
+                      <DataRow label="Planting Date" value="April 2, 2023" />
+                      <DataRow
+                        label="Harvest Date"
+                        value="September 15, 2023"
+                      />
+                      <DataRow label="Number of Plots" value={12} />
+                    </div>
+                  </DataCard>
+
+                  <DataCard
+                    title="Study Design"
+                    icon={<Target className="w-5 h-5" />}
+                  >
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="text-center p-3 bg-muted/50 rounded-lg">
+                        <div className="text-lg font-semibold text-primary">
+                          4
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Treatments
+                        </div>
+                      </div>
+                      <div className="text-center p-3 bg-muted/50 rounded-lg">
+                        <div className="text-lg font-semibold text-primary">
+                          3
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Replications
+                        </div>
+                      </div>
+                      <div className="text-center p-3 bg-muted/50 rounded-lg">
+                        <div className="text-lg font-semibold text-primary">
+                          12
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Total Plots
+                        </div>
+                      </div>
+                      <div className="text-center p-3 bg-muted/50 rounded-lg">
+                        <div className="text-lg font-semibold text-primary">
+                          60'x300'
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Plot Size
+                        </div>
+                      </div>
+                    </div>
+                  </DataCard>
+
+                  <DataCard
+                    title="Trial Summary"
+                    icon={<BarChart2 className="w-5 h-5" />}
+                  >
+                    <div className="space-y-2">
+                      <DataRow label="Average Yield" value="222.1 bu/ac" />
+                      <DataRow label="Yield Range" value="198 - 233 bu/ac" />
+                      <DataRow label="Top Treatment" value="Treatment 3" />
+                      <DataRow label="Top Product" value="Product B" />
+                    </div>
+                  </DataCard>
                 </div>
               </div>
-            </Card>
-          </motion.div>
+
+              {/* Analysis Section */}
+              <div className="space-y-6">
+                <Tabs
+                  defaultValue="product-efficacy"
+                  onValueChange={setSelectedAnalysisTab}
+                >
+                  <div className="overflow-x-auto pb-2">
+                    <TabsList className="mb-6 w-full flex flex-nowrap min-w-max md:w-auto">
+                      <TabsTrigger
+                        className="flex-1 text-xs sm:text-sm whitespace-nowrap"
+                        value="product-efficacy"
+                      >
+                        Product Efficacy
+                      </TabsTrigger>
+                      <TabsTrigger
+                        className="flex-1 text-xs sm:text-sm whitespace-nowrap"
+                        value="validate-practices"
+                      >
+                        Validate Practices
+                      </TabsTrigger>
+                      <TabsTrigger
+                        className="flex-1 text-xs sm:text-sm whitespace-nowrap"
+                        value="spatial-integration"
+                      >
+                        Spatial Integration
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+
+                  <TabsContent value="product-efficacy">
+                    <ProductEfficacyTab
+                      productData={productData}
+                      productStats={productStats}
+                    />
+                  </TabsContent>
+
+                  <TabsContent value="validate-practices" className="space-y-6">
+                    <div className="flex items-center gap-2 mb-1">
+                      <CheckIcon className="w-5 h-5 text-primary" />
+                      <h4 className="text-base font-medium">
+                        Validate Current Practices
+                      </h4>
+                    </div>
+
+                    <span className="text-sm text-muted-foreground block mb-6">
+                      Compare your current management practices against
+                      alternatives to confirm effectiveness and identify
+                      opportunities for improvement.
+                    </span>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                      <Card className="p-5 hover:border-primary/50 transition-colors">
+                        <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
+                          <Beaker className="w-6 h-6 text-primary" />
+                        </div>
+                        <h5 className="font-medium text-base mb-2">
+                          Seed Treatments
+                        </h5>
+                        <p className="text-sm text-muted-foreground">
+                          Evaluate the effectiveness of different seed
+                          treatments under your specific field conditions to
+                          maximize germination and early-season crop health.
+                        </p>
+                      </Card>
+
+                      <Card className="p-5 hover:border-primary/50 transition-colors">
+                        <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
+                          <SplitSquareHorizontal className="w-6 h-6 text-primary" />
+                        </div>
+                        <h5 className="font-medium text-base mb-2">
+                          Split Applications
+                        </h5>
+                        <p className="text-sm text-muted-foreground">
+                          Test multiple application timings against standard
+                          practices to determine if split applications improve
+                          nutrient use efficiency in your soils.
+                        </p>
+                      </Card>
+
+                      <Card className="p-5 hover:border-primary/50 transition-colors">
+                        <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
+                          <Microscope className="w-6 h-6 text-primary" />
+                        </div>
+                        <h5 className="font-medium text-base mb-2">
+                          Biological Products
+                        </h5>
+                        <p className="text-sm text-muted-foreground">
+                          Assess the performance of microbial and biological
+                          products in your cropping system to determine their
+                          impact on soil health and crop yield.
+                        </p>
+                      </Card>
+
+                      <Card className="p-5 hover:border-primary/50 transition-colors">
+                        <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
+                          <SlidersHorizontal className="w-6 h-6 text-primary" />
+                        </div>
+                        <h5 className="font-medium text-base mb-2">
+                          Rate Optimization
+                        </h5>
+                        <p className="text-sm text-muted-foreground">
+                          Find the optimal input rates for your specific
+                          environment through side-by-side comparisons of
+                          different application rates.
+                        </p>
+                      </Card>
+                    </div>
+
+                    <div className="mt-8">
+                      <Card className="p-6 bg-muted/10">
+                        <h5 className="text-base font-medium mb-4 flex items-center gap-2">
+                          <Target className="w-5 h-5 text-primary" />
+                          <span>Practice Validation Process</span>
+                        </h5>
+
+                        <div className="grid md:grid-cols-3 gap-6">
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                              <div className="rounded-full bg-primary/20 w-8 h-8 flex items-center justify-center text-primary font-medium">
+                                1
+                              </div>
+                              <h6 className="font-medium">Design</h6>
+                            </div>
+                            <p className="text-sm text-muted-foreground pl-10">
+                              We work with you to identify practices you want to
+                              validate and design trials with proper controls
+                              and replications.
+                            </p>
+                          </div>
+
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                              <div className="rounded-full bg-primary/20 w-8 h-8 flex items-center justify-center text-primary font-medium">
+                                2
+                              </div>
+                              <h6 className="font-medium">Implementation</h6>
+                            </div>
+                            <p className="text-sm text-muted-foreground pl-10">
+                              Trials are established in your fields using
+                              precision equipment to ensure accurate application
+                              and data collection.
+                            </p>
+                          </div>
+
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                              <div className="rounded-full bg-primary/20 w-8 h-8 flex items-center justify-center text-primary font-medium">
+                                3
+                              </div>
+                              <h6 className="font-medium">Analysis</h6>
+                            </div>
+                            <p className="text-sm text-muted-foreground pl-10">
+                              Results are analyzed using statistical methods to
+                              determine significant differences and provide
+                              actionable recommendations.
+                            </p>
+                          </div>
+                        </div>
+                      </Card>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent
+                    value="spatial-integration"
+                    className="space-y-6"
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <Layers3 className="w-5 h-5 text-primary" />
+                      <h4 className="text-base font-medium">
+                        Spatial Data Integration
+                      </h4>
+                    </div>
+
+                    <span className="text-sm text-muted-foreground block mb-6">
+                      Combine trial results with other spatial data layers to
+                      understand performance in the context of field variability
+                      and environmental factors.
+                    </span>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <Card className="p-4 flex flex-col h-full hover:border-primary transition-colors">
+                        <div className="bg-muted/20 rounded-full w-12 h-12 mb-3 flex items-center justify-center">
+                          <Layers3 className="w-6 h-6 text-primary" />
+                        </div>
+                        <h5 className="font-medium text-sm mb-2">
+                          WSS Soil Types
+                        </h5>
+                        <p className="text-xs text-muted-foreground mt-auto">
+                          Overlay trial data with USDA soil survey maps to
+                          understand how different soil types affect product
+                          performance and yield response.
+                        </p>
+                      </Card>
+
+                      <Card className="p-4 flex flex-col h-full hover:border-primary transition-colors">
+                        <div className="bg-muted/20 rounded-full w-12 h-12 mb-3 flex items-center justify-center">
+                          <ArrowUpDown className="w-6 h-6 text-primary" />
+                        </div>
+                        <h5 className="font-medium text-sm mb-2">
+                          Terrain Indices
+                        </h5>
+                        <p className="text-xs text-muted-foreground mt-auto">
+                          Analyze how elevation, slope, and water flow affect
+                          treatment efficacy and identify optimal management
+                          zones based on topography.
+                        </p>
+                      </Card>
+
+                      <Card className="p-4 flex flex-col h-full hover:border-primary transition-colors">
+                        <div className="bg-muted/20 rounded-full w-12 h-12 mb-3 flex items-center justify-center">
+                          <Sprout className="w-6 h-6 text-primary" />
+                        </div>
+                        <h5 className="font-medium text-sm mb-2">
+                          Vegetative Reflectance (NDVI)
+                        </h5>
+                        <p className="text-xs text-muted-foreground mt-auto">
+                          Correlate seasonal crop health imagery with treatment
+                          responses to identify patterns in plant vigor across
+                          different management practices.
+                        </p>
+                      </Card>
+
+                      <Card className="p-4 flex flex-col h-full hover:border-primary transition-colors">
+                        <div className="bg-muted/20 rounded-full w-12 h-12 mb-3 flex items-center justify-center">
+                          <Grid className="w-6 h-6 text-primary" />
+                        </div>
+                        <h5 className="font-medium text-sm mb-2">
+                          Custom Management Zones
+                        </h5>
+                        <p className="text-xs text-muted-foreground mt-auto">
+                          Create tailored management zones based on multiple
+                          data layers to optimize inputs and maximize ROI across
+                          variable field conditions.
+                        </p>
+                      </Card>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </div>
+            </div>
+          </Card>
+
+          {/* Trial Example #2 */}
+          <Card className="p-8">
+            <div className="space-y-8">
+              {/* Header */}
+
+              {/* Trial Layout Section */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 border-b border-border pb-4">
+                  <Map className="w-8 h-8 text-primary" />
+                  <div>
+                    <h3 className="text-lg font-semibold">
+                      Seeding Rate Trial
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Discover the optimal seed rates for your fields through
+                      data-driven field trials and real-world performance
+                      analysis.
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-muted/50 rounded-lg p-4 shadow-inner">
+                  <div className="h-[600px] w-full rounded-lg overflow-hidden">
+                    {isClient && <OnFarmMap />}
+                  </div>
+                </div>
+
+                {/* Trial Information Grid */}
+                <div className="grid sm:grid-cols-3 gap-6">
+                  <DataCard
+                    title="Trial Information"
+                    icon={<FileBarChart className="w-5 h-5" />}
+                  >
+                    <div className="space-y-2">
+                      <DataRow label="Location" value="Central Illinois" />
+                      <DataRow label="Crop" value="Corn" />
+                      <DataRow label="Planting Date" value="April 15, 2025" />
+                      <DataRow label="Harvest Date" value="October 10, 2025" />
+                      <DataRow
+                        label="Number of Plots"
+                        value={trialData.features.length.toString()}
+                      />
+                    </div>
+                  </DataCard>
+
+                  <DataCard
+                    title="Study Design"
+                    icon={<Target className="w-5 h-5" />}
+                  >
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="text-center p-3 bg-muted/50 rounded-lg">
+                        <div className="text-lg font-semibold text-primary">
+                          5
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Seed Rates
+                        </div>
+                      </div>
+                      <div className="text-center p-3 bg-muted/50 rounded-lg">
+                        <div className="text-lg font-semibold text-primary">
+                          32
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Replications
+                        </div>
+                      </div>
+                      <div className="text-center p-3 bg-muted/50 rounded-lg">
+                        <div className="text-lg font-semibold text-primary">
+                          {trialData.features.length}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Total Plots
+                        </div>
+                      </div>
+                      <div className="text-center p-3 bg-muted/50 rounded-lg">
+                        <div className="text-lg font-semibold text-primary">
+                          300'x35ft
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Plot Size
+                        </div>
+                      </div>
+                    </div>
+                  </DataCard>
+
+                  <DataCard
+                    title="Map Legend"
+                    icon={<Layers3 className="w-5 h-5" />}
+                  >
+                    <p className="text-sm text-muted-foreground mb-3">
+                      The map uses color coding to represent different seed
+                      rates:
+                    </p>
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-[#FEE4D8] mr-2"></div>
+                        <span className="text-sm">26,000 seeds/acre</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-[#FCB195] mr-2"></div>
+                        <span className="text-sm">28,000 seeds/acre</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-[#FB795A] mr-2"></div>
+                        <span className="text-sm">30,000 seeds/acre</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-[#EF3C2D] mr-2"></div>
+                        <span className="text-sm">32,000 seeds/acre</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-[#BB1419] mr-2"></div>
+                        <span className="text-sm">34,000 seeds/acre</span>
+                      </div>
+                    </div>
+                  </DataCard>
+                </div>
+              </div>
+
+              {/* Results Analysis Section */}
+              <div className="space-y-6">
+                <p className="text-sm text-muted-foreground mb-4">
+                  Comprehensive analysis of yield performance across different
+                  seeding rates, helping determine optimal planting density for
+                  your specific field conditions.
+                </p>
+                <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
+                  {/* Average Yield by Seed Rate */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                  >
+                    <Card className="h-full overflow-hidden border-border shadow-sm dark:bg-card/95">
+                      <div className="p-4 sm:p-6">
+                        <div className="flex items-center gap-2 mb-4">
+                          <BarChart2 className="w-5 h-5 text-primary" />
+                          <h3 className="text-lg font-semibold text-foreground">
+                            Average Yield by Seed Rate
+                          </h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          This chart shows the average yield achieved at each
+                          seed rate, helping identify which planting density
+                          produces the highest overall yields.
+                        </p>
+                        <div className="h-[350px] sm:h-[400px]">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <RechartsBarChart
+                              data={trialResults}
+                              margin={{
+                                top: 20,
+                                right: 30,
+                                left: 20,
+                                bottom: 30
+                              }}
+                            >
+                              <CartesianGrid
+                                strokeDasharray="3 3"
+                                stroke={chartColors.grid}
+                              />
+                              <XAxis
+                                dataKey="seedRate"
+                                tickFormatter={value => `${value / 1000}K`}
+                                padding={{ left: 20, right: 20 }}
+                                tick={{ fontSize: 12, fill: chartColors.text }}
+                                stroke={chartColors.axis}
+                              >
+                                <Label
+                                  value="Seed Rate (seeds/acre)"
+                                  position="bottom"
+                                  offset={20}
+                                  style={{
+                                    fill: chartColors.text,
+                                    textAnchor: "middle",
+                                    fontSize: 13,
+                                    fontWeight: 500
+                                  }}
+                                />
+                              </XAxis>
+                              <YAxis
+                                tick={{ fontSize: 12, fill: chartColors.text }}
+                                tickFormatter={value => `${value}`}
+                                stroke={chartColors.axis}
+                              >
+                                <Label
+                                  value="Average Yield (bu/ac)"
+                                  angle={-90}
+                                  position="left"
+                                  offset={-10}
+                                  style={{
+                                    fill: chartColors.text,
+                                    textAnchor: "middle",
+                                    fontSize: 13,
+                                    fontWeight: 500
+                                  }}
+                                />
+                              </YAxis>
+                              <RechartsTooltip
+                                formatter={(value: any) => [
+                                  `${value.toFixed(1)}`,
+                                  "bu/ac"
+                                ]}
+                                labelFormatter={value =>
+                                  `${Number(
+                                    value / 1000
+                                  ).toLocaleString()}K seeds/acre`
+                                }
+                                contentStyle={{
+                                  backgroundColor: chartColors.tooltip.bg,
+                                  borderColor: chartColors.tooltip.border,
+                                  color: chartColors.tooltip.text,
+                                  borderRadius: "0.375rem",
+                                  padding: "0.5rem 0.75rem",
+                                  fontSize: "0.875rem",
+                                  boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
+                                }}
+                              />
+                              <RechartsLegend
+                                wrapperStyle={{
+                                  color: chartColors.text,
+                                  fontSize: "0.875rem",
+                                  paddingTop: "40px"
+                                }}
+                              />
+                              <Bar
+                                dataKey="avgYield"
+                                fill={"#90be6d"}
+                                name="Average Yield"
+                                barSize={40}
+                                radius={[4, 4, 0, 0]}
+                              />
+                            </RechartsBarChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+                    </Card>
+                  </motion.div>
+
+                  {/* Box Plot with Scatter Points */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                  >
+                    <Card className="h-full overflow-hidden border-border shadow-sm dark:bg-card/95">
+                      <div className="p-4 sm:p-6">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Sigma className="w-5 h-5 text-primary" />
+                          <h3 className="text-lg font-semibold text-foreground">
+                            Yield Distribution by Seed Rate
+                          </h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          This chart shows the yield distribution statistics for
+                          each seed rate, including minimum, lower quartile,
+                          median, upper quartile, and maximum values. Higher
+                          bars indicate better yield performance across
+                          different field conditions.
+                        </p>
+                        <div className="h-[350px] sm:h-[400px]">
+                          {isClient && (
+                            <ResponsiveContainer width="100%" height="100%">
+                              <ComposedChart
+                                margin={{
+                                  top: 20,
+                                  right: 30,
+                                  left: 20,
+                                  bottom: 30
+                                }}
+                                data={boxPlotData}
+                                barCategoryGap="20%"
+                              >
+                                <CartesianGrid
+                                  strokeDasharray="3 3"
+                                  stroke={chartColors.grid}
+                                />
+                                <XAxis
+                                  dataKey="seedRate"
+                                  tickFormatter={value => `${value / 1000}K`}
+                                  stroke={chartColors.axis}
+                                  padding={{ left: 20, right: 20 }}
+                                  tick={{
+                                    fontSize: 12,
+                                    fill: chartColors.text
+                                  }}
+                                >
+                                  <Label
+                                    value="Seed Rate (seeds/acre)"
+                                    position="bottom"
+                                    offset={20}
+                                    style={{
+                                      fill: chartColors.text,
+                                      textAnchor: "middle",
+                                      fontSize: 13,
+                                      fontWeight: 500
+                                    }}
+                                  />
+                                </XAxis>
+                                <YAxis
+                                  domain={[195, 235]}
+                                  stroke={chartColors.axis}
+                                  tick={{
+                                    fontSize: 12,
+                                    fill: chartColors.text
+                                  }}
+                                  tickFormatter={value => `${value}`}
+                                >
+                                  <Label
+                                    value="Yield (bu/ac)"
+                                    angle={-90}
+                                    position="left"
+                                    offset={-10}
+                                    style={{
+                                      fill: chartColors.text,
+                                      textAnchor: "middle",
+                                      fontSize: 13,
+                                      fontWeight: 500
+                                    }}
+                                  />
+                                </YAxis>
+                                <RechartsTooltip
+                                  formatter={(value: any) => [
+                                    `${value.toFixed(1)} bu/ac`,
+                                    ""
+                                  ]}
+                                  labelFormatter={value =>
+                                    `${Number(
+                                      value / 1000
+                                    ).toLocaleString()}K seeds/acre`
+                                  }
+                                  contentStyle={{
+                                    backgroundColor: chartColors.tooltip.bg,
+                                    borderColor: chartColors.tooltip.border,
+                                    color: chartColors.tooltip.text,
+                                    borderRadius: "0.375rem",
+                                    padding: "0.5rem 0.75rem",
+                                    fontSize: "0.875rem",
+                                    boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
+                                  }}
+                                  itemStyle={{
+                                    color: chartColors.text,
+                                    fontSize: "0.875rem",
+                                    padding: "2px 0"
+                                  }}
+                                />
+                                <RechartsLegend
+                                  wrapperStyle={{
+                                    color: chartColors.text,
+                                    fontSize: "0.875rem",
+                                    paddingTop: "40px"
+                                  }}
+                                />
+                                <Bar
+                                  dataKey="min"
+                                  name="Minimum Yield"
+                                  fill={
+                                    theme === "dark" ? "#8ecae6" : "#023e8a"
+                                  }
+                                  radius={[4, 4, 0, 0]}
+                                  maxBarSize={35}
+                                />
+                                <Bar
+                                  dataKey="q1"
+                                  name="Lower Quartile"
+                                  fill={
+                                    theme === "dark" ? "#a8dadc" : "#0077b6"
+                                  }
+                                  radius={[4, 4, 0, 0]}
+                                  maxBarSize={35}
+                                />
+                                <Bar
+                                  dataKey="median"
+                                  name="Median Yield"
+                                  fill={
+                                    theme === "dark" ? "#90be6d" : "#2a9d8f"
+                                  }
+                                  radius={[4, 4, 0, 0]}
+                                  maxBarSize={35}
+                                />
+                                <Bar
+                                  dataKey="q3"
+                                  name="Upper Quartile"
+                                  fill={
+                                    theme === "dark" ? "#f9c74f" : "#e76f51"
+                                  }
+                                  radius={[4, 4, 0, 0]}
+                                  maxBarSize={35}
+                                />
+                                <Bar
+                                  dataKey="max"
+                                  name="Maximum Yield"
+                                  fill={
+                                    theme === "dark" ? "#f8961e" : "#d62828"
+                                  }
+                                  radius={[4, 4, 0, 0]}
+                                  maxBarSize={35}
+                                />
+                                <Line
+                                  type="monotone"
+                                  dataKey="median"
+                                  name="Median Trend"
+                                  stroke={
+                                    theme === "dark" ? "#ffffff" : "#000000"
+                                  }
+                                  strokeWidth={2}
+                                  dot={{
+                                    r: 5,
+                                    fill:
+                                      theme === "dark" ? "#ffffff" : "#000000"
+                                  }}
+                                  activeDot={{ r: 7 }}
+                                />
+                              </ComposedChart>
+                            </ResponsiveContainer>
+                          )}
+                        </div>
+                      </div>
+                    </Card>
+                  </motion.div>
+                </div>
+
+                {/* Insights Cards */}
+                <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                  >
+                    <Card className="h-full border-border shadow-sm dark:bg-card/95">
+                      <div className="p-4 sm:p-5 bg-primary/5 dark:bg-primary/10 rounded-lg h-full">
+                        <h4 className="text-sm font-medium mb-2 flex items-center gap-2 text-foreground">
+                          <Target className="h-4 w-4 text-primary" />
+                          Key Insights
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          The 30K and 32K seed rates show the highest median
+                          yields, suggesting an optimal balance between plant
+                          population and resource utilization.
+                        </p>
+                      </div>
+                    </Card>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.5 }}
+                  >
+                    <Card className="h-full border-border shadow-sm dark:bg-card/95">
+                      <div className="p-4 sm:p-5 bg-primary/5 dark:bg-primary/10 rounded-lg h-full">
+                        <h4 className="text-sm font-medium mb-2 flex items-center gap-2 text-foreground">
+                          <BarChart2 className="h-4 w-4 text-primary" />
+                          Variability Analysis
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          Lower seed rates (26K) show greater yield variability,
+                          indicating higher sensitivity to environmental
+                          conditions and field variations.
+                        </p>
+                      </div>
+                    </Card>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                  >
+                    <Card className="h-full border-border shadow-sm dark:bg-card/95">
+                      <div className="p-4 sm:p-5 bg-primary/5 dark:bg-primary/10 rounded-lg h-full">
+                        <h4 className="text-sm font-medium mb-2 flex items-center gap-2 text-foreground">
+                          <LineChart className="h-4 w-4 text-primary" />
+                          Recommendation
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          For consistent performance across variable field
+                          conditions, the 30K-32K seed rate range offers the
+                          best combination of yield potential and stability.
+                        </p>
+                      </div>
+                    </Card>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          </Card>
         </div>
-      </section>
+      </div>
+
+      {/* Why On-Farm Research Matters Section */}
+      <div className="container mx-auto px-4 pb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.7 }}
+          className="max-w-3xl mx-auto"
+        >
+          <Card className="border-border shadow-sm dark:bg-card/95">
+            <div className="p-5 sm:p-6 bg-gradient-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 rounded-lg">
+              <h3 className="text-xl font-semibold text-center mb-4 text-foreground">
+                Why On-Farm Research Matters
+              </h3>
+              <p className="text-center text-muted-foreground mb-6">
+                Every field is unique, with its own soil characteristics,
+                moisture patterns, and yield potential. Generic recommendations
+                often fall short because they don't account for your specific
+                conditions. On-farm research trials allow you to make
+                data-driven decisions based on results from your own fields,
+                helping you optimize inputs, maximize returns, and build
+                long-term sustainability.
+              </p>
+              <div className="flex justify-center">
+                <a
+                  href="/#contact"
+                  className="bg-primary text-primary-foreground px-6 py-3 rounded-md hover:bg-primary/80 transition-colors font-medium"
+                >
+                  Learn More About Our Trials
+                </a>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+      </div>
     </div>
   );
 }

@@ -2,14 +2,14 @@
 
 import { motion } from "framer-motion";
 import { ServiceGrid, type ServiceItem } from "@/components/ui/service-grid";
-import { Plane, Microscope, TestTube } from "lucide-react";
+import {  Microscope, TestTube, LandPlot } from "lucide-react";
 
 const services: ServiceItem[] = [
   {
     title: "SimpleSense",
     description:
       "A research-grade aerial imagery pipeline optimized for plot trials. Leveraging calibrated reflectance data and machine learning, we deliver precise canopy metrics, plant height measurements, and temporal analysis with rigorous QA/QC. Our publication-quality reports include advanced derivatives like canopy cover, plant consistency, and supervised classification.",
-    icon: <Plane className="w-5 h-5 sm:w-6 sm:h-6" />,
+    icon: <LandPlot className="w-5 h-5 sm:w-6 sm:h-6" />,
     image: "/hero/topright.png",
     tags: [
       "Calibrated Reflectance",

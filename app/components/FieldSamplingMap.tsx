@@ -16,64 +16,56 @@ const nutrientInfo = {
     property: "P (B1 1_7)",
     unit: "ppm",
     ranges: [0, 20, 40, 60, 80],
-    colors: ["#FF5252", "#FF9800", "#FFEB3B", "#8BC34A", "#4CAF50"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"]
+    colors: ["#FF5252", "#FF9800", "#FFEB3B", "#8BC34A", "#4CAF50"]
   },
   potassium: {
     displayName: "Potassium (K)",
     property: "K (AA)",
     unit: "ppm",
     ranges: [0, 100, 150, 200, 250],
-    colors: ["#F44336", "#FB8C00", "#FFD54F", "#7CB342", "#2E7D32"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"]
+    colors: ["#F44336", "#FB8C00", "#FFD54F", "#7CB342", "#2E7D32"]
   },
   magnesium: {
     displayName: "Magnesium (Mg)",
     property: "Mg (AA)",
     unit: "ppm",
     ranges: [0, 200, 300, 400, 500],
-    colors: ["#E53935", "#F57C00", "#FDD835", "#8BC34A", "#388E3C"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"]
+    colors: ["#E53935", "#F57C00", "#FDD835", "#8BC34A", "#388E3C"]
   },
   calcium: {
     displayName: "Calcium (Ca)",
     property: "Ca (AA)",
     unit: "ppm",
     ranges: [0, 1000, 1500, 2000, 2500],
-    colors: ["#D32F2F", "#EF6C00", "#FBC02D", "#7CB342", "#388E3C"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"]
+    colors: ["#D32F2F", "#EF6C00", "#FBC02D", "#7CB342", "#388E3C"]
   },
   ph: {
     displayName: "pH",
     property: "pH (1_1)",
     unit: "",
     ranges: [5.5, 6.0, 6.5, 7.0, 7.5],
-    colors: ["#F44336", "#FF9800", "#4CAF50", "#FF9800", "#F44336"],
-    labels: ["Very Acidic", "Acidic", "Optimal", "Alkaline", "Very Alkaline"]
+    colors: ["#F44336", "#FF9800", "#4CAF50", "#FF9800", "#F44336"]
   },
   organicMatter: {
     displayName: "Organic Matter",
     property: "OM (WB)",
     unit: "%",
     ranges: [0, 1, 2, 3, 4],
-    colors: ["#FFCDD2", "#FFAB91", "#A5D6A7", "#66BB6A", "#388E3C"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"]
+    colors: ["#FFCDD2", "#FFAB91", "#A5D6A7", "#66BB6A", "#388E3C"]
   },
   zinc: {
     displayName: "Zinc (Zn)",
     property: "Zn (HCL)",
     unit: "ppm",
     ranges: [0, 5, 10, 15, 20],
-    colors: ["#EF9A9A", "#FFCC80", "#FFF59D", "#A5D6A7", "#81C784"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"]
+    colors: ["#EF9A9A", "#FFCC80", "#FFF59D", "#A5D6A7", "#81C784"]
   },
   manganese: {
     displayName: "Manganese (Mn)",
     property: "Mn (HCl)",
     unit: "ppm",
     ranges: [0, 20, 40, 60, 80],
-    colors: ["#FFCDD2", "#FFAB91", "#FFCC80", "#C5E1A5", "#A5D6A7"],
-    labels: ["Very Low", "Low", "Medium", "High", "Very High"]
+    colors: ["#FFCDD2", "#FFAB91", "#FFCC80", "#C5E1A5", "#A5D6A7"]
   }
 };
 
@@ -453,7 +445,7 @@ const FieldSamplingMap = ({
         const label = document.createElement("span");
         label.innerHTML = `${ranges[i]} - ${ranges[i + 1]} ${
           selectedNutrient.unit
-        } <small>(${labels[i]})</small>`;
+        }`;
 
         row.appendChild(colorBox);
         row.appendChild(label);
@@ -476,7 +468,7 @@ const FieldSamplingMap = ({
       const lastLabel = document.createElement("span");
       lastLabel.innerHTML = `> ${ranges[ranges.length - 1]} ${
         selectedNutrient.unit
-      } <small>(${labels[labels.length - 1]})</small>`;
+      } `;
 
       lastRow.appendChild(lastColorBox);
       lastRow.appendChild(lastLabel);
@@ -504,20 +496,13 @@ const FieldSamplingMap = ({
         onEachFeature: (feature, layer) => {
           if (feature.properties) {
             const props = feature.properties;
-            const sampleDate = props.SampleDate
-              ? new Date(props.SampleDate).toLocaleDateString()
-              : "N/A";
+            const sampleDate = props.SampleDate ? "October 12, 2024" : "N/A";
 
             layer.bindPopup(`
               <div class="sample-popup">
                 <h3 class="sample-popup-title">Sample ${
                   props.SampleID || props.ID || "N/A"
                 }</h3>
-                
-                <div class="sample-popup-section">
-                  <div class="sample-popup-label">Sample Date:</div>
-                  <div class="sample-popup-value">${sampleDate}</div>
-                </div>
                 
                 <div class="sample-popup-card">
                   <div class="sample-popup-card-title">Primary Nutrients (NPK)</div>

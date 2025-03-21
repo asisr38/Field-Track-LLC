@@ -556,7 +556,7 @@ export default function SimpleSensePage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center p-3 bg-muted/50 rounded-lg">
                         <div className="text-lg font-semibold text-emerald-600">
-                          24°F
+                          70°F
                         </div>
                         <div className="text-xs text-muted-foreground">
                           Temperature

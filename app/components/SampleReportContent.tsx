@@ -1900,456 +1900,23 @@ export default function SampleReportContent() {
         <div className="space-y-6">
           {/* Tabs Navigation - Improved for mobile */}
           <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-            {["Nitrogen", "Phosphorus", "Potassium", "Lime"].map(
-              (tab, index) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveStep(index + 1)}
-                  className={`px-3 py-2 text-xs md:text-sm font-medium rounded-lg transition-colors ${
-                    activeStep === index + 1
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted hover:bg-muted/80 text-muted-foreground"
-                  }`}
-                >
-                  {tab}
-                </button>
-              )
-            )}
+            {["Phosphorus", "Potassium", "Lime"].map((tab, index) => (
+              <button
+                key={tab}
+                onClick={() => setActiveStep(index + 1)}
+                className={`px-3 py-2 text-xs md:text-sm font-medium rounded-lg transition-colors ${
+                  activeStep === index + 1
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted hover:bg-muted/80 text-muted-foreground"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
           </div>
 
-          {/* Nitrogen Management Tab  */}
-          {activeStep === 1 && (
-            <div className="grid grid-cols-1 gap-4 md:gap-6">
-              <div className="bg-white dark:bg-card p-4 md:p-6 rounded-xl shadow-sm border border-border/50">
-                <h4 className="text-base md:text-lg font-medium mb-3 md:mb-4">
-                  Nitrogen Management
-                </h4>
-                <div className="space-y-4 md:space-y-6">
-                  {/* Mobile view - Application Details */}
-                  <div className="md:hidden space-y-4">
-                    <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                      <p className="text-xs font-medium mb-2">
-                        Application Details
-                      </p>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-xs font-medium">Source:</span>
-                          <span className="text-xs">
-                            82-0-0, anhydrous ammonia
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs font-medium">Area:</span>
-                          <span className="text-xs">75.04 ac</span>
-                        </div>
-
-                        <div className="flex justify-between">
-                          <span className="text-xs font-medium">VR Stats:</span>
-                          <span className="text-xs">
-                            Mean: 196 lb/ac (90-240 lb/ac)
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-3 bg-amber-50 dark:bg-amber-950/50 rounded-lg">
-                      <p className="text-xs font-medium text-amber-800 dark:text-amber-400 mb-1">
-                        Agronomist Notes
-                      </p>
-                      <p className="text-xs text-amber-700 dark:text-amber-300">
-                        Sample #12 shows unusually high CEC relative to the rest
-                        of the field, along with very low pH.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Desktop view - Application Details */}
-                  <div className="hidden md:grid md:grid-cols-2 gap-6">
-                    <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                      <p className="text-sm font-medium mb-4">
-                        Application Details
-                      </p>
-                      <Table>
-                        <TableBody>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              Source
-                            </TableCell>
-                            <TableCell>82-0-0, anhydrous ammonia</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">Area</TableCell>
-                            <TableCell>75.04 ac</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              Yield Goal
-                            </TableCell>
-                            <TableCell>175 bu/ac</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              VR Stats
-                            </TableCell>
-                            <TableCell>
-                              Mean: 196 lb/ac (90-240 lb/ac)
-                            </TableCell>
-                          </TableRow>
-                        </TableBody>
-                      </Table>
-                    </div>
-                    <div className="p-4 bg-amber-50 dark:bg-amber-950/50 rounded-lg">
-                      <p className="text-sm font-medium text-amber-800 dark:text-amber-400 mb-2">
-                        Agronomist Notes
-                      </p>
-                      <p className="text-sm text-amber-700 dark:text-amber-300">
-                        Sample #12 shows unusually high CEC relative to the rest
-                        of the field, along with very low pH.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Mobile view - Comparison Table */}
-                  <div className="md:hidden">
-                    <p className="text-xs font-medium mb-2">
-                      Application Type Comparison
-                    </p>
-                    <div className="space-y-3">
-                      <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg">
-                        <div className="flex justify-between items-center border-b border-border/30 pb-1 mb-2">
-                          <span className="text-xs font-medium">Metric</span>
-                          <div className="flex gap-3">
-                            <span className="text-xs font-medium w-16 text-right">
-                              Uniform
-                            </span>
-                            <span className="text-xs font-medium w-16 text-right">
-                              Variable
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs">Total Product (lb)</span>
-                            <div className="flex gap-3">
-                              <span className="text-xs w-16 text-right">
-                                14,700
-                              </span>
-                              <span className="text-xs w-16 text-right">
-                                14,280
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs">Product Cost (USD)</span>
-                            <div className="flex gap-3">
-                              <span className="text-xs w-16 text-right">
-                                $5,145
-                              </span>
-                              <span className="text-xs w-16 text-right">
-                                $4,998
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs">Application (USD)</span>
-                            <div className="flex gap-3">
-                              <span className="text-xs w-16 text-right">
-                                $375
-                              </span>
-                              <span className="text-xs w-16 text-right">
-                                $525
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="flex justify-between items-center pt-1 border-t border-border/30">
-                            <span className="text-xs font-medium">
-                              Field Total (USD)
-                            </span>
-                            <div className="flex gap-3">
-                              <span className="text-xs font-medium w-16 text-right">
-                                $5,520
-                              </span>
-                              <span className="text-xs font-medium w-16 text-right">
-                                $5,523
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Desktop view - Comparison Table */}
-                  <div className="hidden md:block bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
-                    <p className="text-sm font-medium mb-4">
-                      Application Type Comparison
-                    </p>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Metric</TableHead>
-                          <TableHead>Uniform</TableHead>
-                          <TableHead>Variable</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Total Product (lb)
-                          </TableCell>
-                          <TableCell>14,700</TableCell>
-                          <TableCell>14,280</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Product Cost (USD)
-                          </TableCell>
-                          <TableCell>$5,145</TableCell>
-                          <TableCell>$4,998</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Application (USD)
-                          </TableCell>
-                          <TableCell>$375</TableCell>
-                          <TableCell>$525</TableCell>
-                        </TableRow>
-                        <TableRow className="font-medium">
-                          <TableCell>Field Total (USD)</TableCell>
-                          <TableCell>$5,520</TableCell>
-                          <TableCell>$5,523</TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Potassium Management Tab - Mobile optimized */}
-          {activeStep === 3 && (
-            <div className="grid grid-cols-1 gap-4 md:gap-6">
-              <div className="bg-white dark:bg-card p-4 md:p-6 rounded-xl shadow-sm border border-border/50">
-                <h4 className="text-base md:text-lg font-medium mb-3 md:mb-4">
-                  Potassium Management
-                </h4>
-                <div className="space-y-4 md:space-y-6">
-                  {/* Mobile view - Application Details */}
-                  <div className="md:hidden space-y-4">
-                    <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                      <p className="text-xs font-medium mb-2">
-                        Application Details
-                      </p>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-xs font-medium">Source:</span>
-                          <span className="text-xs">0-0-60, Potash</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs font-medium">Area:</span>
-                          <span className="text-xs">75.04 ac</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs font-medium">
-                            Yield Goal:
-                          </span>
-                          <span className="text-xs">175 bu/ac</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs font-medium">VR Stats:</span>
-                          <span className="text-xs">
-                            Mean: 97 lb/ac (0-180 lb/ac)
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-3 bg-amber-50 dark:bg-amber-950/50 rounded-lg">
-                      <p className="text-xs font-medium text-amber-800 dark:text-amber-400 mb-1">
-                        Agronomist Notes
-                      </p>
-                      <p className="text-xs text-amber-700 dark:text-amber-300">
-                        K levels are generally adequate but variable. Consider
-                        split application to improve efficiency and reduce
-                        leaching risk.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Desktop view - Application Details */}
-                  <div className="hidden md:grid md:grid-cols-2 gap-6">
-                    <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                      <p className="text-sm font-medium mb-4">
-                        Application Details
-                      </p>
-                      <Table>
-                        <TableBody>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              Source
-                            </TableCell>
-                            <TableCell>0-0-60, Potash</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">Area</TableCell>
-                            <TableCell>75.04 ac</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              Yield Goal
-                            </TableCell>
-                            <TableCell>175 bu/ac</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              VR Stats
-                            </TableCell>
-                            <TableCell>Mean: 97 lb/ac (0-180 lb/ac)</TableCell>
-                          </TableRow>
-                        </TableBody>
-                      </Table>
-                    </div>
-                    <div className="p-4 bg-amber-50 dark:bg-amber-950/50 rounded-lg">
-                      <p className="text-sm font-medium text-amber-800 dark:text-amber-400 mb-2">
-                        Agronomist Notes
-                      </p>
-                      <p className="text-sm text-amber-700 dark:text-amber-300">
-                        K levels are generally adequate but variable. Consider
-                        split application to improve efficiency and reduce
-                        leaching risk.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Mobile view - Comparison Table */}
-                  <div className="md:hidden">
-                    <p className="text-xs font-medium mb-2">
-                      Application Type Comparison
-                    </p>
-                    <div className="space-y-3">
-                      <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg">
-                        <div className="flex justify-between items-center border-b border-border/30 pb-1 mb-2">
-                          <span className="text-xs font-medium">Metric</span>
-                          <div className="flex gap-3">
-                            <span className="text-xs font-medium w-16 text-right">
-                              Uniform
-                            </span>
-                            <span className="text-xs font-medium w-16 text-right">
-                              Variable
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs">Total Product (lb)</span>
-                            <div className="flex gap-3">
-                              <span className="text-xs w-16 text-right">
-                                12,100
-                              </span>
-                              <span className="text-xs w-16 text-right">
-                                12,050
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs">Product Cost (USD)</span>
-                            <div className="flex gap-3">
-                              <span className="text-xs w-16 text-right">
-                                $2,420
-                              </span>
-                              <span className="text-xs w-16 text-right">
-                                $2,410
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs">Application (USD)</span>
-                            <div className="flex gap-3">
-                              <span className="text-xs w-16 text-right">
-                                $375
-                              </span>
-                              <span className="text-xs w-16 text-right">
-                                $525
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="flex justify-between items-center pt-1 border-t border-border/30">
-                            <span className="text-xs font-medium">
-                              Field Total (USD)
-                            </span>
-                            <div className="flex gap-3">
-                              <span className="text-xs font-medium w-16 text-right">
-                                $2,795
-                              </span>
-                              <span className="text-xs font-medium w-16 text-right">
-                                $2,935
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Desktop view - Comparison Table */}
-                  <div className="hidden md:block bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
-                    <p className="text-sm font-medium mb-4">
-                      Application Type Comparison
-                    </p>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Metric</TableHead>
-                          <TableHead>Uniform</TableHead>
-                          <TableHead>Variable</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Total Product (lb)
-                          </TableCell>
-                          <TableCell>12,100</TableCell>
-                          <TableCell>12,050</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Product Cost (USD)
-                          </TableCell>
-                          <TableCell>$2,420</TableCell>
-                          <TableCell>$2,410</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Application (USD)
-                          </TableCell>
-                          <TableCell>$375</TableCell>
-                          <TableCell>$525</TableCell>
-                        </TableRow>
-                        <TableRow className="font-medium">
-                          <TableCell>Field Total (USD)</TableCell>
-                          <TableCell>$2,795</TableCell>
-                          <TableCell>$2,935</TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Phosphorus Management Tab - Mobile optimized */}
-          {activeStep === 2 && (
+          {activeStep === 1 && (
             <div className="grid grid-cols-1 gap-4 md:gap-6">
               <div className="bg-white dark:bg-card p-4 md:p-6 rounded-xl shadow-sm border border-border/50">
                 <h4 className="text-base md:text-lg font-medium mb-3 md:mb-4">
@@ -2565,8 +2132,225 @@ export default function SampleReportContent() {
             </div>
           )}
 
+          {/* Potassium Management Tab - Mobile optimized */}
+          {activeStep === 2 && (
+            <div className="grid grid-cols-1 gap-4 md:gap-6">
+              <div className="bg-white dark:bg-card p-4 md:p-6 rounded-xl shadow-sm border border-border/50">
+                <h4 className="text-base md:text-lg font-medium mb-3 md:mb-4">
+                  Potassium Management
+                </h4>
+                <div className="space-y-4 md:space-y-6">
+                  {/* Mobile view - Application Details */}
+                  <div className="md:hidden space-y-4">
+                    <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                      <p className="text-xs font-medium mb-2">
+                        Application Details
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">Source:</span>
+                          <span className="text-xs">0-0-60, Potash</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">Area:</span>
+                          <span className="text-xs">75.04 ac</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">
+                            Yield Goal:
+                          </span>
+                          <span className="text-xs">175 bu/ac</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs font-medium">VR Stats:</span>
+                          <span className="text-xs">
+                            Mean: 97 lb/ac (0-180 lb/ac)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3 bg-amber-50 dark:bg-amber-950/50 rounded-lg">
+                      <p className="text-xs font-medium text-amber-800 dark:text-amber-400 mb-1">
+                        Agronomist Notes
+                      </p>
+                      <p className="text-xs text-amber-700 dark:text-amber-300">
+                        K levels are generally adequate but variable. Consider
+                        split application to improve efficiency and reduce
+                        leaching risk.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Desktop view - Application Details */}
+                  <div className="hidden md:grid md:grid-cols-2 gap-6">
+                    <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                      <p className="text-sm font-medium mb-4">
+                        Application Details
+                      </p>
+                      <Table>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              Source
+                            </TableCell>
+                            <TableCell>0-0-60, Potash</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">Area</TableCell>
+                            <TableCell>75.04 ac</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              Yield Goal
+                            </TableCell>
+                            <TableCell>175 bu/ac</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              VR Stats
+                            </TableCell>
+                            <TableCell>Mean: 97 lb/ac (0-180 lb/ac)</TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
+                    <div className="p-4 bg-amber-50 dark:bg-amber-950/50 rounded-lg">
+                      <p className="text-sm font-medium text-amber-800 dark:text-amber-400 mb-2">
+                        Agronomist Notes
+                      </p>
+                      <p className="text-sm text-amber-700 dark:text-amber-300">
+                        K levels are generally adequate but variable. Consider
+                        split application to improve efficiency and reduce
+                        leaching risk.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Mobile view - Comparison Table */}
+                  <div className="md:hidden">
+                    <p className="text-xs font-medium mb-2">
+                      Application Type Comparison
+                    </p>
+                    <div className="space-y-3">
+                      <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg">
+                        <div className="flex justify-between items-center border-b border-border/30 pb-1 mb-2">
+                          <span className="text-xs font-medium">Metric</span>
+                          <div className="flex gap-3">
+                            <span className="text-xs font-medium w-16 text-right">
+                              Uniform
+                            </span>
+                            <span className="text-xs font-medium w-16 text-right">
+                              Variable
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Total Product (lb)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                12,100
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                12,050
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Product Cost (USD)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                $2,420
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                $2,410
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs">Application (USD)</span>
+                            <div className="flex gap-3">
+                              <span className="text-xs w-16 text-right">
+                                $375
+                              </span>
+                              <span className="text-xs w-16 text-right">
+                                $525
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center pt-1 border-t border-border/30">
+                            <span className="text-xs font-medium">
+                              Field Total (USD)
+                            </span>
+                            <div className="flex gap-3">
+                              <span className="text-xs font-medium w-16 text-right">
+                                $2,795
+                              </span>
+                              <span className="text-xs font-medium w-16 text-right">
+                                $2,935
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Desktop view - Comparison Table */}
+                  <div className="hidden md:block bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                    <p className="text-sm font-medium mb-4">
+                      Application Type Comparison
+                    </p>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Metric</TableHead>
+                          <TableHead>Uniform</TableHead>
+                          <TableHead>Variable</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Total Product (lb)
+                          </TableCell>
+                          <TableCell>12,100</TableCell>
+                          <TableCell>12,050</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Product Cost (USD)
+                          </TableCell>
+                          <TableCell>$2,420</TableCell>
+                          <TableCell>$2,410</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Application (USD)
+                          </TableCell>
+                          <TableCell>$375</TableCell>
+                          <TableCell>$525</TableCell>
+                        </TableRow>
+                        <TableRow className="font-medium">
+                          <TableCell>Field Total (USD)</TableCell>
+                          <TableCell>$2,795</TableCell>
+                          <TableCell>$2,935</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Lime Management Tab - Mobile optimized */}
-          {activeStep === 4 && (
+          {activeStep === 3 && (
             <div className="grid grid-cols-1 gap-4 md:gap-6">
               <div className="bg-white dark:bg-card p-4 md:p-6 rounded-xl shadow-sm border border-border/50">
                 <h4 className="text-base md:text-lg font-medium mb-3 md:mb-4">
