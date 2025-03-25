@@ -94,27 +94,26 @@ const DataRow = ({
 
 const features = [
   {
-    name: "Precision Soil Sampling",
-    description:
-      "GPS guided soil, plant tissue and sap analysis with strategic patterns for analysis",
+    name: "Precision Data Collection",
+    description: "GPS-guided sampling with strategic patterns for analysis.",
     icon: FaMapMarkedAlt
   },
   {
-    name: "Comprehensive Nutrient Analysis",
+    name: "Laboratory Analysis",
     description:
-      "Detailed analysis of macro and micronutrients, pH, organic matter, and more",
+      "Soil, plant tissue, water, manure, compost, and fertilizer analysis.",
     icon: FaFlask
   },
   {
     name: "Spatial Mapping",
     description:
-      "Integration of proxy layers (Vegetative reflectance, TWI, SSurgo, etc) ",
+      "Collected data can be mapped and integrated with other supporting layers.",
     icon: FaChartLine
   },
   {
     name: "Custom Recommendations",
     description:
-      "Tailored fertilizer and amendment recommendations based on your specific crops and goals",
+      "Tailored agronomic recommendations based on your specific crops and goals.",
     icon: FaCalculator
   }
 ];
@@ -304,36 +303,8 @@ export default function FieldSamplingPage() {
                 <h4 className="font-semibold text-lg">Soil Sampling</h4>
                 <p className="text-muted-foreground text-sm">
                   Soil sampling provides the foundation for all agronomic
-                  decisions. By analyzing your soil, we can:
+                  decisions.
                 </p>
-                <ul className="space-y-1">
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>
-                      Measure nutrient levels and identify deficiencies or
-                      excesses
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Determine soil pH and organic matter content</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>
-                      Evaluate cation exchange capacity (CEC) and base
-                      saturation
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Create zone-specific fertility recommendations</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Track changes in soil health over time</span>
-                  </li>
-                </ul>
               </div>
 
               <div className="space-y-4">
@@ -348,40 +319,8 @@ export default function FieldSamplingPage() {
                 <h4 className="font-semibold text-lg">Tissue Sampling</h4>
                 <p className="text-muted-foreground text-sm">
                   Plant tissue analysis complements soil testing by showing what
-                  nutrients the plant is actually absorbing. This helps:
+                  nutrients the plant is actually absorbing.
                 </p>
-                <ul className="space-y-1">
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>
-                      Identify hidden nutrient deficiencies before visual
-                      symptoms appear
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>
-                      Verify if applied fertilizers are being utilized by the
-                      crop
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>
-                      Understand nutrient interactions and antagonisms
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>
-                      Make in-season fertility adjustments when needed
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Diagnose unusual growth or discoloration issues</span>
-                  </li>
-                </ul>
               </div>
 
               <div className="space-y-4">
@@ -396,34 +335,8 @@ export default function FieldSamplingPage() {
                 <h4 className="font-semibold text-lg">Field Observations</h4>
                 <p className="text-muted-foreground text-sm">
                   Regular field scouting provides critical context that
-                  laboratory tests can't capture. Field observations help:
+                  complements and enhances your data-driven decisions.
                 </p>
-                <ul className="space-y-1">
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Detect pest and disease issues at early stages</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Evaluate crop stand and development progress</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>
-                      Identify areas of stress from weather or management
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>
-                      Monitor weed pressure and herbicide effectiveness
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Document field conditions throughout the season</span>
-                  </li>
-                </ul>
               </div>
             </div>
           </motion.div>
@@ -446,10 +359,9 @@ export default function FieldSamplingPage() {
             <p className="text-muted-foreground text-base">
               Explore our interactive soil sampling map showing detailed
               nutrient levels across the field. Each point represents a soil
-              sample with comprehensive nutrient analysis. Click on sample
-              points to view detailed information about soil health indicators
-              and nutrient levels. Use the dropdown below to switch between
-              different nutrients.
+              sample. Click on sample points to view detailed information about
+              soil health indicators and nutrient levels. Use the dropdown below
+              to switch between different nutrients.
             </p>
           </motion.div>
 
@@ -468,8 +380,8 @@ export default function FieldSamplingPage() {
                 <div className="space-y-2">
                   <DataRow label="Field Name" value="John Doe" />
                   <DataRow label="Property" value="DOE FAMILY FARMS" />
-                  <DataRow label="Field Size" value="160.304 acres" />
-                  <DataRow label="Current Crop" value="Soybean (2024)" />
+                  <DataRow label="Field Size" value="160 acres" />
+                  <DataRow label="Next Crop" value="Soybean (2024)" />
                   <DataRow label="Previous Crop" value="Corn (2023)" />
                 </div>
               </DataCard>
@@ -483,7 +395,6 @@ export default function FieldSamplingPage() {
                   <DataRow label="Number of Points" value="20+" />
                   <DataRow label="Sampling Depth" value="6 inches" />
                   <DataRow label="Sampling Pattern" value="Grid" />
-                  <DataRow label="Crop Year" value="2020" />
                 </div>
               </DataCard>
 

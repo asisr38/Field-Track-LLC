@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ServiceGrid, type ServiceItem } from "@/components/ui/service-grid";
-import {  Microscope, TestTube, LandPlot } from "lucide-react";
+import { Microscope, TestTube, LandPlot } from "lucide-react";
 
 const services: ServiceItem[] = [
   {
@@ -10,7 +10,7 @@ const services: ServiceItem[] = [
     description:
       "A research-grade aerial imagery pipeline optimized for plot trials. Leveraging calibrated reflectance data and machine learning, we deliver precise canopy metrics, plant height measurements, and temporal analysis with rigorous QA/QC. Our publication-quality reports include advanced derivatives like canopy cover, plant consistency, and supervised classification.",
     icon: <LandPlot className="w-5 h-5 sm:w-6 sm:h-6" />,
-    image: "/hero/topright.png",
+    image: "/simple-sense/simplesense.png",
     tags: [
       "Calibrated Reflectance",
       "Machine Learning Analysis",

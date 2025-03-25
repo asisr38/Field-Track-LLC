@@ -26,7 +26,7 @@ const steps = [
     description:
       "Spatially collected farm data is integrated with field samples, aerial imagery, and weather patterns, providing relevant insights for informed decision-making.",
     details: [
-      "Integration with your farm management software",
+      "Integration with farm management software",
       "Precise and repeatable field sampling and imagery metrics",
       "Spatial decision-support layers and weather tracking"
     ],
@@ -51,11 +51,7 @@ const steps = [
     title: "Customized Reporting",
     description:
       "Clear reports transform complex data into practical insight and recommendations, empowering confident decisions.",
-    details: [
-      "Field-specific application recommendations with timing guidelines",
-      "Economic comparison of uniform vs. variable rate strategies",
-      "Seasonal implementation plans with agronomist support"
-    ],
+    details: [],
     icon: FileText,
     image: "/images/onfield.jpg",
     alt: "Farmer reviewing customized agricultural report in the field"
@@ -191,9 +187,6 @@ export default function Process() {
                           <div>
                             <p className="font-semibold">
                               Performance Tracking
-                            </p>
-                            <p className="text-sm opacity-80">
-                              Continuous monitoring of trial results
                             </p>
                           </div>
                         </div>

@@ -320,12 +320,12 @@ const ProductEfficacyTab = ({
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-1">
         <Beaker className="w-5 h-5 text-primary" />
-        <h4 className="text-base font-medium">Product Performance Analysis</h4>
+        <h4 className="text-base font-medium"> Performance Analysis</h4>
       </div>
 
       <span className="text-sm text-muted-foreground block mb-8">
-        Compare product performance across all trial plots to determine which
-        products provide the best results in your specific field conditions.
+        Compare treatment performance across all trial plots to determine which
+        treatment provide the best results in your specific field conditions.
       </span>
 
       <div className="grid lg:grid-cols-5 gap-6">
@@ -343,7 +343,7 @@ const ProductEfficacyTab = ({
                 <XAxis
                   dataKey="name"
                   label={{
-                    value: "Treatment (Product)",
+                    value: "Treatment",
                     position: "bottom",
                     offset: 2
                   }}
@@ -1085,15 +1085,60 @@ export default function OnFarmResearchPage() {
               On-Farm <span className="text-primary">Research</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Become the scientist of your farm with data-driven insights from
-              field trials. Our On-Farm Research service helps you test and
-              validate various practices to optimize your farming decisions for
-              maximum performance.
+              On-farm trials provide valuable, data-driven insights tailored to
+              specific field conditions, offering a more precise approach than
+              generalized recommendations. Our service helps validate practices
+              with real-world data, empowering informed decision-making.
             </p>
           </motion.div>
         </div>
       </section>
+      <div className="container mx-auto px-4 pb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="p-5 hover:border-primary/50 transition-colors">
+            <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
+              <Beaker className="w-6 h-6 text-primary" />
+            </div>
+            <h5 className="font-medium text-base mb-2">Rate Testing</h5>
+            <p className="text-sm text-muted-foreground">
+              Compare different application rates for inputs like fertilizers,
+              herbicides, or pesticides.
+            </p>
+          </Card>
 
+          <Card className="p-5 hover:border-primary/50 transition-colors">
+            <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
+              <Microscope className="w-6 h-6 text-primary" />
+            </div>
+            <h5 className="font-medium text-base mb-2">Variety Trials</h5>
+            <p className="text-sm text-muted-foreground">
+              Evaluate the performance of various crop hybrids or varieties.
+            </p>
+          </Card>
+
+          <Card className="p-5 hover:border-primary/50 transition-colors">
+            <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
+              <SplitSquareHorizontal className="w-6 h-6 text-primary" />
+            </div>
+            <h5 className="font-medium text-base mb-2">Product Comparisons</h5>
+            <p className="text-sm text-muted-foreground">
+              Conduct side-by-side trials of agricultural products such as
+              treatments or amendments.
+            </p>
+          </Card>
+
+          <Card className="p-5 hover:border-primary/50 transition-colors">
+            <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
+              <SlidersHorizontal className="w-6 h-6 text-primary" />
+            </div>
+            <h5 className="font-medium text-base mb-2">Seeding Rates</h5>
+            <p className="text-sm text-muted-foreground">
+              Test different planting densities to identify the optimal
+              approach.
+            </p>
+          </Card>
+        </div>
+      </div>
       {/* Main Content Section */}
       <div className="container mx-auto px-4 pb-12">
         <div className="space-y-12">
@@ -1110,9 +1155,8 @@ export default function OnFarmResearchPage() {
                       On-Farm Strip Trial
                     </h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Real-world field trials with different treatments and
-                      products to evaluate performance under actual farming
-                      conditions.
+                      Real-world field trials with different treatments evaluate
+                      performance.
                     </p>
                   </div>
                 </div>
@@ -1240,7 +1284,7 @@ export default function OnFarmResearchPage() {
                         className="flex-1 text-xs sm:text-sm whitespace-nowrap"
                         value="product-efficacy"
                       >
-                        Product Efficacy
+                        Efficacy
                       </TabsTrigger>
                       <TabsTrigger
                         className="flex-1 text-xs sm:text-sm whitespace-nowrap"
@@ -1277,64 +1321,6 @@ export default function OnFarmResearchPage() {
                       alternatives to confirm effectiveness and identify
                       opportunities for improvement.
                     </span>
-
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                      <Card className="p-5 hover:border-primary/50 transition-colors">
-                        <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
-                          <Beaker className="w-6 h-6 text-primary" />
-                        </div>
-                        <h5 className="font-medium text-base mb-2">
-                          Seed Treatments
-                        </h5>
-                        <p className="text-sm text-muted-foreground">
-                          Evaluate the effectiveness of different seed
-                          treatments under your specific field conditions to
-                          maximize germination and early-season crop health.
-                        </p>
-                      </Card>
-
-                      <Card className="p-5 hover:border-primary/50 transition-colors">
-                        <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
-                          <SplitSquareHorizontal className="w-6 h-6 text-primary" />
-                        </div>
-                        <h5 className="font-medium text-base mb-2">
-                          Split Applications
-                        </h5>
-                        <p className="text-sm text-muted-foreground">
-                          Test multiple application timings against standard
-                          practices to determine if split applications improve
-                          nutrient use efficiency in your soils.
-                        </p>
-                      </Card>
-
-                      <Card className="p-5 hover:border-primary/50 transition-colors">
-                        <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
-                          <Microscope className="w-6 h-6 text-primary" />
-                        </div>
-                        <h5 className="font-medium text-base mb-2">
-                          Biological Products
-                        </h5>
-                        <p className="text-sm text-muted-foreground">
-                          Assess the performance of microbial and biological
-                          products in your cropping system to determine their
-                          impact on soil health and crop yield.
-                        </p>
-                      </Card>
-
-                      <Card className="p-5 hover:border-primary/50 transition-colors">
-                        <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
-                          <SlidersHorizontal className="w-6 h-6 text-primary" />
-                        </div>
-                        <h5 className="font-medium text-base mb-2">
-                          Rate Optimization
-                        </h5>
-                        <p className="text-sm text-muted-foreground">
-                          Find the optimal input rates for your specific
-                          environment through side-by-side comparisons of
-                          different application rates.
-                        </p>
-                      </Card>
-                    </div>
 
                     <div className="mt-8">
                       <Card className="p-6 bg-muted/10">
