@@ -273,12 +273,11 @@ export default function SimpleSensePage() {
               Simple<span className="text-primary">Sense</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Our research-grade analysis pipeline delivers precise field
-              insights through multi-temporal NDVI analysis, designed to meet
-              the rigorous demands of academic and industrial research. We
-              collect and process aerial imagery that seamlessly integrates into
-              your existing projects, enabling data-driven agricultural
-              decisions.
+              Our research-grade* analysis pipeline delivers precise field
+              insights designed to meet the rigorous demands of academic and
+              industry research. We collect and process aerial imagery that
+              seamlessly integrates into your existing projects, enabling
+              data-driven decisions.
             </p>
           </motion.div>
         </div>
@@ -308,14 +307,14 @@ export default function SimpleSensePage() {
                     Create spatially consistent plot zones for your current
                     trial.
                   </h3>
-                  <span className="text-sm text-muted-foreground ml-2">
-                    Randomized Complete Block Factorial
-                  </span>
+                  <span className="text-sm text-muted-foreground ml-2"></span>
                 </div>
 
                 <div className="mb-0">
                   <div className="flex justify-between items-center mb-4">
-                    <h4 className="text-base font-medium">Trial Layout</h4>
+                    <h4 className="text-base font-medium">
+                      An example of a Randomized Complete Block Factorial trial
+                    </h4>
                     <div className="flex items-center space-x-3">
                       <button
                         className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-l-md ${
@@ -444,13 +443,6 @@ export default function SimpleSensePage() {
                   </div>
 
                   <div className="flex flex-col md:flex-row items-start gap-4 mb-6">
-                    <Image
-                      src="/hero/topleft.png"
-                      alt="DJI Mavic 3M"
-                      width={200}
-                      height={150}
-                      className="rounded-lg mx-auto md:mx-0 mb-4 md:mb-0"
-                    />
                     <div className="space-y-4 w-full">
                       <p className="text-sm text-muted-foreground">
                         Multispectral Imaging System + RGB Highly integrated
@@ -751,7 +743,7 @@ export default function SimpleSensePage() {
                 <Card className="p-6">
                   <Tabs defaultValue="1" className="space-y-4">
                     <div className="overflow-x-auto pb-2">
-                      <TabsList className="min-w-[700px]">
+                      <TabsList className="min-w-[500px]">
                         <TabsTrigger value="1" className="text-sm">
                           V4 Stage (Early)
                         </TabsTrigger>
@@ -763,12 +755,6 @@ export default function SimpleSensePage() {
                         </TabsTrigger>
                         <TabsTrigger value="4" className="text-sm">
                           R3 Stage (Milk)
-                        </TabsTrigger>
-                        <TabsTrigger value="5" className="text-sm">
-                          R5 Stage (Dent)
-                        </TabsTrigger>
-                        <TabsTrigger value="6" className="text-sm">
-                          R6 Stage (Maturity)
                         </TabsTrigger>
                       </TabsList>
                     </div>
@@ -817,121 +803,6 @@ export default function SimpleSensePage() {
                     </TabsContent>
                   </Tabs>
                 </Card>
-              </div>
-
-              {/* Analysis Summary */}
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="bg-card rounded-lg p-6 border border-border/50">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Growth Stage Analysis
-                  </h3>
-                  <div className="space-y-6">
-                    {[
-                      {
-                        stage: "V4",
-                        range: "0.30 - 0.60",
-                        key: "Early vegetative growth shows initial treatment responses"
-                      },
-                      {
-                        stage: "V9",
-                        range: "0.40 - 0.75",
-                        key: "Peak vegetative growth with clear treatment differentiation"
-                      },
-                      {
-                        stage: "R1",
-                        range: "0.40 - 0.90",
-                        key: "Reproductive stage shows maximum treatment effects"
-                      },
-                      {
-                        stage: "R3",
-                        range: "0.40 - 1.00",
-                        key: "Grain fill period reveals sustained treatment impacts"
-                      }
-                    ].map(stage => (
-                      <div
-                        key={stage.stage}
-                        className="flex items-start gap-4 p-4 bg-muted rounded-lg"
-                      >
-                        <div className="p-2 rounded-lg bg-primary/10">
-                          <Sprout className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="text-base font-medium">
-                              Stage {stage.stage}
-                            </h4>
-                            <span className="text-xs text-muted-foreground">
-                              NDVI: {stage.range}
-                            </span>
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            {stage.key}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="bg-card rounded-lg p-6 border border-border/50">
-                  <h4 className="text-base font-medium mb-3">Key Findings</h4>
-                  <div className="space-y-6">
-                    <div className="p-4 bg-muted rounded-lg">
-                      <h5 className="text-sm font-medium mb-3">
-                        Temporal Patterns
-                      </h5>
-                      <ul className="space-y-2 text-sm text-muted-foreground">
-                        <li className="flex items-start gap-2">
-                          <FileBarChart className="w-4 h-4 text-primary mt-1" />
-                          <span>
-                            NDVI values increase progressively through growth
-                            stages
-                          </span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <FileBarChart className="w-4 h-4 text-primary mt-1" />
-                          <span>
-                            Treatment effects most pronounced during R1-R3
-                            stages
-                          </span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <FileBarChart className="w-4 h-4 text-primary mt-1" />
-                          <span>
-                            Spatial patterns reveal block and treatment
-                            interactions
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div className="p-4 bg-muted rounded-lg">
-                      <h5 className="text-sm font-medium mb-3">
-                        Index Comparisons
-                      </h5>
-                      <ul className="space-y-2 text-sm text-muted-foreground">
-                        <li className="flex items-start gap-2">
-                          <FileBarChart className="w-4 h-4 text-primary mt-1" />
-                          <span>
-                            NDVI and NDRE show strong correlation (r² &gt; 0.85)
-                          </span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <FileBarChart className="w-4 h-4 text-primary mt-1" />
-                          <span>
-                            VARI provides complementary stress detection
-                          </span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <FileBarChart className="w-4 h-4 text-primary mt-1" />
-                          <span>
-                            Multi-index approach improves treatment assessment
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
               </div>
 
               {/* 5. Treatment NDVI Line Chart Section - New section */}

@@ -840,14 +840,6 @@ function NutrientMap() {
             <option value="P">Phosphorus (P)</option>
             <option value="K">Potassium (K)</option>
           </select>
-          <div className="text-sm text-muted-foreground">
-            {selectedNutrient === "N" &&
-              "Nitrogen map showing application rates and zones of varying N requirements"}
-            {selectedNutrient === "P" &&
-              "Phosphorus distribution indicating areas of deficiency and surplus"}
-            {selectedNutrient === "K" &&
-              "Potassium availability map highlighting zones needing targeted application"}
-          </div>
         </div>
       </div>
       <div
@@ -1298,36 +1290,6 @@ export default function SampleReportContent() {
   const analysisSteps: AnalysisStep[] = [
     {
       number: 1,
-      title: "Field Mapping & Sample Collection",
-      description:
-        "The foundation of accurate soil analysis begins with proper field mapping and strategic sample collection.",
-      component: <SampleDistributionMap />,
-      details: [
-        {
-          title: "GPS-Guided Sampling",
-          description:
-            "Using precision GPS technology, we collect soil samples in a systematic grid pattern across your field.",
-          icon: Map,
-          component: null // Add optional component property with null default
-        },
-        {
-          title: "Sample Depth Consistency",
-          description:
-            "All samples are taken at consistent depths to ensure accurate comparison and analysis.",
-          icon: Ruler,
-          component: null
-        },
-        {
-          title: "Field Boundary Mapping",
-          description:
-            "Complete field boundaries are mapped to create accurate management zones.",
-          icon: BoxSelect,
-          component: null
-        }
-      ]
-    },
-    {
-      number: 2,
       title: "Laboratory Analysis",
       description:
         "We work with certified soil testing laboratories to deliver rapid and reliable soil analysis results.",
@@ -1528,7 +1490,6 @@ export default function SampleReportContent() {
                   <p className="text-xl md:text-2xl font-semibold text-primary mt-1">
                     0.27:1
                   </p>
-                  <p className="text-xs text-red-500 font-medium mt-1">Low</p>
                 </div>
 
                 <div className="bg-white dark:bg-card p-3 md:p-4 rounded-lg border border-border/50">
@@ -1536,18 +1497,12 @@ export default function SampleReportContent() {
                   <p className="text-xl md:text-2xl font-semibold text-primary mt-1">
                     16:1
                   </p>
-                  <p className="text-xs text-amber-500 font-medium mt-1">
-                    High
-                  </p>
                 </div>
 
                 <div className="bg-white dark:bg-card p-3 md:p-4 rounded-lg border border-border/50">
                   <p className="text-xs md:text-sm font-medium">Ca:Mg Ratio</p>
                   <p className="text-xl md:text-2xl font-semibold text-primary mt-1">
                     4.4:1
-                  </p>
-                  <p className="text-xs text-green-500 font-medium mt-1">
-                    Optimal
                   </p>
                 </div>
               </div>
@@ -1844,7 +1799,7 @@ export default function SampleReportContent() {
         {
           title: "Comprehensive Testing",
           description:
-            "We coordinate with certified regional laboratories to analyze essential soil parameters tailored to your specific crop and region needs.",
+            "We coordinate with certified regional laboratories to analyze samples tailored to your specific crop and region needs.",
           icon: FileBarChart,
           component: null
         },
@@ -1868,26 +1823,20 @@ export default function SampleReportContent() {
       number: 3,
       title: "Nutrient Mapping",
       description:
-        "Advanced geospatial analysis of soil nutrients using precision mapping technology. Our system generates high-resolution nutrient distribution maps, identifies management zones, and tracks temporal changes in soil fertility patterns.",
+        "Interactive soil nutrient maps showing distribution patterns across your field.",
       component: <NutrientMap />,
       details: [
         {
-          title: "Nutrient Variability Analysis",
+          title: "Nutrient Analysis",
           description:
-            "Comprehensive mapping of macro and micronutrients (N, P, K, Ca, Mg, S) with detailed spatial analysis of deficiencies, excesses, and balanced zones. Includes pH and CEC distribution for enhanced nutrient availability understanding.",
+            "Visual mapping of key nutrients showing deficiencies and excesses.",
           icon: Map
         },
         {
-          title: "Management Zone Delineation",
+          title: "Management Zones",
           description:
-            "Creation of data-driven management zones based on multiple parameters including soil texture, organic matter, CEC, and nutrient levels. Zones are optimized for variable rate application and targeted soil amendments.",
+            "Field segmentation based on soil samples for targeted applications.",
           icon: Layout
-        },
-        {
-          title: "Precision Recommendations",
-          description:
-            "Zone-specific nutrient recommendations considering crop requirements, yield goals, and economic factors. Includes variable rate prescriptions for optimal resource utilization.",
-          icon: Calculator
         }
       ]
     },
@@ -1959,7 +1908,7 @@ export default function SampleReportContent() {
                       </p>
                       <p className="text-xs text-amber-700 dark:text-amber-300">
                         Much of the field has sufficient P levels, but the SW
-                        edge and Eastern finger could benefit from fertilizer or
+                        edge and Eastern edge could benefit from fertilizer or
                         manure application.
                       </p>
                     </div>
@@ -2004,7 +1953,7 @@ export default function SampleReportContent() {
                       </p>
                       <p className="text-sm text-amber-700 dark:text-amber-300">
                         Much of the field has sufficient P levels, but the SW
-                        edge and Eastern finger could benefit from fertilizer or
+                        edge and Eastern edge could benefit from fertilizer or
                         manure application.
                       </p>
                     </div>
@@ -2392,8 +2341,8 @@ export default function SampleReportContent() {
                         Important Note
                       </p>
                       <p className="text-xs text-red-600 dark:text-red-300">
-                        The eastern finger has very low pH levels. Do not exceed
-                        2 tons/ac of lime in a single application. Contact for
+                        The eastern edge has very low pH levels. Do not exceed 2
+                        tons/ac of lime in a single application. Contact for
                         assistance in amending the prescription for safe
                         one-time application.
                       </p>
@@ -2440,8 +2389,8 @@ export default function SampleReportContent() {
                         Important Note
                       </p>
                       <p className="text-sm text-red-600 dark:text-red-300">
-                        The eastern finger has very low pH levels. Do not exceed
-                        2 tons/ac of lime in a single application. Contact for
+                        The eastern edge has very low pH levels. Do not exceed 2
+                        tons/ac of lime in a single application. Contact for
                         assistance in amending the prescription for safe
                         one-time application.
                       </p>
@@ -2577,19 +2526,19 @@ export default function SampleReportContent() {
         {
           title: "Nutrient Planning",
           description:
-            "Customized application plans based on your soil test results and crop yield goals. Includes split application strategies for nitrogen, targeted phosphorus applications for deficient zones, optimized potassium rates, and pH management through careful lime applications.",
+            "Customized application plans based on soil test results and crop yield goals.",
           icon: Calculator
         },
         {
           title: "Cost Analysis",
           description:
-            "Clear comparison between uniform and variable rate application strategies. We analyze product costs, application expenses, and potential savings to help you make informed decisions about your fertilizer investment.",
+            "Comparison between uniform and variable rate application strategies to help you make informed decisions.",
           icon: TrendingUp
         },
         {
           title: "Application Timing",
           description:
-            "Strategic timing recommendations aligned with your crop's growth stages. Spring pre-plant applications, early-season adjustments, summer side-dress options, and fall maintenance programs tailored to your operation.",
+            "Strategic timing recommendations aligned with your crop's growth stages.",
           icon: Calendar
         }
       ]
