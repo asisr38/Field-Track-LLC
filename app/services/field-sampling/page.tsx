@@ -154,14 +154,10 @@ const nutrientOptions = [
       "Improves soil structure, water retention, and nutrient cycling"
   },
   {
-    value: "zinc",
-    label: "Zinc (Zn)",
-    description: "Essential for enzyme function and hormone production"
-  },
-  {
-    value: "manganese",
-    label: "Manganese (Mn)",
-    description: "Vital for photosynthesis and nitrogen metabolism"
+    value: "cec",
+    label: "CEC",
+    description:
+      "Cation Exchange Capacity - measures soil's ability to hold and exchange nutrients"
   }
 ];
 
@@ -173,17 +169,17 @@ const nutrientColorScales = {
     unit: "ppm"
   },
   potassium: {
-    ranges: [0, 100, 150, 200, 250],
+    ranges: [0, 30, 40, 50, 60],
     colors: ["#F44336", "#FB8C00", "#FFD54F", "#7CB342", "#2E7D32"],
     unit: "ppm"
   },
   magnesium: {
-    ranges: [0, 200, 300, 400, 500],
+    ranges: [0, 100, 150, 200, 250],
     colors: ["#E53935", "#F57C00", "#FDD835", "#8BC34A", "#388E3C"],
     unit: "ppm"
   },
   calcium: {
-    ranges: [0, 1000, 1500, 2000, 2500],
+    ranges: [0, 800, 1000, 1200, 1400],
     colors: ["#D32F2F", "#EF6C00", "#FBC02D", "#7CB342", "#388E3C"],
     unit: "ppm"
   },
@@ -193,19 +189,14 @@ const nutrientColorScales = {
     unit: ""
   },
   organicMatter: {
-    ranges: [0, 1, 2, 3, 4],
+    ranges: [1.5, 1.8, 2.0, 2.2, 2.4],
     colors: ["#FFCDD2", "#FFAB91", "#A5D6A7", "#66BB6A", "#388E3C"],
     unit: "%"
   },
-  zinc: {
-    ranges: [0, 5, 10, 15, 20],
-    colors: ["#EF9A9A", "#FFCC80", "#FFF59D", "#A5D6A7", "#81C784"],
-    unit: "ppm"
-  },
-  manganese: {
-    ranges: [0, 20, 40, 60, 80],
-    colors: ["#FFCDD2", "#FFAB91", "#FFCC80", "#C5E1A5", "#A5D6A7"],
-    unit: "ppm"
+  cec: {
+    ranges: [5, 6, 7, 8, 9],
+    colors: ["#FFCDD2", "#FFAB91", "#A5D6A7", "#66BB6A", "#388E3C"],
+    unit: "meq/100g"
   }
 };
 

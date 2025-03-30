@@ -13,6 +13,10 @@ const nextConfig = {
     config.externals.push({
       cobe: "cobe"
     });
+    config.module.rules.push({
+      test: /\.(geojson|json)$/,
+      type: "json"
+    });
     return config;
   },
   typescript: {
