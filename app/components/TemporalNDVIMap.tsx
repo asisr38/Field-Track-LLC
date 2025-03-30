@@ -31,7 +31,7 @@ const NDVIColorScale = () => (
           className="w-4 h-4 rounded-sm"
           style={{ backgroundColor: "#91cf60" }}
         ></div>
-        <span className="text-xs text-black">≥ 0.8 (High Vigor)</span>
+        <span className="text-xs text-black">≥ 0.8 </span>
       </div>
       <div className="flex items-center gap-2">
         <div
@@ -59,7 +59,7 @@ const NDVIColorScale = () => (
           className="w-4 h-4 rounded-sm"
           style={{ backgroundColor: "#d73027" }}
         ></div>
-        <span className="text-xs text-black">≤ 0.3 (Low Vigor)</span>
+        <span className="text-xs text-black">≤ 0.3</span>
       </div>
     </div>
   </Card>
@@ -121,8 +121,8 @@ const TemporalNDVIMap = ({
         <div class="font-medium mb-2">Plot ${plotInfo.Plot}</div>
         <div class="text-sm grid grid-cols-2 gap-x-2 gap-y-1">
           <span class="text-muted-foreground">Rep:</span> ${plotInfo.Rep}<br/>
-          <span class="text-muted-foreground">Treatment:</span> ${
-            plotInfo.Trt
+          <span class="text-muted-foreground">Product:</span> ${
+            plotInfo.MainPlot1 || "N/A"
           }<br/>
           <span class="text-muted-foreground">NDVI:</span> ${
             ndviValue !== null ? ndviValue.toFixed(4) : "N/A"
@@ -130,8 +130,8 @@ const TemporalNDVIMap = ({
           <span class="text-muted-foreground">Crop:</span> ${
             plotInfo.Crop || "N/A"
           }<br/>
-          <span class="text-muted-foreground">Product:</span> ${
-            plotInfo.MainPlot1 || "N/A"
+          <span class="text-muted-foreground">Treatment:</span> ${
+            plotInfo.Treatment || "N/A"
           }<br/>
           <span class="text-muted-foreground">Timing:</span> ${
             plotInfo.SubPlot1 || "N/A"
@@ -175,6 +175,8 @@ const TemporalNDVIMap = ({
         getFeatureStyle={getFeatureStyle}
         onEachFeature={onEachFeature}
         onMapCreated={setMap}
+        useSatelliteLayer={true}
+        zoomPosition="topleft"
       />
       <div className="absolute inset-0 pointer-events-none">
         <NDVIColorScale />
