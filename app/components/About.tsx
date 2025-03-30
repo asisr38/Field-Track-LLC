@@ -93,7 +93,7 @@ export default function About() {
                   title: "Practical Results",
                   description:
                     "Convert complex field data into clear, actionable insights for your operation.",
-                  image: "/images/analysisRepor.jpg"
+                  image: "/images/report.jpg"
                 }
               ].map((point, index) => (
                 <motion.div
