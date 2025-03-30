@@ -29,8 +29,8 @@ import React, {
   useCallback,
   useMemo
 } from "react";
-import fieldData from "../data/Boundary_Demo.json";
-import soilSampleData from "../data/Point_Demo.json";
+import soilSampleData from "@/public/field-sampling/data/field-sampling-demo.json";
+import fieldData from "@/public/field-sampling/data/field-sampling-boundary.geojson";
 import {
   Table,
   TableBody,
@@ -40,6 +40,8 @@ import {
   TableRow
 } from "@/components/ui/table";
 import type { Map as LeafletMap, Control } from "leaflet";
+import L from "leaflet";
+import type { Feature, Geometry } from "geojson";
 
 // Define interfaces for the Leaflet types we need
 interface LeafletStatic {
@@ -77,9 +79,14 @@ interface FieldFeature {
 // Define interface for soil sample properties
 interface SampleProperties {
   SampleID: number;
-  "pH (1_1)": number;
-  "P (B1 1_7)": number;
-  "K (AA)": number;
+  pH_1_1: number;
+  P_M3_ppm: number;
+  K_M3_ppm: number;
+  OM_LOI_per: number;
+  CEC_M3: number;
+  Ca_M3_ppm: number;
+  Mg_M3_ppm: number;
+  Depth_in: number;
   [key: string]: any; // Allow for dynamic property access with string keys
 }
 
@@ -437,20 +444,15 @@ function FieldMap() {
           ) {
             const tooltipContent = `
               <div class="p-2">
-                <div class="font-bold">Sample ID: ${
-                  (point.properties as unknown as SampleProperties).SampleID
-                }</div>
-                <div>pH: ${
-                  (point.properties as unknown as SampleProperties)["pH (1_1)"]
-                }</div>
-                <div>P: ${
-                  (point.properties as unknown as SampleProperties)[
-                    "P (B1 1_7)"
-                  ]
-                } ppm</div>
-                <div>K: ${
-                  (point.properties as unknown as SampleProperties)["K (AA)"]
-                } ppm</div>
+                <div class="font-bold">Sample ID: ${point.properties.SampleID}</div>
+                <div>pH: ${point.properties.pH_1_1}</div>
+                <div>P: ${point.properties.P_M3_ppm} ppm</div>
+                <div>K: ${point.properties.K_M3_ppm} ppm</div>
+                <div>OM: ${point.properties.OM_LOI_per}%</div>
+                <div>CEC: ${point.properties.CEC_M3} meq/100g</div>
+                <div>Ca: ${point.properties.Ca_M3_ppm} ppm</div>
+                <div>Mg: ${point.properties.Mg_M3_ppm} ppm</div>
+                <div>Depth: ${point.properties.Depth_in} inches</div>
               </div>
             `;
             createMap().set(
@@ -563,19 +565,19 @@ function FieldMap() {
               <div className="grid grid-cols-2 gap-3">
                 <p>
                   <span className="font-semibold text-gray-700">pH:</span>{" "}
-                  {selectedSample["pH (1_1)"]}
+                  {selectedSample["pH_1_1"]}
                 </p>
                 <p>
                   <span className="font-semibold text-gray-700">OM:</span>{" "}
-                  {selectedSample["OM (WB)"]} {selectedSample["OM (WB)U"]}
+                  {selectedSample["OM_LOI_per"]} {selectedSample["OM_LOI_unit"]}
                 </p>
                 <p>
                   <span className="font-semibold text-gray-700">P:</span>{" "}
-                  {selectedSample["P (B1 1_7)"]} {selectedSample["P (B1 1__1"]}
+                  {selectedSample["P_M3_ppm"]} {selectedSample["P_M3_unit"]}
                 </p>
                 <p>
                   <span className="font-semibold text-gray-700">K:</span>{" "}
-                  {selectedSample["K (AA)"]} {selectedSample["K (AA)U"]}
+                  {selectedSample["K_M3_ppm"]} {selectedSample["K_M3_unit"]}
                 </p>
               </div>
             </div>
@@ -587,19 +589,19 @@ function FieldMap() {
               <div className="grid grid-cols-2 gap-3">
                 <p>
                   <span className="font-semibold text-gray-700">Ca:</span>{" "}
-                  {selectedSample["Ca (AA)"]} {selectedSample["Ca (AA)U"]}
+                  {selectedSample["Ca_M3_ppm"]} {selectedSample["Ca_M3_unit"]}
                 </p>
                 <p>
                   <span className="font-semibold text-gray-700">Mg:</span>{" "}
-                  {selectedSample["Mg (AA)"]} {selectedSample["Mg (AA)U"]}
+                  {selectedSample["Mg_M3_ppm"]} {selectedSample["Mg_M3_unit"]}
                 </p>
                 <p>
                   <span className="font-semibold text-gray-700">S:</span>{" "}
-                  {selectedSample["S (M3)"]} {selectedSample["S (M3)U"]}
+                  {selectedSample["S_M3_ppm"]} {selectedSample["S_M3_unit"]}
                 </p>
                 <p>
                   <span className="font-semibold text-gray-700">CEC:</span>{" "}
-                  {selectedSample["CEC (AA)"]} {selectedSample["CEC (AA)U"]}
+                  {selectedSample["CEC_M3"]} {selectedSample["CEC_M3_unit"]}
                 </p>
               </div>
             </div>
@@ -611,23 +613,23 @@ function FieldMap() {
               <div className="grid grid-cols-2 gap-3">
                 <p>
                   <span className="font-semibold text-gray-700">K:</span>{" "}
-                  {selectedSample["BS-K"]}
-                  {selectedSample["BS-KU"]}
+                  {selectedSample["BS_K_M3_ppm"]}
+                  {selectedSample["BS_K_M3_unit"]}
                 </p>
                 <p>
                   <span className="font-semibold text-gray-700">Mg:</span>{" "}
-                  {selectedSample["BS-Mg"]}
-                  {selectedSample["BS-MgU"]}
+                  {selectedSample["BS_Mg_M3_ppm"]}
+                  {selectedSample["BS_Mg_M3_unit"]}
                 </p>
                 <p>
                   <span className="font-semibold text-gray-700">Ca:</span>{" "}
-                  {selectedSample["BS-Ca"]}
-                  {selectedSample["BS-CaU"]}
+                  {selectedSample["BS_Ca_M3_ppm"]}
+                  {selectedSample["BS_Ca_M3_unit"]}
                 </p>
                 <p>
                   <span className="font-semibold text-gray-700">Total:</span>{" "}
-                  {selectedSample["BS"]}
-                  {selectedSample["BSU"]}
+                  {selectedSample["BS_M3_ppm"]}
+                  {selectedSample["BS_M3_unit"]}
                 </p>
               </div>
             </div>
@@ -637,11 +639,11 @@ function FieldMap() {
               <div className="grid grid-cols-2 gap-3">
                 <p>
                   <span className="font-semibold text-gray-700">Mg/K:</span>{" "}
-                  {selectedSample["Mg_K"]}
+                  {selectedSample["Mg_K_M3_ppm"]}
                 </p>
                 <p>
                   <span className="font-semibold text-gray-700">Ca/Mg:</span>{" "}
-                  {selectedSample["Ca_Mg"]}
+                  {selectedSample["Ca_Mg_M3_ppm"]}
                 </p>
               </div>
             </div>
@@ -655,177 +657,149 @@ function FieldMap() {
 function NutrientMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
-  const [selectedNutrient, setSelectedNutrient] = useState("N");
+  const [selectedNutrient, setSelectedNutrient] =
+    useState<keyof typeof nutrientInfo>("phosphorus");
+  const [vrData, setVrData] = useState<any>(null);
 
-  // Memoize the color function to avoid recalculation
-  const getColor = useCallback((value: number, nutrient: string) => {
-    // Different color schemes for different nutrients
-    const colors = {
-      N: {
-        // Green shades for Nitrogen
-        ranges: [0, 20, 40, 60, 80, 100, 120, 140, 160, 180],
-        colors: [
-          "#f7fcf5",
-          "#e5f5e0",
-          "#c7e9c0",
-          "#a1d99b",
-          "#74c476",
-          "#41ab5d",
-          "#238b45",
-          "#006d2c",
-          "#00441b",
-          "#002910"
-        ]
-      },
-      P: {
-        // Red shades for Phosphorus
-        ranges: [0, 20, 40, 60, 80, 100, 120, 140, 160, 180],
-        colors: [
-          "#fff5f0",
-          "#fee0d2",
-          "#fcbba1",
-          "#fc9272",
-          "#fb6a4a",
-          "#ef3b2c",
-          "#cb181d",
-          "#a50f15",
-          "#67000d",
-          "#3f0008"
-        ]
-      },
-      K: {
-        // Blue shades for Potassium
-        ranges: [0, 20, 40, 60, 80, 100, 120, 140, 160, 180],
-        colors: [
-          "#f7fbff",
-          "#deebf7",
-          "#c6dbef",
-          "#9ecae1",
-          "#6baed6",
-          "#4292c6",
-          "#2171b5",
-          "#08519c",
-          "#08306b",
-          "#051b3f"
-        ]
-      }
-    };
+  // Define color scales and ranges for each nutrient
+  interface NutrientInfo {
+    displayName: string;
+    ranges: number[];
+    colors: string[];
+    unit: string;
+    property: string;
+  }
 
-    const nutrientColors = colors[nutrient as keyof typeof colors];
-    for (let i = nutrientColors.ranges.length - 1; i >= 0; i--) {
-      if (value > nutrientColors.ranges[i]) {
-        return nutrientColors.colors[i];
+  interface NutrientInfoMap {
+    [key: string]: NutrientInfo;
+  }
+
+  const nutrientInfo: NutrientInfoMap = {
+    phosphorus: {
+      displayName: "Phosphorus (P)",
+      ranges: [0, 20, 40, 60, 80, 90],
+      colors: [
+        "#FFE5E5", // 0-20
+        "#FFB3B3", // 20-40
+        "#FF8080", // 40-60
+        "#FF4D4D", // 60-80
+        "#FF1A1A", // 80-90
+        "#E60000" // 90+
+      ],
+      unit: "lbs/acre",
+      property: "18-46-D"
+    },
+    potassium: {
+      displayName: "Potassium (K)",
+      ranges: [190, 195, 200, 205, 210],
+      colors: [
+        "#E6F3FF", // 190-195
+        "#B3D9FF", // 195-200
+        "#80BFFF", // 200-205
+        "#4DA6FF", // 205-210
+        "#1A8CFF" // 210+
+      ],
+      unit: "lbs/acre",
+      property: "0-0-60p"
+    },
+    lime: {
+      displayName: "Lime Application",
+      ranges: [0, 1],
+      colors: ["#FFFFFF", "#90EE90"], // White for no lime, Light green for lime
+      unit: "",
+      property: "Ag Lime"
+    }
+  };
+
+  const getColor = (value: number, nutrient: NutrientInfo) => {
+    for (let i = 0; i < nutrient.ranges.length - 1; i++) {
+      if (value >= nutrient.ranges[i] && value < nutrient.ranges[i + 1]) {
+        return nutrient.colors[i];
       }
     }
-    return nutrientColors.colors[0];
-  }, []);
+    return nutrient.colors[nutrient.colors.length - 1];
+  };
+
+  const loadVrData = async () => {
+    try {
+      const response = await fetch(
+        `/field-sampling/data/${selectedNutrient}_VR_v2.json`
+      );
+      const data = await response.json();
+      setVrData(data);
+    } catch (error) {
+      console.error("Error loading VR data:", error);
+    }
+  };
 
   useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      mapRef.current &&
-      !mapInstanceRef.current
-    ) {
-      try {
-        const L = window.L;
-        if (!L) {
-          console.error("Leaflet not loaded");
-          return;
-        }
+    loadVrData();
+  }, [selectedNutrient]);
 
-        // Initialize the map with performance optimizations
-        const map = L.map(mapRef.current, {
-          center: FIELD_CENTER,
-          zoom: 16,
-          minZoom: 12,
-          maxZoom: 19,
-          zoomControl: false,
-          scrollWheelZoom: false,
-          preferCanvas: true,
-          renderer: L.canvas(),
-          tap: true,
-          touchZoom: true
-        });
+  useEffect(() => {
+    if (!mapRef.current || !vrData) return;
 
-        mapInstanceRef.current = map;
-
-        // Add custom zoom control
-        L.control
-          .zoom({
-            position: "bottomright",
-            zoomInTitle: "Zoom in",
-            zoomOutTitle: "Zoom out"
-          })
-          .addTo(map);
-
-        // Add satellite imagery base layer
-        L.tileLayer(
-          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-          {
-            maxZoom: 19,
-            attribution: "© Esri"
-          }
-        ).addTo(map);
-
-        // Create field boundary layer with styling
-        const fieldLayer = L.geoJSON(fieldData, {
-          style: {
-            color: "#000",
-            weight: 2,
-            opacity: 1,
-            fillColor: getColor(100, selectedNutrient),
-            fillOpacity: 0.8
-          }
-        }).addTo(map);
-
-        // Add legend
-        const legend = L.control({ position: "topright" }) as LegendControl;
-        legend.onAdd = function (map: L.Map): HTMLElement {
-          const div = L.DomUtil.create(
-            "div",
-            "info legend bg-white p-2 rounded-lg shadow-lg"
-          );
-          const ranges = [0, 20, 40, 60, 80, 100, 120, 140, 160, 180];
-          const labels = ["Very Low", "Low", "Medium", "High", "Very High"];
-
-          let html = `<div class="text-sm font-semibold mb-2">${selectedNutrient} Rate (lb/ac)</div>`;
-
-          for (let i = 0; i < ranges.length; i++) {
-            const from = ranges[i];
-            const to = ranges[i + 1];
-            html += `
-              <div class="flex items-center gap-2 my-1">
-                <i style="background:${getColor(
-                  from + 1,
-                  selectedNutrient
-                )}; width: 18px; height: 18px; display: inline-block;"></i>
-                <span class="text-xs">${from}${to ? "&ndash;" + to : "+"}</span>
-              </div>`;
-          }
-
-          div.innerHTML = html;
-          return div;
-        };
-        legend.addTo(map);
-
-        // Fit map to field bounds with padding
-        const bounds = fieldLayer.getBounds();
-        if (bounds.isValid()) {
-          map.fitBounds(bounds.pad(0.1));
-        }
-
-        // Clean up on unmount
-        return () => {
-          if (mapInstanceRef.current) {
-            mapInstanceRef.current.remove();
-            mapInstanceRef.current = null;
-          }
-        };
-      } catch (error) {
-        console.error("Error initializing map:", error);
-      }
+    // Clean up previous map instance
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.remove();
+      mapInstanceRef.current = null;
     }
-  }, [getColor, selectedNutrient]);
+
+    // Create new map instance
+    const map = L.map(mapRef.current, {
+      center: [41.5, -93.6],
+      zoom: 13,
+      zoomControl: false,
+      scrollWheelZoom: false
+    });
+
+    // Add zoom control to bottom right
+    L.control
+      .zoom({
+        position: "bottomright"
+      })
+      .addTo(map);
+
+    mapInstanceRef.current = map;
+
+    // Add satellite imagery base layer
+    L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      {
+        attribution:
+          "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+        opacity: 0.5
+      }
+    ).addTo(map);
+
+    const nutrient = nutrientInfo[selectedNutrient];
+    const vrLayer = L.geoJSON(vrData, {
+      style: (
+        feature: Feature<Geometry, { [key: string]: number }> | undefined
+      ): L.PathOptions => {
+        if (!feature) return { fillColor: "#ffffff" };
+        const value = feature.properties[nutrient.property];
+        return {
+          fillColor: getColor(value, nutrient),
+          weight: 1,
+          opacity: 0.5,
+          color: "#666",
+          fillOpacity: 0.7
+        };
+      }
+    }).addTo(map);
+
+    // Fit map to field bounds
+    map.fitBounds(vrLayer.getBounds());
+
+    // Cleanup function
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [vrData, selectedNutrient]);
 
   return (
     <div className="space-y-4">
@@ -833,17 +807,19 @@ function NutrientMap() {
         <div className="flex items-center gap-4">
           <select
             value={selectedNutrient}
-            onChange={e => setSelectedNutrient(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-border bg-background text-sm"
+            onChange={e =>
+              setSelectedNutrient(e.target.value as keyof typeof nutrientInfo)
+            }
+            className="px-3 py-2 rounded-lg border border-border bg-background text-sm font-medium"
           >
-            <option value="N">Nitrogen (N)</option>
-            <option value="P">Phosphorus (P)</option>
-            <option value="K">Potassium (K)</option>
+            <option value="phosphorus">Phosphorus (P)</option>
+            <option value="potassium">Potassium (K)</option>
+            <option value="lime">Lime Application</option>
           </select>
         </div>
       </div>
       <div
-        className="relative h-[500px] rounded-2xl overflow-hidden border border-border/50"
+        className="relative h-[500px] rounded-2xl overflow-hidden border border-border/50 shadow-lg"
         style={{ zIndex: 1 }}
       >
         <div
@@ -863,412 +839,13 @@ function NutrientMap() {
         .leaflet-control-zoom a {
           pointer-events: auto;
         }
+        .vr-polygon {
+          transition: fill-color 0.3s ease;
+        }
+        .info.legend {
+          min-width: 150px;
+        }
       `}</style>
-    </div>
-  );
-}
-
-function SampleDistributionMap() {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
-  const markersRef = useRef<any[]>([]);
-
-  useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      mapRef.current &&
-      !mapInstanceRef.current
-    ) {
-      try {
-        const L = window.L;
-        if (!L) {
-          console.error("Leaflet not loaded");
-          return;
-        }
-
-        // Initialize the map with performance optimizations
-        const map = L.map(mapRef.current, {
-          center: FIELD_CENTER,
-          zoom: 16,
-          minZoom: 12,
-          maxZoom: 19,
-          zoomControl: false, // Disable default zoom control, we'll add our own
-          scrollWheelZoom: false, // Disable scroll wheel zoom
-          preferCanvas: true, // Use canvas renderer for better performance
-          renderer: L.canvas(), // Force canvas renderer
-          tap: true, // Enable tap for mobile
-          touchZoom: true // Enable pinch zoom on mobile
-        });
-
-        mapInstanceRef.current = map;
-
-        // Add custom zoom control
-        L.control
-          .zoom({
-            position: "bottomright",
-            zoomInTitle: "Zoom in",
-            zoomOutTitle: "Zoom out"
-          })
-          .addTo(map);
-
-        // Add satellite imagery base layer
-        L.tileLayer(
-          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-          {
-            maxZoom: 19,
-            attribution: "© Esri"
-          }
-        ).addTo(map);
-
-        // Create field boundary layer with styling
-        const fieldLayer = L.geoJSON(fieldData, {
-          style: {
-            color: "#475569",
-            weight: 2,
-            opacity: 0.8,
-            fillColor: "#64748b",
-            fillOpacity: 0.05
-          }
-        }).addTo(map);
-
-        // Create sample points layer group
-        const samplesLayer = L.featureGroup().addTo(map);
-
-        // Batch process markers to improve performance
-        const markerBatch: L.CircleMarker[] = [];
-        soilSampleData.features.forEach(point => {
-          const latlng = [
-            point.geometry.coordinates[1],
-            point.geometry.coordinates[0]
-          ];
-
-          const marker = L.circleMarker(latlng, {
-            radius: 6,
-            fillColor: "#3b82f6",
-            color: "#ffffff",
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.8
-          });
-
-          // Keep simple tooltip without complex HTML
-          marker.bindTooltip(
-            `Sample ${
-              (point.properties as unknown as SampleProperties).SampleID
-            }`,
-            {
-              direction: "top",
-              offset: [0, -8]
-            }
-          );
-
-          markerBatch.push(marker);
-          markersRef.current.push(marker);
-        });
-
-        // Add all markers at once
-        const samplesGroup = L.featureGroup(markerBatch).addTo(map);
-
-        // Add layer controls with simplified options
-        L.control
-          .layers(
-            {},
-            {
-              "Sample Points": samplesGroup
-            },
-            {
-              collapsed: false,
-              position: "bottomright"
-            }
-          )
-          .addTo(map);
-
-        // Fit map to field bounds with padding
-        const bounds = fieldLayer.getBounds();
-        if (bounds.isValid()) {
-          map.fitBounds(bounds.pad(0.1));
-        }
-
-        // Clean up on unmount
-        return () => {
-          if (mapInstanceRef.current) {
-            // Clear marker references
-            markersRef.current = [];
-            mapInstanceRef.current.remove();
-            mapInstanceRef.current = null;
-          }
-        };
-      } catch (error) {
-        console.error("Error initializing map:", error);
-      }
-    }
-  }, []);
-
-  return (
-    <div className="space-y-4">
-      <div
-        className="relative h-[400px] rounded-2xl overflow-hidden border border-border/50"
-        style={{ zIndex: 1 }}
-      >
-        <div
-          ref={mapRef}
-          className="w-full h-full"
-          style={{ background: "#f0f0f0" }}
-        />
-        <style jsx global>{`
-          .leaflet-control-container {
-            pointer-events: auto;
-          }
-          .leaflet-control-zoom {
-            pointer-events: auto;
-          }
-          .leaflet-control-zoom a {
-            pointer-events: auto;
-          }
-        `}</style>
-      </div>
-      <p className="text-sm text-center text-muted-foreground">
-        Each point represents a soil sample location in the field.
-      </p>
-    </div>
-  );
-}
-
-function FertilizerRecommendations() {
-  // Calculate average values from soil data
-  const averages = useMemo(() => {
-    const sum = soilData.reduce(
-      (acc, sample) => ({
-        ph: acc.ph + sample.ph,
-        cec: acc.cec + sample.cec,
-        om: acc.om + sample.om,
-        p: acc.p + sample.p,
-        k: acc.k + sample.k,
-        ca_ppm: acc.ca_ppm + sample.ca_ppm,
-        mg_ppm: acc.mg_ppm + sample.mg_ppm
-      }),
-      {
-        ph: 0,
-        cec: 0,
-        om: 0,
-        p: 0,
-        k: 0,
-        ca_ppm: 0,
-        mg_ppm: 0
-      }
-    );
-
-    const count = soilData.length;
-    return {
-      ph: (sum.ph / count).toFixed(1),
-      cec: (sum.cec / count).toFixed(1),
-      om: (sum.om / count).toFixed(1),
-      p: (sum.p / count).toFixed(0),
-      k: (sum.k / count).toFixed(0),
-      ca_ppm: (sum.ca_ppm / count).toFixed(0),
-      mg_ppm: (sum.mg_ppm / count).toFixed(0)
-    };
-  }, []);
-
-  // Define optimal ranges for each nutrient
-  const optimalRanges = {
-    ph: { min: 6.0, max: 7.0, unit: "" },
-    cec: { min: 10, max: 20, unit: "meq/100g" },
-    om: { min: 2.0, max: 5.0, unit: "%" },
-    p: { min: 30, max: 50, unit: "ppm" },
-    k: { min: 120, max: 200, unit: "ppm" },
-    ca_ppm: { min: 1000, max: 2000, unit: "ppm" },
-    mg_ppm: { min: 120, max: 180, unit: "ppm" }
-  };
-
-  // Calculate recommendations based on averages and optimal ranges
-  const getRecommendation = (
-    nutrient: string,
-    value: number,
-    range: { min: number; max: number }
-  ) => {
-    if (value < range.min) {
-      return "Increase needed";
-    } else if (value > range.max) {
-      return "Reduce applications";
-    }
-    return "Maintain current levels";
-  };
-
-  return (
-    <div className="space-y-8">
-      {/* Summary Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-border/50">
-          <h3 className="text-lg font-semibold mb-4">Current Soil Status</h3>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Parameter</TableHead>
-                <TableHead>Average</TableHead>
-                <TableHead>Optimal Range</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {Object.entries(averages).map(([key, value]) => (
-                <TableRow key={key}>
-                  <TableCell className="font-medium">
-                    {key.toUpperCase().replace("_PPM", "")}
-                  </TableCell>
-                  <TableCell>
-                    {value}{" "}
-                    {optimalRanges[key as keyof typeof optimalRanges].unit}
-                  </TableCell>
-                  <TableCell>
-                    {optimalRanges[key as keyof typeof optimalRanges].min} -{" "}
-                    {optimalRanges[key as keyof typeof optimalRanges].max}{" "}
-                    {optimalRanges[key as keyof typeof optimalRanges].unit}
-                  </TableCell>
-                  <TableCell>
-                    <span
-                      className={
-                        Number(value) <
-                        optimalRanges[key as keyof typeof optimalRanges].min
-                          ? "text-red-500"
-                          : Number(value) >
-                            optimalRanges[key as keyof typeof optimalRanges].max
-                          ? "text-yellow-500"
-                          : "text-green-500"
-                      }
-                    >
-                      {getRecommendation(
-                        key,
-                        Number(value),
-                        optimalRanges[key as keyof typeof optimalRanges]
-                      )}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-
-        {/* Recommendations Card */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-border/50">
-          <h3 className="text-lg font-semibold mb-4">
-            Step-by-Step Recommendations
-          </h3>
-          <div className="space-y-4">
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <h4 className="font-medium text-blue-700 mb-2">
-                1. pH Management
-              </h4>
-              <p className="text-sm text-blue-600">
-                {Number(averages.ph) < 6.0
-                  ? "Apply lime to raise pH. Calculate lime requirement based on buffer pH and CEC."
-                  : Number(averages.ph) > 7.0
-                  ? "Consider acidifying amendments or sulfur application if growing acid-loving crops."
-                  : "pH is in optimal range. Monitor annually."}
-              </p>
-            </div>
-
-            <div className="p-4 bg-green-50 rounded-lg">
-              <h4 className="font-medium text-green-700 mb-2">
-                2. Primary Nutrients (NPK)
-              </h4>
-              <ul className="text-sm text-green-600 space-y-2">
-                <li>
-                  • Phosphorus (P):{" "}
-                  {Number(averages.p) < 30
-                    ? "Apply 80-100 lbs P₂O₅/acre"
-                    : Number(averages.p) < 50
-                    ? "Apply 40-60 lbs P₂O₅/acre"
-                    : "Maintain current levels"}
-                </li>
-                <li>
-                  • Potassium (K):{" "}
-                  {Number(averages.k) < 120
-                    ? "Apply 100-120 lbs K₂O/acre"
-                    : Number(averages.k) < 200
-                    ? "Apply 60-80 lbs K₂O/acre"
-                    : "Maintain current levels"}
-                </li>
-              </ul>
-            </div>
-
-            <div className="p-4 bg-purple-50 rounded-lg">
-              <h4 className="font-medium text-purple-700 mb-2">
-                3. Secondary Nutrients
-              </h4>
-              <ul className="text-sm text-purple-600 space-y-2">
-                <li>
-                  • Calcium:{" "}
-                  {Number(averages.ca_ppm) < 1000
-                    ? "Consider gypsum application"
-                    : "Adequate levels"}
-                </li>
-                <li>
-                  • Magnesium:{" "}
-                  {Number(averages.mg_ppm) < 120
-                    ? "Apply magnesium sulfate"
-                    : "Adequate levels"}
-                </li>
-              </ul>
-            </div>
-
-            <div className="p-4 bg-amber-50 dark:bg-amber-950/50 rounded-lg">
-              <h4 className="font-medium text-amber-700 dark:text-amber-400 mb-2">
-                4. Organic Matter Management
-              </h4>
-              <p className="text-sm text-amber-600 dark:text-amber-300">
-                {Number(averages.om) < 2.0
-                  ? "Implement cover cropping and add organic amendments"
-                  : Number(averages.om) < 3.0
-                  ? "Continue building organic matter through crop residue management"
-                  : "Maintain current organic matter management practices"}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Application Timing Guide */}
-      <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm border border-border/50">
-        <h3 className="text-lg font-semibold mb-4">
-          Seasonal Application Guide
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 bg-orange-50 dark:bg-orange-950/50 rounded-lg">
-            <h4 className="font-medium text-orange-700 dark:text-orange-400 mb-2">
-              Pre-Plant
-            </h4>
-            <ul className="text-sm text-orange-600 dark:text-orange-300 space-y-1">
-              <li>• Apply lime if needed (pH adjustment)</li>
-              <li>• Incorporate P & K fertilizers</li>
-              <li>• Add organic amendments</li>
-            </ul>
-          </div>
-
-          <div className="p-4 bg-emerald-50 dark:bg-emerald-950/50 rounded-lg">
-            <h4 className="font-medium text-emerald-700 dark:text-emerald-400 mb-2">
-              During Growing Season
-            </h4>
-            <ul className="text-sm text-emerald-600 dark:text-emerald-300 space-y-1">
-              <li>• Split N applications</li>
-              <li>• Foliar micronutrient sprays</li>
-              <li>• Fertigation if irrigation available</li>
-            </ul>
-          </div>
-
-          <div className="p-4 bg-cyan-50 dark:bg-cyan-950/50 rounded-lg">
-            <h4 className="font-medium text-cyan-700 dark:text-cyan-400 mb-2">
-              Post-Harvest
-            </h4>
-            <ul className="text-sm text-cyan-600 dark:text-cyan-300 space-y-1">
-              <li>• Soil testing</li>
-              <li>• Cover crop planting</li>
-              <li>• Residue management</li>
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

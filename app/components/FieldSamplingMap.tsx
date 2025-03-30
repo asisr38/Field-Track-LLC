@@ -13,59 +13,52 @@ interface FieldSamplingMapProps {
 const nutrientInfo = {
   phosphorus: {
     displayName: "Phosphorus (P)",
-    property: "P (B1 1_7)",
+    property: "P_M3_ppm",
     unit: "ppm",
-    ranges: [0, 20, 40, 60, 80],
+    ranges: [0, 20, 40, 60, 80], // Based on actual data range: 20-86 ppm
     colors: ["#FF5252", "#FF9800", "#FFEB3B", "#8BC34A", "#4CAF50"]
   },
   potassium: {
     displayName: "Potassium (K)",
-    property: "K (AA)",
+    property: "K_M3_ppm",
     unit: "ppm",
-    ranges: [0, 100, 150, 200, 250],
+    ranges: [0, 30, 40, 50, 60], // Based on actual data range: 30-54 ppm
     colors: ["#F44336", "#FB8C00", "#FFD54F", "#7CB342", "#2E7D32"]
   },
   magnesium: {
     displayName: "Magnesium (Mg)",
-    property: "Mg (AA)",
+    property: "Mg_M3_ppm",
     unit: "ppm",
-    ranges: [0, 200, 300, 400, 500],
+    ranges: [0, 100, 150, 200, 250], // Based on actual data range: 90-181 ppm
     colors: ["#E53935", "#F57C00", "#FDD835", "#8BC34A", "#388E3C"]
   },
   calcium: {
     displayName: "Calcium (Ca)",
-    property: "Ca (AA)",
+    property: "Ca_M3_ppm",
     unit: "ppm",
-    ranges: [0, 1000, 1500, 2000, 2500],
+    ranges: [0, 800, 1000, 1200, 1400], // Based on actual data range: 789-1299 ppm
     colors: ["#D32F2F", "#EF6C00", "#FBC02D", "#7CB342", "#388E3C"]
   },
   ph: {
     displayName: "pH",
-    property: "pH (1_1)",
+    property: "pH_1_1",
     unit: "",
-    ranges: [5.5, 6.0, 6.5, 7.0, 7.5],
+    ranges: [5.5, 6.0, 6.5, 7.0, 7.5], // Based on actual data range: 6.3-7.5
     colors: ["#F44336", "#FF9800", "#4CAF50", "#FF9800", "#F44336"]
   },
   organicMatter: {
     displayName: "Organic Matter",
-    property: "OM (WB)",
+    property: "OM_LOI_per",
     unit: "%",
-    ranges: [0, 1, 2, 3, 4],
+    ranges: [1.5, 1.8, 2.0, 2.2, 2.4], // Based on actual data range: 1.8-2.4%
     colors: ["#FFCDD2", "#FFAB91", "#A5D6A7", "#66BB6A", "#388E3C"]
   },
-  zinc: {
-    displayName: "Zinc (Zn)",
-    property: "Zn (HCL)",
-    unit: "ppm",
-    ranges: [0, 5, 10, 15, 20],
-    colors: ["#EF9A9A", "#FFCC80", "#FFF59D", "#A5D6A7", "#81C784"]
-  },
-  manganese: {
-    displayName: "Manganese (Mn)",
-    property: "Mn (HCl)",
-    unit: "ppm",
-    ranges: [0, 20, 40, 60, 80],
-    colors: ["#FFCDD2", "#FFAB91", "#FFCC80", "#C5E1A5", "#A5D6A7"]
+  cec: {
+    displayName: "CEC",
+    property: "CEC_M3",
+    unit: "meq/100g",
+    ranges: [5, 6, 7, 8, 9], // Based on actual data range: 5.0-8.0 meq/100g
+    colors: ["#FFCDD2", "#FFAB91", "#A5D6A7", "#66BB6A", "#388E3C"]
   }
 };
 
@@ -98,7 +91,9 @@ const FieldSamplingMap = ({
         setError(null);
 
         // Simple approach - just fetch from public directory
-        const boundaryResponse = await fetch("/data/Boundary_Demo.json");
+        const boundaryResponse = await fetch(
+          "/field-sampling/data/field-sampling-boundary.geojson"
+        );
         if (!boundaryResponse.ok) {
           throw new Error(
             `Failed to fetch boundary data: ${boundaryResponse.status}`
@@ -106,7 +101,9 @@ const FieldSamplingMap = ({
         }
         const boundaryJson = await boundaryResponse.json();
 
-        const pointResponse = await fetch("/data/Point_Demo.json");
+        const pointResponse = await fetch(
+          "/field-sampling/data/field-sampling-demo.json"
+        );
         if (!pointResponse.ok) {
           throw new Error(
             `Failed to fetch point data: ${pointResponse.status}`
@@ -133,177 +130,56 @@ const FieldSamplingMap = ({
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
+    let isMounted = true;
+
     // Initialize map if it doesn't exist
     if (!mapRef.current) {
-      // Initialize map
-      const map = L.map(mapContainerRef.current, {
-        minZoom: 14,
-        maxZoom: 20,
-        zoomControl: true,
-        scrollWheelZoom: false, // Disable scroll wheel zoom on mobile
-        doubleClickZoom: true,
-        dragging: true,
-        maxBoundsViscosity: 1.0 // Completely restrict panning outside bounds
-      });
+      try {
+        // Initialize map
+        const map = L.map(mapContainerRef.current, {
+          minZoom: 14,
+          maxZoom: 20,
+          zoomControl: true,
+          scrollWheelZoom: false, // Disable scroll wheel zoom on mobile
+          doubleClickZoom: true,
+          dragging: true,
+          maxBoundsViscosity: 1.0 // Completely restrict panning outside bounds
+        });
 
-      // Enable scroll wheel zoom only on desktop
-      if (window.innerWidth >= 768) {
-        map.scrollWheelZoom.enable();
-      }
-
-      mapRef.current = map;
-
-      // Add satellite imagery tile layer
-      L.tileLayer(
-        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        {
-          attribution:
-            "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-        }
-      ).addTo(map);
-
-      // Add scale control
-      L.control
-        .scale({ position: "bottomleft", imperial: true, metric: true })
-        .addTo(map);
-
-      // Add custom popup styles to the document
-      const style = document.createElement("style");
-      style.innerHTML = `
-      .custom-popup .leaflet-popup-content-wrapper {
-        border-radius: 8px;
-        padding: 0;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        overflow: hidden;
-      }
-      
-      .custom-popup .leaflet-popup-content {
-        margin: 0;
-        padding: 0;
-        line-height: 1.5;
-        width: 100% !important;
-        max-width: 280px;
-      }
-      
-      .custom-popup .leaflet-popup-tip {
-        background-color: var(--popup-bg);
-      }
-      
-      .field-popup, .sample-popup {
-        font-family: system-ui, -apple-system, sans-serif;
-        font-size: 13px;
-        color: var(--popup-text);
-        background-color: var(--popup-bg);
-        padding: 16px;
-        max-height: 400px;
-        overflow-y: auto;
-        scrollbar-width: thin;
-        scrollbar-color: var(--popup-border) transparent;
-      }
-      
-      /* Scrollbar styling for webkit browsers */
-      .field-popup::-webkit-scrollbar, .sample-popup::-webkit-scrollbar {
-        width: 6px;
-      }
-      
-      .field-popup::-webkit-scrollbar-track, .sample-popup::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      
-      .field-popup::-webkit-scrollbar-thumb, .sample-popup::-webkit-scrollbar-thumb {
-        background-color: var(--popup-border);
-        border-radius: 6px;
-      }
-      
-      .field-popup-title, .sample-popup-title {
-        margin: 0 0 12px;
-        font-size: 16px;
-        font-weight: 600;
-        color: var(--popup-title);
-        border-bottom: 1px solid var(--popup-border);
-        padding-bottom: 8px;
-        position: sticky;
-        top: 0;
-        background-color: var(--popup-bg);
-        z-index: 1;
-        padding-top: 4px;
-      }
-      
-      .field-popup-grid, .sample-popup-card-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-      }
-      
-      .field-popup-label, .sample-popup-label {
-        color: var(--popup-label);
-        font-size: 12px;
-      }
-      
-      .field-popup-value, .sample-popup-value {
-        text-align: right;
-        font-weight: 500;
-        color: var(--popup-value);
-      }
-      
-      .sample-popup-section {
-        margin-bottom: 12px;
-      }
-      
-      /* Mobile optimizations */
-      @media (max-width: 640px) {
-        .custom-popup .leaflet-popup-content {
-          max-width: 240px;
-        }
-        
-        .field-popup, .sample-popup {
-          font-size: 12px;
-          padding: 12px;
-        }
-        
-        .field-popup-title, .sample-popup-title {
-          font-size: 14px;
-          margin-bottom: 8px;
-        }
-        
-        .field-popup-label, .sample-popup-label {
-          font-size: 11px;
-        }
-      }
-    `;
-      document.head.appendChild(style);
-
-      // Handle window resize to adjust map
-      const handleResize = () => {
-        map.invalidateSize();
-        // Enable/disable scroll wheel zoom based on screen width
+        // Enable scroll wheel zoom only on desktop
         if (window.innerWidth >= 768) {
           map.scrollWheelZoom.enable();
-        } else {
-          map.scrollWheelZoom.disable();
         }
-      };
 
-      window.addEventListener("resize", handleResize);
+        mapRef.current = map;
 
-      // Wait for the map to be fully initialized
-      setTimeout(() => {
-        // Force a map redraw to ensure it's fully initialized
-        map.invalidateSize();
+        // Add satellite imagery tile layer
+        L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          {
+            attribution:
+              "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+          }
+        ).addTo(map);
 
-        // If data is already loaded, add it to the map
-        if (boundaryData && pointData && !isLoading) {
-          addDataToMap(map, boundaryData, pointData, nutrientType);
-        }
-      }, 500);
+        // Add scale control
+        L.control
+          .scale({ position: "bottomleft", imperial: true, metric: true })
+          .addTo(map);
 
-      // Cleanup function
-      return () => {
-        window.removeEventListener("resize", handleResize);
-        if (style.parentNode) {
-          style.parentNode.removeChild(style);
-        }
-      };
+        // Wait for the map to be fully initialized
+        setTimeout(() => {
+          if (isMounted) {
+            map.invalidateSize();
+            if (boundaryData && pointData && !isLoading) {
+              addDataToMap(map, boundaryData, pointData, nutrientType);
+            }
+          }
+        }, 100);
+      } catch (error) {
+        console.error("Error initializing map:", error);
+        setError("Failed to initialize map");
+      }
     }
 
     // Update map when data is loaded
@@ -311,12 +187,31 @@ const FieldSamplingMap = ({
       addDataToMap(mapRef.current, boundaryData, pointData, nutrientType);
     }
 
-    // Cleanup on unmount
+    // Cleanup function
     return () => {
-      if (mapRef.current && !document.body.contains(mapContainerRef.current)) {
-        mapRef.current.remove();
-        mapRef.current = null;
-        layersRef.current = {};
+      isMounted = false;
+
+      // Only attempt cleanup if the map exists and is properly initialized
+      if (mapRef.current && mapRef.current.getContainer()) {
+        try {
+          // Remove layers first
+          if (layersRef.current.boundaryLayer) {
+            mapRef.current.removeLayer(layersRef.current.boundaryLayer);
+          }
+          if (layersRef.current.pointsLayer) {
+            mapRef.current.removeLayer(layersRef.current.pointsLayer);
+          }
+          if (layersRef.current.legend) {
+            mapRef.current.removeControl(layersRef.current.legend);
+          }
+
+          // Remove the map instance
+          mapRef.current.remove();
+          mapRef.current = null;
+          layersRef.current = {};
+        } catch (error) {
+          console.error("Error cleaning up map:", error);
+        }
       }
     };
   }, [nutrientType, isLoading, boundaryData, pointData]);
@@ -384,9 +279,10 @@ const FieldSamplingMap = ({
       map.removeControl(layersRef.current.legend);
     }
 
-    // Get the selected nutrient info
+    // Get the selected nutrient info with validation
     const selectedNutrient =
-      nutrientInfo[nutrientType as keyof typeof nutrientInfo];
+      nutrientInfo[nutrientType as keyof typeof nutrientInfo] ||
+      nutrientInfo.phosphorus;
 
     // Create a function to get color based on nutrient value
     const getNutrientColor = (value: number) => {
@@ -426,7 +322,7 @@ const FieldSamplingMap = ({
       div.appendChild(title);
 
       // Add color scale
-      const { ranges, colors, labels } = selectedNutrient;
+      const { ranges, colors } = selectedNutrient;
 
       for (let i = 0; i < ranges.length - 1; i++) {
         const row = document.createElement("div");
@@ -498,86 +394,53 @@ const FieldSamplingMap = ({
             const props = feature.properties;
             const sampleDate = props.SampleDate ? "October 12, 2024" : "N/A";
 
-            layer.bindPopup(`
-              <div class="sample-popup">
-                <h3 class="sample-popup-title">Sample ${
-                  props.SampleID || props.ID || "N/A"
-                }</h3>
+            layer.bindPopup(
+              `
+              <div class="p-3 min-w-[300px]">
+                <div class="font-bold text-lg mb-2">Sample ${props.SampleID}</div>
                 
-                <div class="sample-popup-card">
-                  <div class="sample-popup-card-title">Primary Nutrients (NPK)</div>
-                  <div class="sample-popup-card-grid">
-                    <div class="sample-popup-label">Nitrogen (N):</div>
-                    <div class="sample-popup-value">${
-                      props["N"] ||
-                      props["NO3-N"] ||
-                      props["NH4-N"] ||
-                      props["TotalN"] ||
-                      "Not tested"
-                    } ${props["N_Unit"] || props["N_Units"] || "ppm"}</div>
-                    
-                    <div class="sample-popup-label">Phosphorus (P):</div>
-                    <div class="sample-popup-value">${
-                      props["P (B1 1_7)"] ||
-                      props["P"] ||
-                      props["P_Bray"] ||
-                      props["P_Olsen"] ||
-                      "Not tested"
-                    } ${props["P_Unit"] || "ppm"}</div>
-                    
-                    <div class="sample-popup-label">Potassium (K):</div>
-                    <div class="sample-popup-value">${
-                      props["K (AA)"] || props["K"] || "Not tested"
-                    } ${props["K (AA)U"] || props["K_Unit"] || "ppm"}</div>
+                <div class="space-y-3">
+                  <div class="bg-gray-50 p-2 rounded">
+                    <div class="font-semibold text-sm mb-1">Primary Nutrients</div>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                      <div>P:</div>
+                      <div>${props.P_M3_ppm} ppm</div>
+                      <div>K:</div>
+                      <div>${props.K_M3_ppm} ppm</div>
+                    </div>
                   </div>
-                </div>
-                
-                <div class="sample-popup-card">
-                  <div class="sample-popup-card-title">Soil Properties</div>
-                  <div class="sample-popup-card-grid">
-                    <div class="sample-popup-label">pH:</div>
-                    <div class="sample-popup-value">${
-                      props["pH (1_1)"] || props["pH"] || "Not tested"
-                    }</div>
-                    
-                    <div class="sample-popup-label">Organic Matter:</div>
-                    <div class="sample-popup-value">${
-                      props["OM (WB)"] || props["OM"] || "Not tested"
-                    }${props["OM (WB)U"] || props["OM_Unit"] || "%"}</div>
-                    
-                    <div class="sample-popup-label">CEC:</div>
-                    <div class="sample-popup-value">${
-                      props["CEC (AA)"] || props["CEC"] || "Not tested"
-                    } ${props["CEC (AA)U"] || "meq/100g"}</div>
-                    
-                    <div class="sample-popup-label">Depth:</div>
-                    <div class="sample-popup-value">${
-                      props.Depth || "Not specified"
-                    } ${props.DepthUnits || "in"}</div>
+
+                  <div class="bg-gray-50 p-2 rounded">
+                    <div class="font-semibold text-sm mb-1">Soil Properties</div>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                      <div>pH:</div>
+                      <div>${props.pH_1_1}</div>
+                      <div>OM:</div>
+                      <div>${props.OM_LOI_per}%</div>
+                      <div>CEC:</div>
+                      <div>${props.CEC_M3} meq/100g</div>
+                      <div>Depth:</div>
+                      <div>${props.Depth_in} inches</div>
+                    </div>
                   </div>
-                </div>
-                
-                <div class="sample-popup-card">
-                  <div class="sample-popup-card-title">Secondary Nutrients</div>
-                  <div class="sample-popup-card-grid">
-                    <div class="sample-popup-label">Calcium (Ca):</div>
-                    <div class="sample-popup-value">${
-                      props["Ca (AA)"] || props["Ca"] || "Not tested"
-                    } ${props["Ca (AA)U"] || props["Ca_Unit"] || "ppm"}</div>
-                    
-                    <div class="sample-popup-label">Magnesium (Mg):</div>
-                    <div class="sample-popup-value">${
-                      props["Mg (AA)"] || props["Mg"] || "Not tested"
-                    } ${props["Mg (AA)U"] || props["Mg_Unit"] || "ppm"}</div>
-                    
-                    <div class="sample-popup-label">Sulfur (S):</div>
-                    <div class="sample-popup-value">${
-                      props["S"] || props["SO4-S"] || "Not tested"
-                    } ${props["S_Unit"] || "ppm"}</div>
+
+                  <div class="bg-gray-50 p-2 rounded">
+                    <div class="font-semibold text-sm mb-1">Secondary Nutrients</div>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                      <div>Ca:</div>
+                      <div>${props.Ca_M3_ppm} ppm</div>
+                      <div>Mg:</div>
+                      <div>${props.Mg_M3_ppm} ppm</div>
+                    </div>
                   </div>
                 </div>
               </div>
-            `);
+            `,
+              {
+                className: "custom-popup",
+                maxWidth: 350
+              }
+            );
           }
         }
       }).addTo(map);
@@ -590,7 +453,7 @@ const FieldSamplingMap = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" key={nutrientType}>
       <div
         className="relative h-[600px] rounded-2xl overflow-hidden border border-border/50"
         style={{ zIndex: 1 }}
@@ -628,11 +491,20 @@ const FieldSamplingMap = ({
           .leaflet-control-zoom a {
             pointer-events: auto;
           }
+          .custom-popup .leaflet-popup-content-wrapper {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+          .custom-popup .leaflet-popup-content {
+            margin: 0;
+            padding: 0;
+          }
+          .custom-popup .leaflet-popup-tip {
+            background: white;
+          }
         `}</style>
       </div>
-      <p className="text-sm text-center text-muted-foreground">
-        Each point represents a soil sample location in the field.
-      </p>
     </div>
   );
 };

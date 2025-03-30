@@ -5,8 +5,8 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import fieldData from "../data/Boundary_Demo.json";
-import trialData from "../data/Point_Demo.json";
+import fieldData from "../../public/field-sampling/data/field-sampling-demo.json";
+import trialData from "../../public/field-sampling/data/field-sampling-demo.json";
 
 // Define interfaces for trial data
 interface TrialProperties {
