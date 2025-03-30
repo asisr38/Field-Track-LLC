@@ -592,8 +592,8 @@ export default function OnFarmResearchPage() {
   const [boxPlotData, setBoxPlotData] = useState<any[]>([]);
   const [combinedData, setCombinedData] = useState<any[]>([]);
   const [onFarmView, setOnFarmView] = useState<
-    "treatment" | "replication" | "yield"
-  >("treatment");
+    "product" | "replication" | "yield"
+  >("product");
   const [selectedAnalysisTab, setSelectedAnalysisTab] =
     useState("product-efficacy");
   const { theme } = useTheme();
@@ -1165,13 +1165,13 @@ export default function OnFarmResearchPage() {
                     <div className="grid grid-cols-2 sm:flex sm:flex-row sm:items-center gap-1 sm:space-x-0">
                       <button
                         className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-bl-md sm:rounded-none ${
-                          onFarmView === "treatment"
+                          onFarmView === "product"
                             ? "bg-primary text-white"
                             : "bg-muted text-muted-foreground"
                         }`}
-                        onClick={() => setOnFarmView("treatment")}
+                        onClick={() => setOnFarmView("product")}
                       >
-                        Treatment
+                        Product
                       </button>{" "}
                       <button
                         className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-tr-md sm:rounded-none ${

@@ -14,7 +14,7 @@ const nutrientInfo = {
   phosphorus: {
     displayName: "Phosphorus (P)",
     property: "P_M3_ppm",
-    unit: "ppm",
+    unit: "lbs/acre",
     ranges: [0, 20, 40, 60, 80], // Based on actual data range: 20-86 ppm
     colors: ["#FF5252", "#FF9800", "#FFEB3B", "#8BC34A", "#4CAF50"]
   },
@@ -28,7 +28,7 @@ const nutrientInfo = {
   magnesium: {
     displayName: "Magnesium (Mg)",
     property: "Mg_M3_ppm",
-    unit: "ppm",
+    unit: "lbs/acre",
     ranges: [0, 100, 150, 200, 250], // Based on actual data range: 90-181 ppm
     colors: ["#E53935", "#F57C00", "#FDD835", "#8BC34A", "#388E3C"]
   },
@@ -137,8 +137,8 @@ const FieldSamplingMap = ({
       try {
         // Initialize map
         const map = L.map(mapContainerRef.current, {
-          minZoom: 14,
-          maxZoom: 20,
+          minZoom: 16,
+          maxZoom: 18,
           zoomControl: true,
           scrollWheelZoom: false, // Disable scroll wheel zoom on mobile
           doubleClickZoom: true,
@@ -157,8 +157,7 @@ const FieldSamplingMap = ({
         L.tileLayer(
           "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
           {
-            attribution:
-              "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+            attribution: "@Esri"
           }
         ).addTo(map);
 

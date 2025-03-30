@@ -942,6 +942,14 @@ export default function SimpleSensePage() {
                                 "NDVI"
                               ]}
                               labelFormatter={label => `Timing: ${label}`}
+                              contentStyle={{
+                                borderColor: "var(--border)",
+                                backgroundColor: "var(--card)",
+                                color: "var(--foreground)"
+                              }}
+                              labelStyle={{
+                                color: "var(--muted-foreground)"
+                              }}
                             />
                             <Legend verticalAlign="top" height={36} />
                             {(() => {

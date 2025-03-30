@@ -10,7 +10,7 @@ import { PathOptions, LatLngBounds, latLng, PointTuple } from "leaflet";
 import { Card } from "@/components/ui/card";
 
 export type OnFarmTrialMapProps = {
-  view: "treatment" | "replication" | "product" | "yield";
+  view: "product" | "replication" | "yield";
 };
 
 // Calculate bounds from the GeoJSON data
@@ -46,15 +46,15 @@ const getPlotColor = (
   if (!feature.properties) return "#808080";
 
   switch (view) {
-    case "treatment":
-      // Colors for Treatment values
-      const treatmentColors: { [key: string]: string } = {
-        "Treatment 1": "#e6194B",
-        "Treatment 2": "#3cb44b",
-        "Treatment 3": "#ffe119",
-        "Treatment 4": "#4363d8"
+    case "product":
+      // Colors for Product values
+      const productColorMap: { [key: string]: string } = {
+        "Product A": "#e6194B",
+        "Product B": "#3cb44b",
+        "Product C": "#ffe119",
+        Untreated: "#808080"
       };
-      return treatmentColors[feature.properties.Treatment] || "#808080";
+      return productColorMap[feature.properties.Product] || "#808080";
 
     case "replication":
       // Colors for Replication values 1-4
@@ -65,16 +65,6 @@ const getPlotColor = (
         4: "#911eb4"
       };
       return replicationColors[feature.properties.Replicatio] || "#808080";
-
-    case "product":
-      // Colors for different products
-      const productColors: { [key: string]: string } = {
-        "Product A": "#e6194B",
-        "Product B": "#3cb44b",
-        "Product C": "#ffe119",
-        Untreated: "#808080"
-      };
-      return productColors[feature.properties.Product] || "#808080";
 
     case "yield":
       // Color based on yield values - using a green (high) to yellow (medium) to red (low) gradient
@@ -175,12 +165,12 @@ const Legend = ({ view }: { view: OnFarmTrialMapProps["view"] }) => {
   let items = [];
 
   switch (view) {
-    case "treatment":
+    case "product":
       items = [
-        { label: "Treatment 1", color: "#e6194B" },
-        { label: "Treatment 2", color: "#3cb44b" },
-        { label: "Treatment 3", color: "#ffe119" },
-        { label: "Treatment 4", color: "#4363d8" }
+        { label: "Product A", color: "#e6194B" },
+        { label: "Product B", color: "#3cb44b" },
+        { label: "Product C", color: "#ffe119" },
+        { label: "Untreated", color: "#808080" }
       ];
       break;
     case "replication":
@@ -189,14 +179,6 @@ const Legend = ({ view }: { view: OnFarmTrialMapProps["view"] }) => {
         { label: "Replication 2", color: "#3cb44b" },
         { label: "Replication 3", color: "#f58231" },
         { label: "Replication 4", color: "#911eb4" }
-      ];
-      break;
-    case "product":
-      items = [
-        { label: "Product A", color: "#e6194B" },
-        { label: "Product B", color: "#3cb44b" },
-        { label: "Product C", color: "#ffe119" },
-        { label: "Untreated", color: "#808080" }
       ];
       break;
     case "yield":
@@ -211,9 +193,8 @@ const Legend = ({ view }: { view: OnFarmTrialMapProps["view"] }) => {
   }
 
   const legendTitle = {
-    treatment: "Treatments",
-    replication: "Replications",
     product: "Products",
+    replication: "Replications",
     yield: "Yield (bu/ac)"
   }[view];
 
@@ -335,9 +316,9 @@ const MapWrapper = ({ view }: OnFarmTrialMapProps) => {
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px;">
                       <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px;">
-                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Treatment</div>
+                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Product</div>
                         <div style="font-weight: 500; color: #111827; margin-top: 2px;">${
-                          props.Treatment
+                          props.Product
                         }</div>
                       </div>
                       
@@ -350,9 +331,9 @@ const MapWrapper = ({ view }: OnFarmTrialMapProps) => {
                     </div>
                     
                     <div style="margin-bottom: 8px; background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px;">
-                      <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Product</div>
+                      <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Treatment</div>
                       <div style="font-weight: 500; color: #111827; margin-top: 2px;">${
-                        props.Product
+                        props.Treatment || "N/A"
                       }</div>
                     </div>
                     
@@ -365,7 +346,7 @@ const MapWrapper = ({ view }: OnFarmTrialMapProps) => {
                       <div style="background-color: #ecfdf5; padding: 6px 8px; border-radius: 4px;">
                         <div style="color: #065f46; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Yield</div>
                         <div style="font-weight: 600; color: #047857; margin-top: 2px;">${
-                          props.Yield
+                          props.Product_Yld || props.Yield
                         } bu/ac</div>
                       </div>
                     </div>

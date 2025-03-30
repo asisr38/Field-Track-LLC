@@ -356,7 +356,7 @@ function FieldMap() {
         const map = L.map(mapRef.current, {
           center: FIELD_CENTER,
           zoom: 16,
-          minZoom: 12,
+          minZoom: 15,
           maxZoom: 19,
           zoomControl: false, // Disable default zoom control, we'll add our own
           scrollWheelZoom: false, // Disable scroll wheel zoom
@@ -383,8 +383,7 @@ function FieldMap() {
             "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
             {
               maxZoom: 19,
-              attribution:
-                "© Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+              attribution: "© Esri"
             }
           ),
           OpenStreetMap: L.tileLayer(
@@ -398,8 +397,7 @@ function FieldMap() {
             "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
             {
               maxZoom: 19,
-              attribution:
-                "© Esri — Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, and the GIS User Community"
+              attribution: "© Esri"
             }
           )
         };
@@ -745,29 +743,38 @@ function NutrientMap() {
       mapInstanceRef.current = null;
     }
 
-    // Create new map instance
+    // Create new map instance with restricted bounds
     const map = L.map(mapRef.current, {
       center: [41.5, -93.6],
       zoom: 13,
+      minZoom: 16,
+      maxZoom: 19,
       zoomControl: false,
-      scrollWheelZoom: false
+      scrollWheelZoom: false,
+      dragging: false,
+      doubleClickZoom: false,
+      boxZoom: false,
+      keyboard: false,
+      preferCanvas: true,
+      renderer: L.canvas()
     });
+
+    mapInstanceRef.current = map;
 
     // Add zoom control to bottom right
     L.control
       .zoom({
-        position: "bottomright"
+        position: "bottomright",
+        zoomInTitle: "Zoom in",
+        zoomOutTitle: "Zoom out"
       })
       .addTo(map);
-
-    mapInstanceRef.current = map;
 
     // Add satellite imagery base layer
     L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
       {
-        attribution:
-          "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+        attribution: "@Esri",
         opacity: 0.5
       }
     ).addTo(map);
@@ -781,16 +788,59 @@ function NutrientMap() {
         const value = feature.properties[nutrient.property];
         return {
           fillColor: getColor(value, nutrient),
-          weight: 1,
-          opacity: 0.5,
-          color: "#666",
-          fillOpacity: 0.7
+          weight: 0, // Remove boundaries
+          opacity: 0,
+          fillOpacity: 1
         };
       }
     }).addTo(map);
 
-    // Fit map to field bounds
-    map.fitBounds(vrLayer.getBounds());
+    // Fit map to field bounds with padding
+    const bounds = vrLayer.getBounds();
+    if (bounds.isValid()) {
+      map.fitBounds(bounds.pad(0.1));
+    }
+
+    // Restrict map bounds
+    map.setMaxBounds(bounds);
+    map.setMinZoom(16);
+    map.setMaxZoom(17);
+    // Add legend
+    const legend = new L.Control({ position: "topright" });
+    legend.onAdd = function (map: L.Map): HTMLElement {
+      const div = L.DomUtil.create(
+        "div",
+        "info legend bg-white p-3 rounded-lg shadow-lg border border-gray-200"
+      );
+      const ranges = nutrient.ranges;
+      const colors = nutrient.colors;
+
+      let html = `
+        <div class="text-sm font-bold mb-2 text-gray-800">${nutrient.displayName}</div>
+        <div class="text-xs text-gray-600 mb-2">${nutrient.unit}</div>
+      `;
+
+      for (let i = 0; i < ranges.length; i++) {
+        const from = ranges[i];
+        const to = ranges[i + 1];
+        const label =
+          selectedNutrient === "lime"
+            ? from === 0
+              ? "Not Applied"
+              : "Applied"
+            : `${from}${to ? "&ndash;" + to : "+"}`;
+
+        html += `
+          <div class="flex items-center gap-2 my-1">
+            <i style="background:${colors[i]}; width: 20px; height: 20px; display: inline-block; border: 1px solid #ccc;"></i>
+            <span class="text-xs font-medium">${label}</span>
+          </div>`;
+      }
+
+      div.innerHTML = html;
+      return div;
+    };
+    legend.addTo(map);
 
     // Cleanup function
     return () => {
@@ -800,6 +850,16 @@ function NutrientMap() {
       }
     };
   }, [vrData, selectedNutrient]);
+
+  // Add a separate cleanup effect
+  useEffect(() => {
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <div className="space-y-4">
