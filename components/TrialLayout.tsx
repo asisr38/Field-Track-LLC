@@ -17,10 +17,10 @@ import parseGeoraster from "georaster";
 import GeoRasterLayer from "georaster-layer-for-leaflet";
 
 export type TrialLayoutProps = {
-  view: "treatment" | "replication";
+  view?: "treatment" | "replication";
 };
 
-export default function TrialLayout({ view }: TrialLayoutProps) {
+export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
   const [plotRaster, setPlotRaster] = useState<any>(null);
   const [variMapRaster, setVariMapRaster] = useState<any>(null);
 
@@ -150,14 +150,19 @@ export default function TrialLayout({ view }: TrialLayoutProps) {
     useEffect(() => {
       const bounds = calculateBounds();
       if (bounds.isValid()) {
-        const paddedBounds = bounds.pad(0.1);
+        // Add a very small buffer around bounds (roughly 100m)
+        const paddedBounds = bounds.pad(0.001);
         map.setMaxBounds(paddedBounds);
-        const padding: PointTuple = isMobile ? [-20, -20] : [10, 10];
+        const padding: PointTuple = isMobile ? [10, 10] : [5, 5];
         map.fitBounds(bounds, {
           padding,
           animate: true,
-          maxZoom: isMobile ? 18 : 20
+          maxZoom: isMobile ? 19 : 20
         });
+
+        // Set initial zoom level and minimum zoom
+        map.setMinZoom(19);
+        map.setZoom(isMobile ? 19 : 20);
       }
     }, [map, isMobile]);
 
@@ -237,11 +242,9 @@ export default function TrialLayout({ view }: TrialLayoutProps) {
 
       // Add the layer to the map
       map.addLayer(layer);
-      console.log(`Added ${isVariMap ? "VARI Map" : "V2 Raster"} layer`, layer);
 
       // Cleanup
       return () => {
-        console.log(`Removing ${isVariMap ? "VARI Map" : "V2 Raster"} layer`);
         map.removeLayer(layer);
       };
     }, [map, georaster, isVariMap]);
@@ -281,10 +284,11 @@ export default function TrialLayout({ view }: TrialLayoutProps) {
             : String(feature.properties?.Rep || "");
 
         return {
-          fillColor: getPlotColor(property, view),
-          weight: 2,
-          color: "white",
-          fillOpacity: 0.7
+          fillColor: "transparent",
+          weight: 3,
+          color: getPlotColor(property, view as "treatment" | "replication"),
+          fillOpacity: 0,
+          opacity: 0.8
         };
       },
       [view]
@@ -302,14 +306,14 @@ export default function TrialLayout({ view }: TrialLayoutProps) {
         boxZoom={false}
         keyboard={false}
         maxZoom={isMobile ? 19 : 20}
-        minZoom={isMobile ? 17 : 18}
-        maxBounds={bounds.pad(0.1)}
+        minZoom={19}
+        maxBounds={bounds.pad(0.001)}
         maxBoundsViscosity={1.0}
-        zoom={18}
+        zoom={isMobile ? 19 : 20}
       >
         <VectorPaneSetup />
 
-        {/* Base satellite layer */}
+        {/* Base layer */}
         <TileLayer
           attribution="© Esri"
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
@@ -377,7 +381,7 @@ export default function TrialLayout({ view }: TrialLayoutProps) {
                   className="rounded text-blue-600 border-gray-300 dark:border-gray-600 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-800 dark:text-gray-200">
-                  VARI Map
+                  NDVI
                 </span>
               </label>
             </div>

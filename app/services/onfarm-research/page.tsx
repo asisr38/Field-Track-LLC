@@ -324,8 +324,8 @@ const ProductEfficacyTab = ({
       </div>
 
       <span className="text-sm text-muted-foreground block mb-8">
-        Compare treatment performance across all trial plots to determine which
-        treatment provide the best results in your specific field conditions.
+        Compare performance across treatments to provide the results in your
+        specific field conditions.
       </span>
 
       <div className="grid lg:grid-cols-5 gap-6">
@@ -1094,15 +1094,14 @@ export default function OnFarmResearchPage() {
         </div>
       </section>
       <div className="container mx-auto px-4 pb-12">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           <Card className="p-5 hover:border-primary/50 transition-colors">
             <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
               <Beaker className="w-6 h-6 text-primary" />
             </div>
             <h5 className="font-medium text-base mb-2">Rate Testing</h5>
             <p className="text-sm text-muted-foreground">
-              Compare different application rates for inputs like fertilizers,
-              herbicides, or pesticides.
+              Compare different application rates for inputs.
             </p>
           </Card>
 
@@ -1120,21 +1119,9 @@ export default function OnFarmResearchPage() {
             <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
               <SplitSquareHorizontal className="w-6 h-6 text-primary" />
             </div>
-            <h5 className="font-medium text-base mb-2">Product Comparisons</h5>
+            <h5 className="font-medium text-base mb-2">Product Comparisons</h5>{" "}
             <p className="text-sm text-muted-foreground">
-              Conduct side-by-side trials of agricultural products such as
-              treatments or amendments.
-            </p>
-          </Card>
-
-          <Card className="p-5 hover:border-primary/50 transition-colors">
-            <div className="bg-muted/20 rounded-full w-12 h-12 mb-4 flex items-center justify-center">
-              <SlidersHorizontal className="w-6 h-6 text-primary" />
-            </div>
-            <h5 className="font-medium text-base mb-2">Seeding Rates</h5>
-            <p className="text-sm text-muted-foreground">
-              Test different planting densities to identify the optimal
-              approach.
+              Test standalone or combinations of ag products, timings, etc.
             </p>
           </Card>
         </div>
@@ -1209,10 +1196,10 @@ export default function OnFarmResearchPage() {
                     <div className="space-y-2">
                       <DataRow label="Location" value="Southeast Missouri" />
                       <DataRow label="Crop" value="Corn" />
-                      <DataRow label="Planting Date" value="April 2, 2023" />
+                      <DataRow label="Planting Date" value="April 2, 2024" />
                       <DataRow
                         label="Harvest Date"
-                        value="September 15, 2023"
+                        value="September 15, 2024"
                       />
                       <DataRow label="Number of Plots" value={12} />
                     </div>
@@ -1265,8 +1252,7 @@ export default function OnFarmResearchPage() {
                     <div className="space-y-2">
                       <DataRow label="Average Yield" value="222.1 bu/ac" />
                       <DataRow label="Yield Range" value="198 - 233 bu/ac" />
-                      <DataRow label="Top Treatment" value="Treatment 3" />
-                      <DataRow label="Top Product" value="Product B" />
+                      <DataRow label="Top Treatment" value="Product B" />
                     </div>
                   </DataCard>
                 </div>
@@ -1597,9 +1583,9 @@ export default function OnFarmResearchPage() {
                           </h3>
                         </div>
                         <p className="text-sm text-muted-foreground mb-4">
-                          This chart shows the average yield achieved at each
-                          seed rate, helping identify which planting density
-                          produces the highest overall yields.
+                          This chart shows the average yield for each seed rate,
+                          helping identify which planting density produces the
+                          highest overall yields.
                         </p>
                         <div className="h-[350px] sm:h-[400px]">
                           <ResponsiveContainer width="100%" height="100%">

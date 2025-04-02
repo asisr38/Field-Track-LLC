@@ -8,13 +8,13 @@ const services: ServiceItem[] = [
   {
     title: "SimpleSense",
     description:
-      "A research-grade aerial imagery pipeline optimized for plot trials. Leveraging calibrated reflectance data and machine learning, we deliver precise canopy metrics, plant height measurements, and temporal analysis with rigorous QA/QC. Our publication-quality reports include advanced derivatives like canopy cover, plant consistency, and supervised classification.",
+      "Our research-grade aerial imagery pipeline integrates traditional image processing with machine learning to deliver plot-level canopy metrics. Leveraging calibrated reflectance data, we produce publication-ready reports including derivatives such as vegetation indices, canopy cover, uniformity assessments, and supervised classifications.",
     icon: <LandPlot className="w-5 h-5 sm:w-6 sm:h-6" />,
     image: "/simple-sense/simplesense.png",
     tags: [
       "Calibrated Reflectance",
       "Machine Learning Analysis",
-      "Plot-Level Precision"
+      "Plot-Level SimpleSense"
     ],
     meta: "Remote Sensing Pipeline for Plot Research",
     cta: "Explore More",
@@ -23,14 +23,10 @@ const services: ServiceItem[] = [
   {
     title: "On-Farm Research",
     description:
-      "Comprehensive field trial services with advanced spatial analytics. From experimental design to harvest data collection, we help validate agricultural practices using Surgo soil data integration and detailed performance analysis.",
+      "We collaborate with growers to conduct real-world agronomic research trials, utilizing on-farm equipment technology to collect data. Our efforts provide actionable insights that inform practical agronomic decisions.",
     icon: <Microscope className="w-5 h-5 sm:w-6 sm:h-6" />,
     image: "/onfarm/onfarmmain.png",
-    tags: [
-      "Spatial Trial Design",
-      "Variable Rate Testing",
-      "Soil-Specific Analysis"
-    ],
+    tags: ["Product Efficacy", "Rate Testing", "Validate Practices"],
     meta: "Research & Analytics",
     cta: "Discover More",
     link: "/services/onfarm-research"
@@ -38,10 +34,10 @@ const services: ServiceItem[] = [
   {
     title: "Field Services",
     description:
-      "Professional field sampling services that give you the full picture of your land's health. From soil conditions to crop status, we collect the data that drives better decisions with scientific rigor.",
+      "Field sampling services that deliver comprehensive insights into land health. From soil conditions to crop performance, we collect data to support informed and effective agricultural decisions.",
     icon: <TestTube className="w-5 h-5 sm:w-6 sm:h-6" />,
     image: "/field-sampling/sample.png",
-    tags: ["Soil Analysis", "Crop Health Assessment", "Resource Mapping"],
+    tags: ["Soil Analysis", "Resource Mapping"],
     meta: "Professional Services",
     cta: "Learn More",
     link: "/services/field-sampling"
@@ -64,7 +60,7 @@ export default function Services() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-2"
+            className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4 sm:px-6"
           >
             Field Track LLC specializes in three key areas: advanced aerial
             imagery analysis through SimpleSense, comprehensive on-farm research

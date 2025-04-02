@@ -240,7 +240,7 @@ export default function SimpleSensePage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const plotData = demoPlotData.features[0].properties;
   const [layoutView, setLayoutView] = useState<"treatment" | "replication">(
-    "replication"
+    "treatment"
   );
 
   // Animation interval for growth stages
@@ -273,7 +273,7 @@ export default function SimpleSensePage() {
               Simple<span className="text-primary">Sense</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Our research-grade* analysis pipeline delivers precise field
+              Our research-grade analysis pipeline delivers precise field
               insights designed to meet the rigorous demands of academic and
               industry research. We collect and process aerial imagery that
               seamlessly integrates into your existing projects, enabling
@@ -307,27 +307,16 @@ export default function SimpleSensePage() {
                     Create spatially consistent plot zones for your current
                     trial.
                   </h3>
-                  <span className="text-sm text-muted-foreground ml-2"></span>
                 </div>
 
                 <div className="mb-0">
                   <div className="flex justify-between items-center mb-4">
                     <h4 className="text-base font-medium">
-                      An example of a Randomized Complete Block Factorial trial
-                    </h4>
+                      An example of a small plot research trial{" "}
+                    </h4>{" "}
                     <div className="flex items-center space-x-3">
                       <button
                         className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-l-md ${
-                          layoutView === "replication"
-                            ? "bg-primary text-white"
-                            : "bg-muted text-muted-foreground"
-                        }`}
-                        onClick={() => setLayoutView("replication")}
-                      >
-                        Replication
-                      </button>
-                      <button
-                        className={`text-sm font-medium cursor-pointer px-3 py-1 rounded-r-md ${
                           layoutView === "treatment"
                             ? "bg-primary text-white"
                             : "bg-muted text-muted-foreground"
@@ -335,6 +324,16 @@ export default function SimpleSensePage() {
                         onClick={() => setLayoutView("treatment")}
                       >
                         Treatment
+                      </button>
+                      <button
+                        className={`text-sm font-medium cursor-pointer px-3 py-1  rounded-r-md ${
+                          layoutView === "replication"
+                            ? "bg-primary text-white"
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                        onClick={() => setLayoutView("replication")}
+                      >
+                        Replication
                       </button>
                     </div>
                   </div>
@@ -736,7 +735,7 @@ export default function SimpleSensePage() {
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     Interactive visualization of NDVI measurements across
-                    different growth stages for the demo plot.
+                    different growth stages.
                   </p>
                 </div>
 

@@ -42,6 +42,7 @@ import {
 import type { Map as LeafletMap, Control } from "leaflet";
 import L from "leaflet";
 import type { Feature, Geometry } from "geojson";
+import GeoRasterLayer from "georaster-layer-for-leaflet";
 
 // Define interfaces for the Leaflet types we need
 interface LeafletStatic {
@@ -658,6 +659,7 @@ function NutrientMap() {
   const [selectedNutrient, setSelectedNutrient] =
     useState<keyof typeof nutrientInfo>("phosphorus");
   const [vrData, setVrData] = useState<any>(null);
+  const [plotData, setPlotData] = useState<any>(null);
 
   // Define color scales and ranges for each nutrient
   interface NutrientInfo {
@@ -684,7 +686,7 @@ function NutrientMap() {
         "#FF1A1A", // 80-90
         "#E60000" // 90+
       ],
-      unit: "lbs/acre",
+      unit: "ppm",
       property: "18-46-D"
     },
     potassium: {
@@ -697,7 +699,7 @@ function NutrientMap() {
         "#4DA6FF", // 205-210
         "#1A8CFF" // 210+
       ],
-      unit: "lbs/acre",
+      unit: "ppm",
       property: "0-0-60p"
     },
     lime: {
@@ -746,12 +748,12 @@ function NutrientMap() {
     // Create new map instance with restricted bounds
     const map = L.map(mapRef.current, {
       center: [41.5, -93.6],
-      zoom: 13,
-      minZoom: 16,
-      maxZoom: 19,
+      zoom: 16, // Increased initial zoom level
+      minZoom: 16, // Set min zoom equal to initial zoom to prevent zooming out
+      maxZoom: 17, // Reduced max zoom to prevent zooming in too far
       zoomControl: false,
       scrollWheelZoom: false,
-      dragging: false,
+      dragging: true, // Keep dragging enabled but with restrictions
       doubleClickZoom: false,
       boxZoom: false,
       keyboard: false,
@@ -759,6 +761,7 @@ function NutrientMap() {
       renderer: L.canvas()
     });
 
+    // Set the current map instance reference
     mapInstanceRef.current = map;
 
     // Add zoom control to bottom right
@@ -798,19 +801,21 @@ function NutrientMap() {
     // Fit map to field bounds with padding
     const bounds = vrLayer.getBounds();
     if (bounds.isValid()) {
-      map.fitBounds(bounds.pad(0.1));
+      // Add tighter padding to zoom in more
+      map.fitBounds(bounds.pad(0.05)); // Reduced padding from 0.1 to 0.05
+
+      // Set tighter bounds restrictions
+      map.setMaxBounds(bounds.pad(0.1)); // Reduced padding from default
+      map.setMinZoom(16);
+      map.setMaxZoom(17);
     }
 
-    // Restrict map bounds
-    map.setMaxBounds(bounds);
-    map.setMinZoom(16);
-    map.setMaxZoom(17);
     // Add legend
     const legend = new L.Control({ position: "topright" });
     legend.onAdd = function (map: L.Map): HTMLElement {
       const div = L.DomUtil.create(
         "div",
-        "info legend bg-white p-3 rounded-lg shadow-lg border border-gray-200"
+        "info legend bg-white p-2 rounded shadow-md border border-gray-200"
       );
       const ranges = nutrient.ranges;
       const colors = nutrient.colors;
@@ -842,17 +847,45 @@ function NutrientMap() {
     };
     legend.addTo(map);
 
+    // Add plot outlines
+    let plotLayer: any = null;
+    if (plotData) {
+      plotLayer = L.geoJSON(plotData as Feature<Geometry>, {
+        style: {
+          color: "#000",
+          weight: 2,
+          fillColor: "transparent",
+          fillOpacity: 0
+        },
+        pane: "vector-pane"
+      });
+      map.addLayer(plotLayer);
+
+      // Fit bounds to show all plots
+      const plotBounds = plotLayer.getBounds();
+      if (plotBounds.isValid()) {
+        map.fitBounds(plotBounds, {
+          padding: [50, 50],
+          animate: true,
+          maxZoom: 20
+        });
+      }
+    }
+
     // Cleanup function
     return () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
+      if (plotLayer) {
+        map.removeLayer(plotLayer);
       }
+      map.removeControl(legend);
+
+      // Don't remove the map here - just remove references and layers
     };
   }, [vrData, selectedNutrient]);
 
-  // Add a separate cleanup effect
+  // Component unmount cleanup
   useEffect(() => {
+    // This cleanup runs when the component unmounts
     return () => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
@@ -962,7 +995,7 @@ export default function SampleReportContent() {
                   { label: "Average OM", value: "2.2%", range: "1.7 - 3.0%" },
                   {
                     label: "Total Samples",
-                    value: "14",
+                    value: "18",
                     range: "Field Coverage"
                   }
                 ].map(stat => (
@@ -1170,9 +1203,9 @@ export default function SampleReportContent() {
                             <TableCell className="text-sm font-medium">
                               BS Ca (%)
                             </TableCell>
+                            <TableCell className="text-sm">56.0</TableCell>
+                            <TableCell className="text-sm">55.0</TableCell>{" "}
                             <TableCell className="text-sm">57.0</TableCell>
-                            <TableCell className="text-sm">15.8</TableCell>
-                            <TableCell className="text-sm">82.5</TableCell>
                           </TableRow>
                           <TableRow>
                             <TableCell className="text-sm font-medium">
@@ -1194,9 +1227,9 @@ export default function SampleReportContent() {
                             <TableCell className="text-sm font-medium">
                               BS H (%)
                             </TableCell>
-                            <TableCell className="text-sm">33.4</TableCell>
+                            <TableCell className="text-sm">5.1</TableCell>
                             <TableCell className="text-sm">2.4</TableCell>
-                            <TableCell className="text-sm">78.7</TableCell>
+                            <TableCell className="text-sm">7.8</TableCell>
                           </TableRow>
                         </TableBody>
                       </Table>
@@ -1466,7 +1499,7 @@ export default function SampleReportContent() {
         {
           title: "Nutrient Analysis",
           description:
-            "Visual mapping of key nutrients showing deficiencies and excesses.",
+            "Visual mapping of key nutrients.",
           icon: Map
         },
         {

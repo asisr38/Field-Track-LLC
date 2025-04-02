@@ -68,7 +68,7 @@ export default function About() {
                 Research-Driven Field Trial Solutions
               </h2>
               <p className="text-xl text-muted-foreground font-secondary mb-8">
-                Specializing in on-farm research and field trials, I help
+                Specializing in on-farm research and field trials, we help
                 agricultural businesses make data-driven decisions through
                 precise field mapping and detailed analysis.
               </p>

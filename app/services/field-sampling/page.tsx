@@ -171,12 +171,12 @@ const nutrientColorScales = {
   potassium: {
     ranges: [0, 30, 40, 50, 60],
     colors: ["#F44336", "#FB8C00", "#FFD54F", "#7CB342", "#2E7D32"],
-    unit: "lbs/acre"
+    unit: "ppm"
   },
   magnesium: {
     ranges: [0, 100, 150, 200, 250],
     colors: ["#E53935", "#F57C00", "#FDD835", "#8BC34A", "#388E3C"],
-    unit: "lbs/acre"
+    unit: "lbs/ac"
   },
   calcium: {
     ranges: [0, 800, 1000, 1200, 1400],
@@ -371,9 +371,9 @@ export default function FieldSamplingPage() {
                 <div className="space-y-2">
                   <DataRow label="Field Name" value="John Doe" />
                   <DataRow label="Property" value="DOE FAMILY FARMS" />
-                  <DataRow label="Field Size" value="160 acres" />
-                  <DataRow label="Next Crop" value="Soybean (2024)" />
-                  <DataRow label="Previous Crop" value="Corn (2023)" />
+                  <DataRow label="Field Size" value="72 acres" />
+                  <DataRow label="Next Crop" value="Soybean (2025)" />
+                  <DataRow label="Previous Crop" value="Corn (2024)" />
                 </div>
               </DataCard>
 

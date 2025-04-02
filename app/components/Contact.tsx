@@ -538,9 +538,9 @@ ${formData.message}
                       </a>
 
                       <p className="text-sm text-white/90 mt-2 max-w-md">
-                        With over 10 years of experience in agricultural
-                        research and data science, Dr. Smith leads our team in
-                        delivering precision agriculture solutions.
+                        With over 12 years of experience in agricultural
+                        research, Dr. Smith leads our team in delivering
+                        precision agriculture solutions.
                       </p>
                     </div>
                   </div>
