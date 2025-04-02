@@ -1477,8 +1477,8 @@ export default function OnFarmResearchPage() {
                     <div className="space-y-2">
                       <DataRow label="Location" value="Central Illinois" />
                       <DataRow label="Crop" value="Corn" />
-                      <DataRow label="Planting Date" value="April 15, 2025" />
-                      <DataRow label="Harvest Date" value="October 10, 2025" />
+                      <DataRow label="Planting Date" value="April 15, 2024" />
+                      <DataRow label="Harvest Date" value="October 10, 2024" />
                       <DataRow
                         label="Number of Plots"
                         value={trialData.features.length.toString()}
