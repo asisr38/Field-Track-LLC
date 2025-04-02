@@ -14,7 +14,7 @@ const nutrientInfo = {
   phosphorus: {
     displayName: "Phosphorus (P)",
     property: "P_M3_ppm",
-    unit: "lbs/acre",
+    unit: "ppm",
     ranges: [0, 20, 40, 60, 80], // Based on actual data range: 20-86 ppm
     colors: ["#FF5252", "#FF9800", "#FFEB3B", "#8BC34A", "#4CAF50"]
   },
@@ -28,7 +28,7 @@ const nutrientInfo = {
   magnesium: {
     displayName: "Magnesium (Mg)",
     property: "Mg_M3_ppm",
-    unit: "lbs/acre",
+    unit: "lbs/ac",
     ranges: [0, 100, 150, 200, 250], // Based on actual data range: 90-181 ppm
     colors: ["#E53935", "#F57C00", "#FDD835", "#8BC34A", "#388E3C"]
   },

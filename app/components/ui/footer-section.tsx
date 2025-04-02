@@ -103,20 +103,15 @@ function Footerdemo() {
               >
                 <Twitter className="h-4 w-4" />
               </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full h-10 w-10 border-border hover:bg-primary hover:text-primary-foreground"
-              >
-                <Instagram className="h-4 w-4" />
-              </Button>
             </div>
           </div>
           {/* Column 3: Contact Information (replacing Newsletter) */}
           <div className="flex flex-col gap-6">
             <div className="space-y-4">
               <a href="/#contact">
-                <h2 className="text-2xl font-bold hover:text-primary transition-colors">Contact Us</h2>
+                <h2 className="text-2xl font-bold hover:text-primary transition-colors">
+                  Contact Us
+                </h2>
               </a>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Have questions? We're here to help. Reach out to us through any

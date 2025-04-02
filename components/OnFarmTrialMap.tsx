@@ -107,20 +107,23 @@ const MapBoundsUpdater = () => {
   useEffect(() => {
     const bounds = calculateBounds();
     if (bounds.isValid()) {
-      // Add some padding around bounds to make it look nicer
-      const paddedBounds = bounds.pad(0.3); // Increased padding to show more context
+      // Add a very small buffer around bounds (roughly 100m)
+      const paddedBounds = bounds.pad(0.001);
 
       // Set max bounds to restrict panning
       map.setMaxBounds(paddedBounds);
 
-      // Use positive padding to zoom out more
-      const padding: PointTuple = isMobile ? [50, 50] : [30, 30];
+      // Use minimal padding to keep view tight
+      const padding: PointTuple = isMobile ? [10, 10] : [5, 5];
 
       map.fitBounds(bounds, {
         padding,
         animate: true,
-        maxZoom: isMobile ? 16 : 17 // Lower max zoom to ensure it's not too zoomed in
+        maxZoom: isMobile ? 19 : 19.5
       });
+
+      // Set initial zoom level
+      map.setZoom(isMobile ? 18 : 19.5);
 
       // Add custom popup styles
       const style = document.createElement("style");
@@ -273,11 +276,11 @@ const MapWrapper = ({ view }: OnFarmTrialMapProps) => {
       touchZoom={isMobile}
       boxZoom={false}
       keyboard={false}
-      maxZoom={isMobile ? 18 : 19}
-      minZoom={isMobile ? 14 : 15}
-      maxBounds={bounds.pad(0.3)}
+      maxZoom={isMobile ? 19 : 19.5}
+      minZoom={isMobile ? 16 : 17}
+      maxBounds={bounds.pad(0.001)}
       maxBoundsViscosity={1.0}
-      zoom={15} // Start at a more zoomed-out level
+      zoom={isMobile ? 18 : 19.5}
     >
       <TileLayer
         attribution="© Esri"

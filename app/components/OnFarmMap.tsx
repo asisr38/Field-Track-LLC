@@ -22,13 +22,13 @@ const OnFarmMap = ({ className }: OnFarmMapProps) => {
     // Initialize map with a higher zoom level and restricted bounds
     const map = L.map(mapContainerRef.current, {
       minZoom: 16,
-      maxZoom: 20,
+      maxZoom: 19.5,
       zoomControl: true,
       scrollWheelZoom: true,
       doubleClickZoom: true,
       dragging: true,
       maxBoundsViscosity: 1.0 // Completely restrict panning outside bounds
-    }).setView([40.61351, -88.64342], 18);
+    }).setView([40.61351, -88.64342], 19.5);
 
     mapRef.current = map;
 
@@ -148,8 +148,8 @@ const OnFarmMap = ({ className }: OnFarmMapProps) => {
     // Fit map bounds to trial plots with padding
     const bounds = plotsLayer.getBounds();
     map.fitBounds(bounds, {
-      padding: [20, 20],
-      maxZoom: 19
+      padding: [5, 5],
+      maxZoom: 19.5
     });
 
     // Set max bounds with a small buffer around the trial plots to restrict panning

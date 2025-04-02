@@ -18,7 +18,7 @@ const steps = [
       "Sampling strategies for trial"
     ],
     icon: Lightbulb,
-    image: "/research/plan.png",
+    image: "/new/plan.webp",
     alt: "Field implementation of agricultural strategy with equipment in operation"
   },
   {
@@ -31,7 +31,7 @@ const steps = [
       "Spatial decision-support layers and weather tracking"
     ],
     icon: Database,
-    image: "/research/datacollect.jpg",
+    image: "/new/datacollect.jpg",
     alt: "Spatial field data visualization showing variable crop conditions"
   },
   {

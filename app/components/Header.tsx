@@ -28,13 +28,13 @@ import React from "react";
 const serviceItems = [
   {
     name: "SimpleSense",
-    description: "Advanced aerial imagery with multi-temporal NDVI analysis",
+    description: "Advanced aerial image processing pipeline for plot research",
     icon: Plane,
     url: "/services/simple-sense"
   },
   {
     name: "On-Farm Research",
-    description: "Comprehensive field trial services with spatial analytics",
+    description: "Comprehensive field trail services with spatial guidance",
     icon: Microscope,
     url: "/services/onfarm-research"
   },
