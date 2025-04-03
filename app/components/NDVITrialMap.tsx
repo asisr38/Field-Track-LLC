@@ -216,8 +216,6 @@ export default function NDVITrialMap() {
                 <div class="grid grid-cols-2 gap-3">
                   <div class="font-semibold text-gray-700">Treatment:</div>
                   <div class="text-gray-900">${plot.properties.Trt}</div>
-                  <div class="font-semibold text-gray-700">Rep:</div>
-                  <div class="text-gray-900">${plot.properties.Rep}</div>
                   <div class="font-semibold text-gray-700">NDVI:</div>
                   <div class="text-gray-900">${ndviValue.toFixed(3)}</div>
                   <div class="font-semibold text-gray-700">Product:</div>

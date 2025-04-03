@@ -31,16 +31,15 @@ function ServiceGrid({ items }: ServiceGridProps) {
           transition={{ duration: 0.5, delay: index * 0.2 }}
           className={cn(
             "group relative rounded-xl sm:rounded-2xl overflow-hidden",
-            "min-h-[280px] sm:min-h-[320px]",
             "bg-card/50 backdrop-blur-sm border border-border/50",
             "hover:border-primary/50 transition-all duration-300",
             "[box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
             "dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]"
           )}
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 min-h-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
             {/* Image Section - Full width on mobile, half width on desktop */}
-            <div className="relative h-48 sm:h-64 lg:h-full overflow-hidden">
+            <div className="relative aspect-[16/9] lg:aspect-auto lg:h-full w-full overflow-hidden">
               {item.image && (
                 <Image
                   src={item.image}
@@ -55,7 +54,7 @@ function ServiceGrid({ items }: ServiceGridProps) {
             </div>
 
             {/* Content Section */}
-            <div className="p-4 sm:p-6 lg:p-8 flex flex-col justify-between min-h-full relative">
+            <div className="p-4 sm:p-6 lg:p-8 flex flex-col justify-between h-full relative">
               {/* Top Section with Icon and Title */}
               <div className="flex-1">
                 <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-6">

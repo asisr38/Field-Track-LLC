@@ -117,43 +117,23 @@ const TemporalNDVIMap = ({
 
     const plotInfo = feature.properties;
     layer.bindTooltip(
-      `<div class="bg-background/95 p-3 rounded-lg shadow-lg border border-border min-w-[250px]">
-        <div class="font-medium mb-2">Plot ${plotInfo.Plot}</div>
-        <div class="text-sm grid grid-cols-2 gap-x-2 gap-y-1">
-          <span class="text-muted-foreground">Rep:</span> ${plotInfo.Rep}<br/>
-          <span class="text-muted-foreground">Product:</span> ${
-            plotInfo.MainPlot1 || "N/A"
-          }<br/>
-          <span class="text-muted-foreground">NDVI:</span> ${
+      `<div class="bg-white p-3 rounded shadow-md border min-w-[250px] text-black">
+        <div class="font-bold mb-2 pb-1 border-b">Plot ${plotInfo.Plot}</div>
+        <div>
+          <div><span class="font-medium">Treatment:</span> ${plotInfo.Trt || "N/A"}</div>
+          <div><span class="font-medium">Product:</span> ${plotInfo.MainPlot1 || "N/A"}</div>
+          <div><span class="font-medium">Timing:</span> ${plotInfo.SubPlot1 || "N/A"}</div>
+          <div><span class="font-medium">NDVI:</span> ${
             ndviValue !== null ? ndviValue.toFixed(4) : "N/A"
-          }<br/>
-          <span class="text-muted-foreground">Crop:</span> ${
-            plotInfo.Crop || "N/A"
-          }<br/>
-          <span class="text-muted-foreground">Treatment:</span> ${
-            plotInfo.Treatment || "N/A"
-          }<br/>
-          <span class="text-muted-foreground">Timing:</span> ${
-            plotInfo.SubPlot1 || "N/A"
-          }<br/>
-          <span class="text-muted-foreground">Plant Date:</span> ${
-            plotInfo.PlantDate || "N/A"
-          }<br/>
-          <span class="text-muted-foreground">Cultivar:</span> ${
-            plotInfo.Cultivar || "N/A"
-          }<br/>
-          <span class="text-muted-foreground">Seed Rate:</span> ${
-            plotInfo.SeedRate || "N/A"
-          }<br/>
-          <span class="text-muted-foreground">App Date:</span> ${
-            plotInfo.AppDate || "N/A"
-          }<br/>
+          }</div>
         </div>
       </div>`,
       {
         permanent: false,
         direction: "top",
-        className: "custom-tooltip"
+        className: "custom-tooltip",
+        offset: [0, -10],
+        opacity: 1
       }
     );
   };

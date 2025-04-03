@@ -395,41 +395,62 @@ const FieldSamplingMap = ({
 
             layer.bindPopup(
               `
-              <div class="p-3 min-w-[300px]">
-                <div class="font-bold text-lg mb-2">Sample ${props.SampleID}</div>
-                
-                <div class="space-y-3">
-                  <div class="bg-gray-50 p-2 rounded">
-                    <div class="font-semibold text-sm mb-1">Primary Nutrients</div>
-                    <div class="grid grid-cols-2 gap-2 text-sm">
-                      <div>P:</div>
-                      <div>${props.P_M3_ppm} ppm</div>
-                      <div>K:</div>
-                      <div>${props.K_M3_ppm} ppm</div>
+              <div style="font-family: system-ui, sans-serif; width: auto; font-size: 12px; padding: 0;">
+                <div style="padding: 10px 15px 10px 10px;">
+                  <div style="margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; background-color: #f0fdf4; padding: 6px 8px; border-radius: 4px; color-scheme: light dark;">
+                      <span style="font-weight: 600; color: #166534;">Sample ID</span>
+                      <span style="font-weight: 600; color: #047857; font-size: 14px;">${props.SampleID}</span>
                     </div>
                   </div>
-
-                  <div class="bg-gray-50 p-2 rounded">
-                    <div class="font-semibold text-sm mb-1">Soil Properties</div>
-                    <div class="grid grid-cols-2 gap-2 text-sm">
-                      <div>pH:</div>
-                      <div>${props.pH_1_1}</div>
-                      <div>OM:</div>
-                      <div>${props.OM_LOI_per}%</div>
-                      <div>CEC:</div>
-                      <div>${props.CEC_M3} meq/100g</div>
-                      <div>Depth:</div>
-                      <div>${props.Depth_in} inches</div>
+                  
+                  <div style="margin-bottom: 8px;">
+                    <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #ffffff; margin-bottom: 4px; color-scheme: light dark;">Primary Nutrients</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                      <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px; color-scheme: light dark;">
+                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Phosphorus (P)</div>
+                        <div style="font-weight: 500; color: #111827; margin-top: 2px;">${props.P_M3_ppm} ppm</div>
+                      </div>
+                      <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px; color-scheme: light dark;">
+                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Potassium (K)</div>
+                        <div style="font-weight: 500; color: #111827; margin-top: 2px;">${props.K_M3_ppm} ppm</div>
+                      </div>
                     </div>
                   </div>
-
-                  <div class="bg-gray-50 p-2 rounded">
-                    <div class="font-semibold text-sm mb-1">Secondary Nutrients</div>
-                    <div class="grid grid-cols-2 gap-2 text-sm">
-                      <div>Ca:</div>
-                      <div>${props.Ca_M3_ppm} ppm</div>
-                      <div>Mg:</div>
-                      <div>${props.Mg_M3_ppm} ppm</div>
+                  
+                  <div style="margin-bottom: 8px;">
+                                 <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #ffffff; margin-bottom: 4px; color-scheme: light dark;">Soil Properties</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                      <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px; color-scheme: light dark;">
+                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">pH</div>
+                        <div style="font-weight: 500; color: #111827; margin-top: 2px;">${props.pH_1_1}</div>
+                      </div>
+                      <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px; color-scheme: light dark;">
+                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Organic Matter</div>
+                        <div style="font-weight: 500; color: #111827; margin-top: 2px;">${props.OM_LOI_per}%</div>
+                      </div>
+                      <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px; color-scheme: light dark;">
+                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">CEC</div>
+                        <div style="font-weight: 500; color: #111827; margin-top: 2px;">${props.CEC_M3} meq/100g</div>
+                      </div>
+                      <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px; color-scheme: light dark;">
+                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Depth</div>
+                        <div style="font-weight: 500; color: #111827; margin-top: 2px;">${props.Depth_in} inches</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                             <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #ffffff; margin-bottom: 4px; color-scheme: light dark;">Secondary Nutrients</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                      <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px; color-scheme: light dark;">
+                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Calcium (Ca)</div>
+                        <div style="font-weight: 500; color: #111827; margin-top: 2px;">${props.Ca_M3_ppm} ppm</div>
+                      </div>
+                      <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px; color-scheme: light dark;">
+                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Magnesium (Mg)</div>
+                        <div style="font-weight: 500; color: #111827; margin-top: 2px;">${props.Mg_M3_ppm} ppm</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -437,7 +458,11 @@ const FieldSamplingMap = ({
             `,
               {
                 className: "custom-popup",
-                maxWidth: 350
+                closeButton: true,
+                maxWidth: 300,
+                minWidth: 280,
+                autoPan: true,
+                autoClose: true
               }
             );
           }
@@ -491,16 +516,51 @@ const FieldSamplingMap = ({
             pointer-events: auto;
           }
           .custom-popup .leaflet-popup-content-wrapper {
-            background: white;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+              0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            color-scheme: light dark;
           }
           .custom-popup .leaflet-popup-content {
             margin: 0;
-            padding: 0;
+            width: auto !important;
           }
           .custom-popup .leaflet-popup-tip {
-            background: white;
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          }
+          .custom-popup .leaflet-popup-close-button {
+            top: 6px;
+            right: 10px;
+            color: #6b7280;
+            font-size: 18px;
+            padding: 4px;
+            height: 24px;
+            width: 24px;
+            transition: color 0.2s;
+            z-index: 1000;
+          }
+          .custom-popup .leaflet-popup-close-button:hover {
+            color: #111827;
+          }
+
+          /* Dark mode styles */
+          @media (prefers-color-scheme: dark) {
+            .custom-popup .leaflet-popup-content-wrapper {
+              background-color: #1f2937;
+              color: #e5e7eb;
+            }
+            .custom-popup .leaflet-popup-tip {
+              background-color: #1f2937;
+            }
+            .custom-popup .leaflet-popup-close-button {
+              color: #9ca3af;
+            }
+            .custom-popup .leaflet-popup-close-button:hover {
+              color: #e5e7eb;
+            }
           }
         `}</style>
       </div>

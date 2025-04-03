@@ -170,6 +170,14 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
   };
 
   const Legend = ({ view }: { view: "treatment" | "replication" }) => {
+    const isMobile = useIsMobile();
+    const [isCollapsed, setIsCollapsed] = useState(isMobile);
+
+    // Update collapse state when screen size changes
+    useEffect(() => {
+      setIsCollapsed(isMobile);
+    }, [isMobile]);
+
     const items =
       view === "treatment"
         ? [
@@ -194,21 +202,78 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
           ];
 
     return (
-      <Card className="absolute bottom-4 right-4 z-[400] p-4 bg-white">
-        <h6 className="font-semibold mb-2 text-black">
-          {view === "treatment" ? "Treatments" : "Replications"}
-        </h6>
-        <div className="grid grid-cols-1 gap-1">
-          {items.map((item, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <div
-                className="w-4 h-4 rounded border border-gray-200"
-                style={{ backgroundColor: item.color }}
-              />
-              <span className="text-xs text-black">{item.label}</span>
+      <Card
+        className={`absolute bottom-4 right-4 z-[400] bg-white dark:bg-gray-800 shadow-md transition-all duration-200 ${
+          isCollapsed ? "w-10 h-10 p-0" : "p-4"
+        }`}
+      >
+        {isCollapsed ? (
+          // Collapsed state - just show a toggle button
+          <button
+            onClick={() => setIsCollapsed(false)}
+            className="w-full h-full flex items-center justify-center text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary"
+            aria-label="Show legend"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="9" y1="9" x2="15" y2="9"></line>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+              <line x1="9" y1="12" x2="15" y2="12"></line>
+            </svg>
+          </button>
+        ) : (
+          // Expanded state - show full legend with collapse button
+          <>
+            <div className="flex items-center justify-between mb-2">
+              <h6 className="font-semibold text-black dark:text-white">
+                {view === "treatment" ? "Treatments" : "Replications"}
+              </h6>
+              <button
+                onClick={() => setIsCollapsed(true)}
+                className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 p-1"
+                aria-label="Hide legend"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
             </div>
-          ))}
-        </div>
+            <div className="grid grid-cols-1 gap-1 max-h-[300px] overflow-y-auto">
+              {items.map((item, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <div
+                    className="w-4 h-4 rounded border border-gray-200 dark:border-gray-600"
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="text-xs text-black dark:text-gray-200">
+                    {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </Card>
     );
   };

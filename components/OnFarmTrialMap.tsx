@@ -144,13 +144,14 @@ const MapBoundsUpdater = () => {
         }
         .custom-popup .leaflet-popup-close-button {
           top: 6px;
-          right: 6px;
+          right: 10px;
           color: #6b7280;
-          font-size: 16px;
+          font-size: 18px;
           padding: 4px;
-          height: 20px;
-          width: 20px;
+          height: 24px;
+          width: 24px;
           transition: color 0.2s;
+          z-index: 1000;
         }
         .custom-popup .leaflet-popup-close-button:hover {
           color: #111827;
@@ -299,15 +300,11 @@ const MapWrapper = ({ view }: OnFarmTrialMapProps) => {
         eventHandlers={{
           click: e => {
             const props = e.layer.feature.properties;
-            // Create a popup with the plot details
             if (props) {
               const popupContent = `
-                <div style="font-family: system-ui, -apple-system, sans-serif; width: 200px; font-size: 12px; padding: 2px;">
-                  <div style="background-color: #f9fafb; border-radius: 6px 6px 0 0; padding: 8px 10px; border-bottom: 2px solid #10b981;">
-                    <h3 style="margin: 0; font-size: 14px; font-weight: 600; color: #047857;">Plot Details</h3>
-                  </div>
+                <div style="font-family: system-ui, sans-serif; width: auto; font-size: 12px; padding: 0;">
                   
-                  <div style="padding: 10px;">
+                  <div style="padding: 10px 15px 10px 10px;">
                     <div style="margin-bottom: 10px;">
                       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; background-color: #f0fdf4; padding: 6px 8px; border-radius: 4px;">
                         <span style="font-weight: 600; color: #166534;">Plot ID</span>
@@ -361,8 +358,10 @@ const MapWrapper = ({ view }: OnFarmTrialMapProps) => {
                 .bindPopup(popupContent, {
                   className: "custom-popup",
                   closeButton: true,
-                  maxWidth: 250,
-                  minWidth: 220
+                  maxWidth: 230,
+                  minWidth: 210,
+                  autoPan: true,
+                  autoClose: true
                 })
                 .openPopup();
             }
