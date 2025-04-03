@@ -385,7 +385,7 @@ export default function SimpleSensePage() {
                     </div>
                     <div className="text-center p-3 bg-gray-50 rounded-lg">
                       <div className="text-lg font-semibold text-emerald-600">
-                        30'x40'
+                        10'x40'
                       </div>
                       <div className="text-sm text-gray-600">Plot Size</div>
                     </div>

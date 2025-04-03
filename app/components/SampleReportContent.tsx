@@ -654,12 +654,16 @@ function FieldMap() {
 }
 
 function NutrientMap() {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<any>(null);
+  const legendRef = useRef<any>(null);
+  const vrLayerRef = useRef<any>(null);
+  const plotLayerRef = useRef<any>(null);
   const [selectedNutrient, setSelectedNutrient] =
     useState<keyof typeof nutrientInfo>("phosphorus");
   const [vrData, setVrData] = useState<any>(null);
   const [plotData, setPlotData] = useState<any>(null);
+  const [mapInitialized, setMapInitialized] = useState<boolean>(false);
 
   // Define color scales and ranges for each nutrient
   interface NutrientInfo {
@@ -732,165 +736,211 @@ function NutrientMap() {
     }
   };
 
+  // Initialize map once
+  useEffect(() => {
+    if (!mapContainerRef.current || mapInitialized) return;
+
+    try {
+      // Create map instance
+      const map = L.map(mapContainerRef.current, {
+        center: [41.5, -93.6],
+        zoom: 16,
+        minZoom: 16,
+        maxZoom: 17,
+        zoomControl: false,
+        scrollWheelZoom: false,
+        dragging: true,
+        doubleClickZoom: false,
+        boxZoom: false,
+        keyboard: false,
+        preferCanvas: true,
+        renderer: L.canvas()
+      });
+
+      // Add zoom control
+      L.control
+        .zoom({
+          position: "bottomright",
+          zoomInTitle: "Zoom in",
+          zoomOutTitle: "Zoom out"
+        })
+        .addTo(map);
+
+      // Add satellite imagery base layer
+      L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          attribution: "@Esri",
+          opacity: 0.5
+        }
+      ).addTo(map);
+
+      // Store map reference
+      mapRef.current = map;
+      setMapInitialized(true);
+    } catch (error) {
+      console.error("Error initializing map:", error);
+    }
+
+    // Cleanup on unmount
+    return () => {
+      cleanupMap();
+    };
+  }, []);
+
+  // Load data when nutrient selection changes
   useEffect(() => {
     loadVrData();
   }, [selectedNutrient]);
 
+  // Update map when data changes
   useEffect(() => {
-    if (!mapRef.current || !vrData) return;
+    if (!mapRef.current || !vrData || !mapInitialized) return;
 
-    // Clean up previous map instance
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.remove();
-      mapInstanceRef.current = null;
-    }
-
-    // Create new map instance with restricted bounds
-    const map = L.map(mapRef.current, {
-      center: [41.5, -93.6],
-      zoom: 16, // Increased initial zoom level
-      minZoom: 16, // Set min zoom equal to initial zoom to prevent zooming out
-      maxZoom: 17, // Reduced max zoom to prevent zooming in too far
-      zoomControl: false,
-      scrollWheelZoom: false,
-      dragging: true, // Keep dragging enabled but with restrictions
-      doubleClickZoom: false,
-      boxZoom: false,
-      keyboard: false,
-      preferCanvas: true,
-      renderer: L.canvas()
-    });
-
-    // Set the current map instance reference
-    mapInstanceRef.current = map;
-
-    // Add zoom control to bottom right
-    L.control
-      .zoom({
-        position: "bottomright",
-        zoomInTitle: "Zoom in",
-        zoomOutTitle: "Zoom out"
-      })
-      .addTo(map);
-
-    // Add satellite imagery base layer
-    L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      {
-        attribution: "@Esri",
-        opacity: 0.5
-      }
-    ).addTo(map);
-
-    const nutrient = nutrientInfo[selectedNutrient];
-    const vrLayer = L.geoJSON(vrData, {
-      style: (
-        feature: Feature<Geometry, { [key: string]: number }> | undefined
-      ): L.PathOptions => {
-        if (!feature) return { fillColor: "#ffffff" };
-        const value = feature.properties[nutrient.property];
-        return {
-          fillColor: getColor(value, nutrient),
-          weight: 0, // Remove boundaries
-          opacity: 0,
-          fillOpacity: 1
-        };
-      }
-    }).addTo(map);
-
-    // Fit map to field bounds with padding
-    const bounds = vrLayer.getBounds();
-    if (bounds.isValid()) {
-      // Add tighter padding to zoom in more
-      map.fitBounds(bounds.pad(0.05)); // Reduced padding from 0.1 to 0.05
-
-      // Set tighter bounds restrictions
-      map.setMaxBounds(bounds.pad(0.1)); // Reduced padding from default
-      map.setMinZoom(16);
-      map.setMaxZoom(17);
-    }
-
-    // Add legend
-    const legend = new L.Control({ position: "topright" });
-    legend.onAdd = function (map: L.Map): HTMLElement {
-      const div = L.DomUtil.create(
-        "div",
-        "info legend bg-white p-2 rounded shadow-md border border-gray-200"
-      );
-      const ranges = nutrient.ranges;
-      const colors = nutrient.colors;
-
-      let html = `
-        <div class="text-sm font-bold mb-2 text-gray-800">${nutrient.displayName}</div>
-        <div class="text-xs text-gray-600 mb-2">${nutrient.unit}</div>
-      `;
-
-      for (let i = 0; i < ranges.length; i++) {
-        const from = ranges[i];
-        const to = ranges[i + 1];
-        const label =
-          selectedNutrient === "lime"
-            ? from === 0
-              ? "Not Applied"
-              : "Applied"
-            : `${from}${to ? "&ndash;" + to : "+"}`;
-
-        html += `
-          <div class="flex items-center gap-2 my-1">
-            <i style="background:${colors[i]}; width: 20px; height: 20px; display: inline-block; border: 1px solid #ccc;"></i>
-            <span class="text-xs font-medium">${label}</span>
-          </div>`;
+    try {
+      // Clean up previous layers
+      if (vrLayerRef.current) {
+        mapRef.current.removeLayer(vrLayerRef.current);
+        vrLayerRef.current = null;
       }
 
-      div.innerHTML = html;
-      return div;
-    };
-    legend.addTo(map);
+      if (plotLayerRef.current) {
+        mapRef.current.removeLayer(plotLayerRef.current);
+        plotLayerRef.current = null;
+      }
 
-    // Add plot outlines
-    let plotLayer: any = null;
-    if (plotData) {
-      plotLayer = L.geoJSON(plotData as Feature<Geometry>, {
-        style: {
-          color: "#000",
-          weight: 2,
-          fillColor: "transparent",
-          fillOpacity: 0
-        },
-        pane: "vector-pane"
-      });
-      map.addLayer(plotLayer);
+      if (legendRef.current) {
+        mapRef.current.removeControl(legendRef.current);
+        legendRef.current = null;
+      }
 
-      // Fit bounds to show all plots
-      const plotBounds = plotLayer.getBounds();
-      if (plotBounds.isValid()) {
-        map.fitBounds(plotBounds, {
-          padding: [50, 50],
-          animate: true,
-          maxZoom: 20
+      // Add nutrient layer
+      const nutrient = nutrientInfo[selectedNutrient];
+      const vrLayer = L.geoJSON(vrData, {
+        style: (
+          feature: Feature<Geometry, { [key: string]: number }> | undefined
+        ): L.PathOptions => {
+          if (!feature) return { fillColor: "#ffffff" };
+          const value = feature.properties[nutrient.property];
+          return {
+            fillColor: getColor(value, nutrient),
+            weight: 0,
+            opacity: 0,
+            fillOpacity: 1
+          };
+        }
+      }).addTo(mapRef.current);
+
+      vrLayerRef.current = vrLayer;
+
+      // Fit map to field bounds with padding
+      const bounds = vrLayer.getBounds();
+      if (bounds.isValid()) {
+        mapRef.current.fitBounds(bounds.pad(0.05));
+        mapRef.current.setMaxBounds(bounds.pad(0.1));
+      }
+
+      // Add legend
+      const legend = new L.Control({ position: "topright" });
+      legend.onAdd = function (map: L.Map): HTMLElement {
+        const div = L.DomUtil.create(
+          "div",
+          "info legend bg-white p-2 rounded shadow-md border border-gray-200"
+        );
+        const ranges = nutrient.ranges;
+        const colors = nutrient.colors;
+
+        let html = `
+          <div class="text-sm font-bold mb-2 text-gray-800">${nutrient.displayName}</div>
+          <div class="text-xs text-gray-600 mb-2">${nutrient.unit}</div>
+        `;
+
+        for (let i = 0; i < ranges.length; i++) {
+          const from = ranges[i];
+          const to = ranges[i + 1];
+          const label =
+            selectedNutrient === "lime"
+              ? from === 0
+                ? "Not Applied"
+                : "Applied"
+              : `${from}${to ? "&ndash;" + to : "+"}`;
+
+          html += `
+            <div class="flex items-center gap-2 my-1">
+              <i style="background:${colors[i]}; width: 20px; height: 20px; display: inline-block; border: 1px solid #ccc;"></i>
+              <span class="text-xs font-medium">${label}</span>
+            </div>`;
+        }
+
+        div.innerHTML = html;
+        return div;
+      };
+
+      legend.addTo(mapRef.current);
+      legendRef.current = legend;
+
+      // Add plot outlines if available
+      if (plotData) {
+        const plotLayer = L.geoJSON(plotData as Feature<Geometry>, {
+          style: {
+            color: "#000",
+            weight: 2,
+            fillColor: "transparent",
+            fillOpacity: 0
+          },
+          pane: "vector-pane"
         });
+
+        mapRef.current.addLayer(plotLayer);
+        plotLayerRef.current = plotLayer;
+
+        const plotBounds = plotLayer.getBounds();
+        if (plotBounds.isValid()) {
+          mapRef.current.fitBounds(plotBounds, {
+            padding: [50, 50],
+            animate: true,
+            maxZoom: 20
+          });
+        }
       }
+    } catch (error) {
+      console.error("Error updating map:", error);
     }
+  }, [vrData, selectedNutrient, mapInitialized]);
 
-    // Cleanup function
-    return () => {
-      if (plotLayer) {
-        map.removeLayer(plotLayer);
+  // Clean up map and all references
+  const cleanupMap = () => {
+    try {
+      if (plotLayerRef.current && mapRef.current) {
+        mapRef.current.removeLayer(plotLayerRef.current);
+        plotLayerRef.current = null;
       }
-      map.removeControl(legend);
 
-      // Don't remove the map here - just remove references and layers
-    };
-  }, [vrData, selectedNutrient]);
+      if (vrLayerRef.current && mapRef.current) {
+        mapRef.current.removeLayer(vrLayerRef.current);
+        vrLayerRef.current = null;
+      }
+
+      if (legendRef.current && mapRef.current) {
+        mapRef.current.removeControl(legendRef.current);
+        legendRef.current = null;
+      }
+
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+
+      setMapInitialized(false);
+    } catch (error) {
+      console.error("Error cleaning up map:", error);
+    }
+  };
 
   // Component unmount cleanup
   useEffect(() => {
-    // This cleanup runs when the component unmounts
     return () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-      }
+      cleanupMap();
     };
   }, []);
 
@@ -916,7 +966,7 @@ function NutrientMap() {
         style={{ zIndex: 1 }}
       >
         <div
-          ref={mapRef}
+          ref={mapContainerRef}
           className="w-full h-full"
           style={{ background: "#f0f0f0" }}
         />
@@ -1203,9 +1253,9 @@ export default function SampleReportContent() {
                             <TableCell className="text-sm font-medium">
                               BS Ca (%)
                             </TableCell>
-                            <TableCell className="text-sm">56.0</TableCell>
+                            <TableCell className="text-sm">51.0</TableCell>
                             <TableCell className="text-sm">55.0</TableCell>{" "}
-                            <TableCell className="text-sm">57.0</TableCell>
+                            <TableCell className="text-sm">68.0</TableCell>
                           </TableRow>
                           <TableRow>
                             <TableCell className="text-sm font-medium">
@@ -1498,8 +1548,7 @@ export default function SampleReportContent() {
       details: [
         {
           title: "Nutrient Analysis",
-          description:
-            "Visual mapping of key nutrients.",
+          description: "Visual mapping of key nutrients.",
           icon: Map
         },
         {
