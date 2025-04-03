@@ -28,7 +28,7 @@ const nutrientInfo = {
   magnesium: {
     displayName: "Magnesium (Mg)",
     property: "Mg_M3_ppm",
-    unit: "lbs/ac",
+    unit: "ppm",
     ranges: [0, 100, 150, 200, 250], // Based on actual data range: 90-181 ppm
     colors: ["#E53935", "#F57C00", "#FDD835", "#8BC34A", "#388E3C"]
   },

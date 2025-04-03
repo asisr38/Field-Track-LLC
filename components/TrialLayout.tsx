@@ -369,7 +369,7 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
                   className="rounded text-blue-600 border-gray-300 dark:border-gray-600 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-800 dark:text-gray-200">
-                  V2 Raster
+                  RGB
                 </span>
               </label>
 

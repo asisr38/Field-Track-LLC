@@ -176,7 +176,7 @@ const nutrientColorScales = {
   magnesium: {
     ranges: [0, 100, 150, 200, 250],
     colors: ["#E53935", "#F57C00", "#FDD835", "#8BC34A", "#388E3C"],
-    unit: "lbs/ac"
+    unit: "ppm"
   },
   calcium: {
     ranges: [0, 800, 1000, 1200, 1400],
