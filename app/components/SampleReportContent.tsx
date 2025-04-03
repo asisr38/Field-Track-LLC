@@ -664,7 +664,6 @@ function NutrientMap() {
   const [vrData, setVrData] = useState<any>(null);
   const [plotData, setPlotData] = useState<any>(null);
   const [mapInitialized, setMapInitialized] = useState<boolean>(false);
-  const [loadError, setLoadError] = useState<string | null>(null);
 
   // Define color scales and ranges for each nutrient
   interface NutrientInfo {
@@ -727,32 +726,13 @@ function NutrientMap() {
 
   const loadVrData = async () => {
     try {
-      setLoadError(null);
-      // File names start with uppercase (Phosphorus_VR_v2.json, not phosphorus_VR_v2.json)
-      const nutrientName = selectedNutrient as string;
-      const url = `/field-sampling/data/${
-        nutrientName.charAt(0).toUpperCase() + nutrientName.slice(1)
-      }_VR_v2.json`;
-      console.log(`Attempting to fetch: ${url}`);
-
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        const errorMsg = `Failed to fetch data: ${response.status} ${response.statusText}`;
-        console.error(errorMsg);
-        setLoadError(errorMsg);
-        return;
-      }
-
+      const response = await fetch(
+        `/field-sampling/data/${selectedNutrient}_VR_v2.json`
+      );
       const data = await response.json();
-      console.log(`Data loaded successfully for ${selectedNutrient}`);
       setVrData(data);
     } catch (error) {
-      const errorMsg = `Error loading VR data: ${
-        error instanceof Error ? error.message : String(error)
-      }`;
-      console.error(errorMsg);
-      setLoadError(errorMsg);
+      console.error("Error loading VR data:", error);
     }
   };
 
@@ -985,23 +965,6 @@ function NutrientMap() {
         className="relative h-[500px] rounded-2xl overflow-hidden border border-border/50 shadow-lg"
         style={{ zIndex: 1 }}
       >
-        {loadError && (
-          <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-10 p-4">
-            <div className="bg-red-50 text-red-800 p-4 rounded-lg max-w-md text-center">
-              <p className="font-medium mb-2">Error Loading Map Data</p>
-              <p className="text-sm">{loadError}</p>
-              <button
-                onClick={() => {
-                  setLoadError(null);
-                  loadVrData();
-                }}
-                className="mt-4 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 rounded-md text-sm font-medium"
-              >
-                Try Again
-              </button>
-            </div>
-          </div>
-        )}
         <div
           ref={mapContainerRef}
           className="w-full h-full"

@@ -18,7 +18,7 @@ const steps = [
       "Sampling strategies for trial"
     ],
     icon: Lightbulb,
-    image: "/new/plan.webp",
+    image: "/process/plan.webp",
     alt: "Field implementation of agricultural strategy with equipment in operation"
   },
   {
@@ -31,7 +31,7 @@ const steps = [
       "Spatial decision-support layers and weather tracking"
     ],
     icon: Database,
-    image: "/new/datacollect.jpg",
+    image: "/process/datacollect.webp",
     alt: "Spatial field data visualization showing variable crop conditions"
   },
   {
@@ -44,7 +44,7 @@ const steps = [
       "Year-over-year performance tracking and trend identification"
     ],
     icon: BarChart2,
-    image: "/images/implementation.jpg",
+    image: "/process/implementation.webp",
     alt: "Spatial data analysis of agricultural fields"
   },
   {
@@ -53,7 +53,7 @@ const steps = [
       "Clear reports transform complex data into practical insight and recommendations, empowering confident decisions.",
     details: [],
     icon: FileText,
-    image: "/images/onfield.jpg",
+    image: "/process/onfield.jpg",
     alt: "Farmer reviewing customized agricultural report in the field"
   }
 ];
