@@ -235,6 +235,8 @@ const ProductEfficacyTab = ({
   productData: any[];
   productStats: any;
 }) => {
+  const { theme } = useTheme();
+
   // Ensure we have valid data for the charts - add a default fallback for empty arrays
   const validProductData =
     productData?.length > 0
@@ -345,8 +347,14 @@ const ProductEfficacyTab = ({
                   label={{
                     value: "Treatment",
                     position: "bottom",
-                    offset: 2
+                    offset: 2,
+                    style: {
+                      fill: theme === "dark" ? "#e1e1e1" : "#333333",
+                      fontSize: "13px",
+                      fontWeight: 500
+                    }
                   }}
+                  tick={{ fill: theme === "dark" ? "#e1e1e1" : "#333333" }}
                 />
                 <YAxis
                   domain={[domainMin, domainMax]}
@@ -354,17 +362,71 @@ const ProductEfficacyTab = ({
                     value: "Yield (Bu/Ac)",
                     angle: -90,
                     position: "insideLeft",
-                    offset: 2
+                    offset: 2,
+                    style: {
+                      fill: theme === "dark" ? "#e1e1e1" : "#333333",
+                      fontSize: "13px",
+                      fontWeight: 500
+                    }
                   }}
                   tickCount={7}
+                  tick={{ fill: theme === "dark" ? "#e1e1e1" : "#333333" }}
                 />
                 <RechartsTooltip
-                  formatter={(value, name) => {
-                    if (name === "yield")
-                      return [`${Number(value).toFixed(1)} bu/ac`, "Yield"];
-                    if (name === "yieldProd")
-                      return [`$${Number(value).toFixed(1)}`, "ROI"];
-                    return [value, name];
+                  contentStyle={{
+                    backgroundColor: theme === "dark" ? "#1f1f1f" : "#ffffff",
+                    border: `1px solid ${
+                      theme === "dark" ? "#444444" : "#e0e0e0"
+                    }`,
+                    borderRadius: "8px",
+                    color: theme === "dark" ? "#e1e1e1" : "#333333",
+                    boxShadow:
+                      theme === "dark"
+                        ? "0 4px 12px rgba(0, 0, 0, 0.3)"
+                        : "0 2px 8px rgba(0, 0, 0, 0.1)",
+                    padding: "0"
+                  }}
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      // Find the yield value from the payload
+                      const yieldData = payload.find(
+                        item => item.dataKey === "yield"
+                      );
+                      if (yieldData) {
+                        // Find the color for this product
+                        const productColor =
+                          validProductData.find(item => item.name === label)
+                            ?.color || "#8884d8";
+
+                        return (
+                          <div className="bg-card rounded-lg shadow-md overflow-hidden">
+                            <div
+                              className="px-4 py-2 text-base font-semibold"
+                              style={{
+                                backgroundColor:
+                                  theme === "dark"
+                                    ? `${productColor}33`
+                                    : `${productColor}11`,
+                                color: productColor
+                              }}
+                            >
+                              {label}
+                            </div>
+                            <div className="p-3">
+                              <div className="flex items-center justify-between gap-4">
+                                <span className="text-muted-foreground text-sm">
+                                  Yield:
+                                </span>
+                                <span className="font-medium">
+                                  {Number(yieldData.value).toFixed(1)} bu/ac
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                    }
+                    return null;
                   }}
                 />
                 <Bar
@@ -384,12 +446,12 @@ const ProductEfficacyTab = ({
                     dataKey="error"
                     width={4}
                     strokeWidth={2}
-                    stroke="#666"
+                    stroke={theme === "dark" ? "#666666" : "#444444"}
                   />
                 </Bar>
                 <Scatter
                   dataKey="yield"
-                  fill="#fff"
+                  fill={theme === "dark" ? "#ffffff" : "#000000"}
                   shape={(props: any) => {
                     const { cx, cy } = props;
                     return (
@@ -397,9 +459,9 @@ const ProductEfficacyTab = ({
                         cx={cx}
                         cy={cy}
                         r={4}
-                        stroke="#000"
+                        stroke={theme === "dark" ? "#ffffff" : "#000000"}
                         strokeWidth={1}
-                        fill="#fff"
+                        fill={theme === "dark" ? "#ffffff" : "#000000"}
                       />
                     );
                   }}
@@ -456,132 +518,6 @@ const ProductEfficacyTab = ({
         </div>
       </div>
     </div>
-  );
-};
-
-// Multi-Year Component
-const MultiYearChart = () => {
-  const data = [
-    { year: "2022", standard: 205, enhanced: 212, split: 218 },
-    { year: "2023", standard: 215, enhanced: 224, split: 227 },
-    { year: "2024", standard: 221, enhanced: 228, split: 233 }
-  ];
-
-  return (
-    <ResponsiveContainer width="100%" height={200}>
-      <RechartsLineChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.1} />
-        <XAxis dataKey="year" />
-        <YAxis domain={[200, 240]} />
-        <RechartsTooltip />
-        <Line
-          type="monotone"
-          dataKey="standard"
-          stroke="#8884d8"
-          strokeWidth={2}
-          dot={{ r: 4 }}
-          name="Standard"
-        />
-        <Line
-          type="monotone"
-          dataKey="enhanced"
-          stroke="#82ca9d"
-          strokeWidth={2}
-          dot={{ r: 4 }}
-          name="Enhanced"
-        />
-        <Line
-          type="monotone"
-          dataKey="split"
-          stroke="#ffc658"
-          strokeWidth={2}
-          dot={{ r: 4 }}
-          name="Split App"
-        />
-      </RechartsLineChart>
-    </ResponsiveContainer>
-  );
-};
-
-// GDD vs NDVI Scatter Chart Component
-const GDDvsNDVIChart = () => {
-  // Ensure safe, valid data with default values
-  const safeData = {
-    productA: [
-      { gdd: 1250, ndvi: 0.72, z: 215 },
-      { gdd: 1320, ndvi: 0.75, z: 218 },
-      { gdd: 1450, ndvi: 0.81, z: 221 }
-    ],
-    productB: [
-      { gdd: 1280, ndvi: 0.75, z: 227 },
-      { gdd: 1350, ndvi: 0.79, z: 230 },
-      { gdd: 1480, ndvi: 0.85, z: 228 }
-    ],
-    productC: [
-      { gdd: 1270, ndvi: 0.69, z: 210 },
-      { gdd: 1340, ndvi: 0.73, z: 215 },
-      { gdd: 1460, ndvi: 0.78, z: 220 }
-    ],
-    untreated: [
-      { gdd: 1260, ndvi: 0.67, z: 208 },
-      { gdd: 1330, ndvi: 0.7, z: 212 },
-      { gdd: 1440, ndvi: 0.76, z: 216 }
-    ]
-  };
-
-  return (
-    <ResponsiveContainer width="100%" height={300}>
-      <ScatterChart margin={{ top: 20, right: 20, bottom: 40, left: 20 }}>
-        <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
-        <XAxis
-          type="number"
-          dataKey="gdd"
-          name="GDD"
-          domain={[1200, 1600]}
-          label={{ value: "Growing Degree Days", position: "bottom" }}
-        />
-        <YAxis
-          type="number"
-          dataKey="ndvi"
-          name="NDVI"
-          domain={[0.6, 0.9]}
-          label={{ value: "NDVI Value", angle: -90, position: "insideLeft" }}
-        />
-        <RechartsTooltip
-          formatter={(value: any, name: string) => {
-            if (name === "NDVI" && typeof value === "number" && !isNaN(value))
-              return [value.toFixed(2), name];
-            return [value, name];
-          }}
-          cursor={{ strokeDasharray: "3 3" }}
-        />
-        <Scatter
-          name="Product A"
-          data={safeData.productA}
-          fill="#e6194B"
-          opacity={0.7}
-        />
-        <Scatter
-          name="Product B"
-          data={safeData.productB}
-          fill="#3cb44b"
-          opacity={0.7}
-        />
-        <Scatter
-          name="Product C"
-          data={safeData.productC}
-          fill="#ffe119"
-          opacity={0.7}
-        />
-        <Scatter
-          name="Untreated"
-          data={safeData.untreated}
-          fill="#808080"
-          opacity={0.7}
-        />
-        <RechartsLegend />
-      </ScatterChart>
-    </ResponsiveContainer>
   );
 };
 
@@ -1779,12 +1715,21 @@ export default function OnFarmResearchPage() {
                                     borderRadius: "0.375rem",
                                     padding: "0.5rem 0.75rem",
                                     fontSize: "0.875rem",
-                                    boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
+                                    boxShadow:
+                                      theme === "dark"
+                                        ? "0 4px 6px rgba(0, 0, 0, 0.3)"
+                                        : "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
                                   }}
                                   itemStyle={{
                                     color: chartColors.text,
                                     fontSize: "0.875rem",
                                     padding: "2px 0"
+                                  }}
+                                  cursor={{
+                                    fill:
+                                      theme === "dark"
+                                        ? "rgba(255, 255, 255, 0.1)"
+                                        : "rgba(0, 0, 0, 0.05)"
                                   }}
                                 />
                                 <RechartsLegend

@@ -172,6 +172,7 @@ export default function Process() {
                       height: "100%"
                     }}
                     priority={index === 0}
+                    unoptimized
                   />
                   {index === 3 && (
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
@@ -183,6 +184,7 @@ export default function Process() {
                             width={120}
                             height={80}
                             className="rounded-md shadow-lg"
+                            unoptimized
                           />
                           <div>
                             <p className="font-semibold">
