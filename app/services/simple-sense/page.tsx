@@ -831,7 +831,7 @@ export default function SimpleSensePage() {
                         which treatments perform best at each crop development
                         stage.
                       </p>
-                      <div className="h-[400px] w-full">
+                      <div className="h-[450px] sm:h-[420px] lg:h-[400px] w-full mt-6">
                         <ResponsiveContainer width="100%" height="100%">
                           <RechartsLineChart
                             data={(() => {
@@ -908,10 +908,10 @@ export default function SimpleSensePage() {
                               return extractNDVIData();
                             })()}
                             margin={{
-                              top: 20,
+                              top: 30,
                               right: 30,
                               left: 20,
-                              bottom: 20
+                              bottom: 60
                             }}
                           >
                             <CartesianGrid strokeDasharray="3 3" />
@@ -950,7 +950,16 @@ export default function SimpleSensePage() {
                                 color: "var(--muted-foreground)"
                               }}
                             />
-                            <Legend verticalAlign="top" height={36} />
+                            <Legend
+                              verticalAlign="bottom"
+                              height={36}
+                              iconSize={8}
+                              wrapperStyle={{
+                                fontSize: "14px",
+                                overflowWrap: "break-word",
+                                paddingTop: "32px"
+                              }}
+                            />
                             {(() => {
                               // Get the treatments directly from the data
                               const treatments = [
@@ -980,9 +989,9 @@ export default function SimpleSensePage() {
                                   dataKey={treatment}
                                   name={`Treatment ${treatment}`}
                                   stroke={colors[index % colors.length]}
-                                  activeDot={{ r: 8 }}
+                                  activeDot={{ r: 6 }}
                                   strokeWidth={2}
-                                  dot={{ strokeWidth: 2 }}
+                                  dot={{ strokeWidth: 2, r: 4 }}
                                 />
                               ));
                             })()}
