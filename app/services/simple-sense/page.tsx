@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
-import demoPlotData from "@/public/simple-sense/SmallPlots_Demo_v6_WGS_Plots_ExtractionZones.json";
+import demoPlotData from "@/public/simple-sense/ExtractionZones_v2.json";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IconContext } from "react-icons";
@@ -39,7 +39,7 @@ import {
   Line,
   ResponsiveContainer
 } from "recharts";
-import plotData from "../../../public/simple-sense/SmallPlots_Demo_v6_WGS_Plots_ExtractionZones.json";
+import plotData from "../../../public/simple-sense/ExtractionZones_v2.json";
 
 // Dynamic import of TrialLayout component
 const TrialLayout = dynamic(() => import("@/components/TrialLayout"), {
