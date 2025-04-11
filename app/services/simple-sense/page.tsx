@@ -943,11 +943,13 @@ export default function SimpleSensePage() {
                               labelFormatter={label => `Timing: ${label}`}
                               contentStyle={{
                                 borderColor: "var(--border)",
-                                backgroundColor: "var(--card)",
-                                color: "var(--foreground)"
+                                backgroundColor: "white",
+                                color: "var(--foreground)",
+                                fontSize: "12px"
                               }}
                               labelStyle={{
-                                color: "var(--muted-foreground)"
+                                color: "black",
+                                fontSize: "12px"
                               }}
                             />
                             <Legend

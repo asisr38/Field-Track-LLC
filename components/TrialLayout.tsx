@@ -41,7 +41,9 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
         setPlotRaster(plotRasterData);
 
         console.log("Starting to load Variability Map...");
-        const variMapResponse = await fetch("/simple-sense/DSM_Soil.tif");
+        const variMapResponse = await fetch(
+          "/simple-sense/VegIndex_NoSoil.tif"
+        );
         if (!variMapResponse.ok) {
           throw new Error(
             `Failed to fetch variability map: ${variMapResponse.status}`
@@ -286,7 +288,34 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
         georaster,
         opacity: 1.0, // Full opacity for all raster layers
         resolution: 256,
-        pane: "raster-pane"
+        pane: "raster-pane",
+        // Apply grayscale visualization with stretch to min/max for variMap
+        pixelValuesToColorFn: isVariMap
+          ? values => {
+              const val = values[0]; // First band contains values
+
+              // Check for no-data values
+              if (val === null || val === -9999 || isNaN(val)) {
+                return "rgba(0,0,0,0)"; // Transparent for no data
+              }
+
+              // Apply min/max stretch (0.121107 to 1.47059)
+              const min = 0.121107;
+              const max = 1.47059;
+
+              // Normalize value between 0 and 1 using the min/max range
+              let normalized = (val - min) / (max - min);
+
+              // Clamp between 0 and 1
+              normalized = Math.max(0, Math.min(1, normalized));
+
+              // Convert to 0-255 integer for grayscale (black to white)
+              const pixelValue = Math.round(normalized * 255);
+
+              // Return grayscale color with appropriate alpha
+              return `rgba(${pixelValue},${pixelValue},${pixelValue},0.9)`;
+            }
+          : undefined
       });
 
       // Add the layer to the map
