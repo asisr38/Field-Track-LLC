@@ -8,7 +8,7 @@ import {
   LayersControl
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import demoPlotData from "@/public/simple-sense/SmallPlots_Demo_v6_WGS_Plots_ExtractionZones.json";
+import demoPlotData from "@/public/simple-sense/ExtractionZones_v2.json";
 import { useCallback, useEffect, useState, useRef, useMemo } from "react";
 import type { FeatureCollection, Feature, GeoJsonProperties } from "geojson";
 import { PathOptions, LatLngBounds, latLng, PointTuple } from "leaflet";
@@ -29,9 +29,7 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
     const loadGeoTIFFs = async () => {
       try {
         console.log("Starting to load Plot Raster...");
-        const plotRasterResponse = await fetch(
-          "/simple-sense/Plots_Raster_SmallPlots_v2_WGS.tif"
-        );
+        const plotRasterResponse = await fetch("/simple-sense/RGB_Soil.tif");
         if (!plotRasterResponse.ok) {
           throw new Error(
             `Failed to fetch plot raster: ${plotRasterResponse.status}`
@@ -39,18 +37,11 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
         }
         const plotRasterArrayBuffer = await plotRasterResponse.arrayBuffer();
         const plotRasterData = await parseGeoraster(plotRasterArrayBuffer);
-        console.log("Plot Raster Data loaded:", {
-          noDataValue: plotRasterData.noDataValue,
-          xmin: plotRasterData.xmin,
-          xmax: plotRasterData.xmax,
-          ymin: plotRasterData.ymin,
-          ymax: plotRasterData.ymax,
-          values: plotRasterData.values ? plotRasterData.values.length : 0
-        });
+
         setPlotRaster(plotRasterData);
 
         console.log("Starting to load Variability Map...");
-        const variMapResponse = await fetch("/simple-sense/vari_map_WGS.tif");
+        const variMapResponse = await fetch("/simple-sense/DSM_Soil.tif");
         if (!variMapResponse.ok) {
           throw new Error(
             `Failed to fetch variability map: ${variMapResponse.status}`
@@ -58,14 +49,7 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
         }
         const variMapArrayBuffer = await variMapResponse.arrayBuffer();
         const variMapData = await parseGeoraster(variMapArrayBuffer);
-        console.log("Variability Map Data loaded:", {
-          noDataValue: variMapData.noDataValue,
-          xmin: variMapData.xmin,
-          xmax: variMapData.xmax,
-          ymin: variMapData.ymin,
-          ymax: variMapData.ymax,
-          values: variMapData.values ? variMapData.values.length : 0
-        });
+
         setVariMapRaster(variMapData);
       } catch (error) {
         console.error("Error loading GeoTIFF files:", error);
