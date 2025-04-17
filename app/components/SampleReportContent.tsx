@@ -680,7 +680,7 @@ function NutrientMap() {
 
   const nutrientInfo: NutrientInfoMap = {
     phosphorus: {
-      displayName: "Phosphorus (P)",
+      displayName: "Phosphorus (P₂O₅ - ppm)",
       ranges: [0, 20, 40, 60, 80, 90],
       colors: [
         "#FFE5E5", // 0-20
@@ -694,7 +694,7 @@ function NutrientMap() {
       property: "18-46-D"
     },
     potassium: {
-      displayName: "Potassium (K)",
+      displayName: "Potassium (K₂O - ppm)",
       ranges: [190, 195, 200, 205, 210],
       colors: [
         "#E6F3FF", // 190-195
@@ -724,15 +724,35 @@ function NutrientMap() {
     return nutrient.colors[nutrient.colors.length - 1];
   };
 
+  const getCapitalizedFileName = (
+    nutrient: keyof typeof nutrientInfo
+  ): string => {
+    // Ensure consistent capitalization to match actual file names
+    if (nutrient === "phosphorus") return "Phosphorus";
+    if (nutrient === "potassium") return "Potassium";
+    if (nutrient === "lime") return "Lime";
+    return String(nutrient);
+  };
+
   const loadVrData = async () => {
     try {
+      const fileName = getCapitalizedFileName(selectedNutrient);
+      console.log(`Loading VR data for ${fileName}`);
       const response = await fetch(
-        `/field-sampling/data/${selectedNutrient}_VR_v2.json`
+        `/field-sampling/data/${fileName}_VR_v2.json`
       );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to load ${fileName}_VR_v2.json (${response.status})`
+        );
+      }
+
       const data = await response.json();
       setVrData(data);
     } catch (error) {
       console.error("Error loading VR data:", error);
+      // Show fallback message or data if needed
     }
   };
 
@@ -955,8 +975,8 @@ function NutrientMap() {
             }
             className="px-3 py-2 rounded-lg border border-border bg-background text-sm font-medium"
           >
-            <option value="phosphorus">Phosphorus (P)</option>
-            <option value="potassium">Potassium (K)</option>
+            <option value="phosphorus">Phosphorus (P₂O₅ - ppm)</option>
+            <option value="potassium">Potassium (K₂O - ppm)</option>
             <option value="lime">Lime Application</option>
           </select>
         </div>
