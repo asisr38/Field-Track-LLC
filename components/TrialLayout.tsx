@@ -29,7 +29,7 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
     const loadGeoTIFFs = async () => {
       try {
         console.log("Starting to load Plot Raster...");
-        const plotRasterResponse = await fetch("/simple-sense/RGB_Soil.tif");
+        const plotRasterResponse = await fetch("/simple-sense/RGB_NoSoil.tif");
         if (!plotRasterResponse.ok) {
           throw new Error(
             `Failed to fetch plot raster: ${plotRasterResponse.status}`
@@ -42,7 +42,7 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
 
         console.log("Starting to load Variability Map...");
         const variMapResponse = await fetch(
-          "/simple-sense/VegIndex_NoSoil.tif"
+          "/simple-sense/NDVI_Symbology_v2.tif"
         );
         if (!variMapResponse.ok) {
           throw new Error(
@@ -167,18 +167,18 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
     const items =
       view === "treatment"
         ? [
-            { label: "A - Treatment A, Time 1", color: "#e6194B" },
-            { label: "B - Treatment A, Time 2", color: "#3cb44b" },
-            { label: "C - Treatment A, Time 3", color: "#ffe119" },
-            { label: "D - Treatment A, Time 4", color: "#4363d8" },
-            { label: "E - Treatment B, Time 1", color: "#f58231" },
-            { label: "F - Treatment B, Time 2", color: "#911eb4" },
-            { label: "G - Treatment B, Time 3", color: "#42d4f4" },
-            { label: "H - Treatment B, Time 4", color: "#f032e6" },
-            { label: "I - Treatment C, Time 1", color: "#bfef45" },
-            { label: "J - Treatment C, Time 2", color: "#fabed4" },
-            { label: "K - Treatment C, Time 3", color: "#469990" },
-            { label: "L - Treatment C, Time 4", color: "#dcbeff" }
+            { label: "A - Product A, Time 1", color: "#e6194B" },
+            { label: "B - Product A, Time 2", color: "#3cb44b" },
+            { label: "C - Product A, Time 3", color: "#ffe119" },
+            { label: "D - Product A, Time 4", color: "#4363d8" },
+            { label: "E - Product B, Time 1", color: "#f58231" },
+            { label: "F - Product B, Time 2", color: "#911eb4" },
+            { label: "G - Product B, Time 3", color: "#42d4f4" },
+            { label: "H - Product B, Time 4", color: "#f032e6" },
+            { label: "I - Product C, Time 1", color: "#bfef45" },
+            { label: "J - Product C, Time 2", color: "#fabed4" },
+            { label: "K - Product C, Time 3", color: "#469990" },
+            { label: "L - Product C, Time 4", color: "#dcbeff" }
           ]
         : [
             { label: "Replication 1", color: "#4363d8" },
@@ -222,7 +222,7 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
           <>
             <div className="flex items-center justify-between mb-2">
               <h6 className="font-semibold text-black dark:text-white">
-                {view === "treatment" ? "Treatments" : "Replications"}
+                {view === "treatment" ? "Products" : "Replications"}
               </h6>
               <button
                 onClick={() => setIsCollapsed(true)}
@@ -283,40 +283,25 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
         map.getPane("raster-pane")!.style.zIndex = "250";
       }
 
-      // Create the layer
-      const layer = new GeoRasterLayer({
+      // Create the layer with appropriate configuration based on layer type
+      const layerOptions = {
         georaster,
-        opacity: 1.0, // Full opacity for all raster layers
+        opacity: 1.0,
         resolution: 256,
-        pane: "raster-pane",
-        // Apply grayscale visualization with stretch to min/max for variMap
-        pixelValuesToColorFn: isVariMap
-          ? values => {
-              const val = values[0]; // First band contains values
+        pane: "raster-pane"
+      };
 
-              // Check for no-data values
-              if (val === null || val === -9999 || isNaN(val)) {
-                return "rgba(0,0,0,0)"; // Transparent for no data
-              }
+      // If it's not the VARI map (NDVI_Symbology_v2.tif), we can apply custom coloring
+      // For the VARI map (isVariMap=true), we'll use the pre-symbolized data as is
+      if (!isVariMap) {
+        // Only apply custom coloring to the RGB layer
+        Object.assign(layerOptions, {
+          pixelValuesToColorFn: undefined
+        });
+      }
 
-              // Apply min/max stretch (0.121107 to 1.47059)
-              const min = 0.121107;
-              const max = 1.47059;
-
-              // Normalize value between 0 and 1 using the min/max range
-              let normalized = (val - min) / (max - min);
-
-              // Clamp between 0 and 1
-              normalized = Math.max(0, Math.min(1, normalized));
-
-              // Convert to 0-255 integer for grayscale (black to white)
-              const pixelValue = Math.round(normalized * 255);
-
-              // Return grayscale color with appropriate alpha
-              return `rgba(${pixelValue},${pixelValue},${pixelValue},0.9)`;
-            }
-          : undefined
-      });
+      // Create the layer with the appropriate options
+      const layer = new GeoRasterLayer(layerOptions);
 
       // Add the layer to the map
       map.addLayer(layer);

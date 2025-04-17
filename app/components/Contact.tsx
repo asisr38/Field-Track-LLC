@@ -214,9 +214,7 @@ ${formData.message}
               Get in <span className="text-primary">Touch</span>
             </h2>
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
-              Tell us about your fields and objectives. We'll create a
-              personalized precision agriculture plan that maximizes your yields
-              and profitability.
+              Tell us about your objectives.
             </p>
           </motion.div>
         </div>
@@ -245,7 +243,7 @@ ${formData.message}
                   </h4>
                   <p className="text-sm sm:text-base text-muted-foreground">
                     Your message has been sent successfully. We'll get back to
-                    you shortly to discuss your agricultural needs.
+                    you.
                   </p>
                 </div>
               ) : (

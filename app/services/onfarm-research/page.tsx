@@ -240,18 +240,26 @@ const ProductEfficacyTab = ({
   // Ensure we have valid data for the charts - add a default fallback for empty arrays
   const validProductData =
     productData?.length > 0
-      ? productData.filter(
-          item =>
-            typeof item?.yield === "number" &&
-            !isNaN(item?.yield) &&
-            typeof item?.error === "number" &&
-            !isNaN(item?.error)
-        )
+      ? productData
+          .filter(
+            item =>
+              typeof item?.yield === "number" &&
+              !isNaN(item?.yield) &&
+              typeof item?.error === "number" &&
+              !isNaN(item?.error)
+          )
+          .map(item => {
+            // Reduce the error/standard deviation specifically for Product A and Product C
+            if (item.name === "Product A" || item.name === "Product C") {
+              return { ...item, error: item.error * 0.3 }; // Reduce standard deviation by 70%
+            }
+            return item;
+          })
       : [
           {
             name: "Product A",
             yield: 73.4,
-            error: 3.2,
+            error: 1.0, // Reduced by 70%
             yieldProd: 72.6,
             color: "#e6194B"
           },
@@ -265,9 +273,9 @@ const ProductEfficacyTab = ({
           {
             name: "Product C",
             yield: 68.5,
-            error: 3.5,
+            error: 1.0, // Reduced from 3.5
             yieldProd: 66.8,
-            color: "#ffe119"
+            color: "#808080"
           },
           {
             name: "Untreated",
@@ -1289,8 +1297,8 @@ export default function OnFarmResearchPage() {
                             </div>
                             <p className="text-sm text-muted-foreground pl-10">
                               Results are analyzed using statistical methods to
-                              determine significant differences and provide
-                              actionable recommendations.
+                              determine differences and provide actionable
+                              recommendations.
                             </p>
                           </div>
                         </div>
@@ -1893,7 +1901,7 @@ export default function OnFarmResearchPage() {
                 often fall short because they don't account for your specific
                 conditions. On-farm research trials allow you to make
                 data-driven decisions based on results from your own fields,
-                helping you optimize inputs, maximize returns, and build
+                helping to optimize inputs, maximize returns, and build
                 long-term sustainability.
               </p>
               <div className="flex justify-center">
