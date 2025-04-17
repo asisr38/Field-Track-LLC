@@ -11,7 +11,7 @@ const steps = [
   {
     title: "Plan and Set-Up",
     description:
-      "Field- and product-specific strategies are designed to align with your equipment, enabling effective farm data collection to achieve your research goals.",
+      "Field- and product-specific strategies are designed to align with modern farm equipment and UAV technology, enabling effective application and data collection to meet your research goals.",
     details: [
       "Trial procurement and placement",
       "Prescriptions and guidance layers",

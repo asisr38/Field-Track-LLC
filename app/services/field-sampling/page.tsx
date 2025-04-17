@@ -122,13 +122,13 @@ const features = [
 const nutrientOptions = [
   {
     value: "phosphorus",
-    label: "Phosphorus (P)",
+    label: "Phosphorus (P₂O₅ - ppm)",
     description:
       "Essential for root development, flowering, and energy transfer"
   },
   {
     value: "potassium",
-    label: "Potassium (K)",
+    label: "Potassium (K₂O - ppm)",
     description:
       "Critical for water regulation, disease resistance, and overall plant health"
   },
@@ -383,7 +383,7 @@ export default function FieldSamplingPage() {
               >
                 <div className="space-y-2">
                   <DataRow label="Sample Date" value="October 12, 2024" />
-                  <DataRow label="Number of Points" value="20+" />
+                  <DataRow label="Number of Points" value="18" />
                   <DataRow label="Sampling Depth" value="6 inches" />
                   <DataRow label="Sampling Pattern" value="Grid" />
                 </div>
@@ -482,10 +482,9 @@ export default function FieldSamplingPage() {
                   Ready to Optimize Your Field Management?
                 </h3>
                 <p className="text-center text-muted-foreground mb-6">
-                  Our comprehensive field services package includes precision
-                  soil sampling, variable rate prescriptions, data analysis, and
-                  year-round agronomic support to maximize your yields and
-                  optimize input costs.
+                  Our field services include precision sampling, prescriptions,
+                  data analysis, and agronomic support aimed at discovering ways
+                  to boost yields and cut input costs.
                 </p>
                 <div className="flex justify-center">
                   <a

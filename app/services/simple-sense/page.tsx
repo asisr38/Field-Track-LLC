@@ -444,12 +444,13 @@ export default function SimpleSensePage() {
                   <div className="flex flex-col md:flex-row items-start gap-4 mb-6">
                     <div className="space-y-4 w-full">
                       <p className="text-sm text-muted-foreground">
-                        Multispectral Imaging System + RGB Highly integrated
-                        imaging system Imaging system has one 20MP RGB camera
-                        and four 5MP multispectral cameras (green, red, red
-                        edge, and near infrared), enabling applications such as
-                        high-precision aerial surveying, crop growth monitoring,
-                        and natural resource surveys.
+                        An advanced multispectral and RGB integrated imaging
+                        system equipped with a 20MP RGB camera and four 5MP
+                        multispectral cameras (covering green, red, red edge,
+                        and near-infrared wavelengths). This innovative setup
+                        supports a range of precision applications, including
+                        high-resolution aerial surveys, detailed crop growth
+                        analysis, and plot-level monitoring.
                       </p>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
                         <div className="p-3 bg-muted/50 rounded-lg text-center">
@@ -503,9 +504,8 @@ export default function SimpleSensePage() {
                   >
                     <div className="space-y-2">
                       <DataRow label="Flight Height" value="76.2 m" />
-                      <DataRow label="GSD" value="5 cm/px" />
                       <DataRow label="Image Count" value="229" />
-                      <DataRow label="Duration" value="~10 min" />
+                      <DataRow label="Duration" value="~36 min" />
                     </div>
                   </DataCard>
 
@@ -516,9 +516,8 @@ export default function SimpleSensePage() {
                   >
                     <div className="space-y-2">
                       <DataRow label="Image Overlap" value="80%" />
-                      <DataRow label="GSD Achieved" value="4.8 cm/px" />
+                      <DataRow label="GSD Achieved" value="3.0 cm/px" />
                       <DataRow label="Coverage" value="100%" />
-                      <DataRow label="Accuracy" value="± 2cm" />
                     </div>
                   </DataCard>
 
@@ -734,8 +733,9 @@ export default function SimpleSensePage() {
                     Multispectral Imagery
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Interactive visualization of NDVI measurements across
-                    different growth stages.
+                    Interactive visualization of vegetation indices across
+                    different growth stages. Toggle between NDVI and VARI layers
+                    with the controls in the top right.
                   </p>
                 </div>
 
@@ -834,79 +834,88 @@ export default function SimpleSensePage() {
                       <div className="h-[450px] sm:h-[420px] lg:h-[400px] w-full mt-6">
                         <ResponsiveContainer width="100%" height="100%">
                           <RechartsLineChart
-                            data={(() => {
-                              // Function to extract NDVI data directly from the GeoJSON
-                              const extractNDVIData = () => {
-                                // Get unique treatments
-                                const treatments = [
-                                  ...new Set(
-                                    demoPlotData.features.map(
-                                      feature => feature.properties.Trt
-                                    )
-                                  )
-                                ]
-                                  .sort()
-                                  .slice(0, 6); // Get first 6 treatments (A-F)
-
-                                // Initialize data array for the 6 measurement points
-                                const ndviData = [];
-
-                                // For each measurement (1-6)
-                                for (let i = 1; i <= 6; i++) {
-                                  // Fix TypeScript error by properly typing the dataPoint object
-                                  const dataPoint: {
-                                    timing: number;
-                                    [key: string]: number;
-                                  } = { timing: i };
-
-                                  // For each treatment, calculate average NDVI
-                                  treatments.forEach(treatment => {
-                                    // Get all plots with this treatment
-                                    const plots = demoPlotData.features.filter(
-                                      feature =>
-                                        feature.properties.Trt === treatment
-                                    );
-
-                                    if (plots.length > 0) {
-                                      // Calculate average NDVI, explicitly parsing string to number
-                                      const ndviValues = plots.map(plot => {
-                                        const ndviValue =
-                                          plot.properties[
-                                            `NDVI_M_${i}` as keyof typeof plot.properties
-                                          ];
-                                        // Convert string to number (parseFloat handles the string format)
-                                        return typeof ndviValue === "string"
-                                          ? parseFloat(ndviValue)
-                                          : ndviValue;
-                                      });
-
-                                      // Calculate average and add to data point
-                                      const avgNDVI =
-                                        ndviValues.reduce(
-                                          (sum, val) => sum + val,
-                                          0
-                                        ) / ndviValues.length;
-
-                                      // Now TypeScript knows dataPoint can have string keys
-                                      dataPoint[treatment] = Number(
-                                        avgNDVI.toFixed(2)
-                                      );
-                                    }
-                                  });
-
-                                  ndviData.push(dataPoint);
-                                }
-
-                                console.log(
-                                  "Real NDVI data from GeoJSON:",
-                                  ndviData
-                                );
-                                return ndviData;
-                              };
-
-                              // Get the actual data
-                              return extractNDVIData();
-                            })()}
+                            data={[
+                              {
+                                timing: 1,
+                                growthStage: "V4",
+                                A: 0.29,
+                                B: 0.3,
+                                C: 0.28,
+                                D: 0.3,
+                                E: 0.286,
+                                F: 0.3,
+                                G: 0.28,
+                                H: 0.29,
+                                I: 0.3,
+                                J: 0.29,
+                                K: 0.29,
+                                L: 0.31
+                              },
+                              {
+                                timing: 2,
+                                growthStage: "V9",
+                                A: 0.34,
+                                B: 0.385,
+                                C: 0.33,
+                                D: 0.35,
+                                E: 0.37,
+                                F: 0.35,
+                                G: 0.33,
+                                H: 0.34,
+                                I: 0.35,
+                                J: 0.36,
+                                K: 0.34,
+                                L: 0.39
+                              },
+                              {
+                                timing: 3,
+                                growthStage: "R1",
+                                A: 0.69,
+                                B: 0.751,
+                                C: 0.686,
+                                D: 0.71,
+                                E: 0.7,
+                                F: 0.7,
+                                G: 0.645,
+                                H: 0.63,
+                                I: 0.65,
+                                J: 0.71,
+                                K: 0.7,
+                                L: 0.745
+                              },
+                              {
+                                timing: 4,
+                                growthStage: "R3",
+                                A: 0.61,
+                                B: 0.64,
+                                C: 0.612,
+                                D: 0.6,
+                                E: 0.58,
+                                F: 0.6,
+                                G: 0.6,
+                                H: 0.59,
+                                I: 0.61,
+                                J: 0.64,
+                                K: 0.61,
+                                L: 0.649
+                              },
+                              {
+                                timing: 5,
+                                growthStage: "R5",
+                                A: 0.36,
+                                B: 0.379,
+                                C: 0.37,
+                                D: 0.35,
+                                E: 0.36,
+                                F: 0.35,
+                                G: 0.39,
+                                H: 0.36,
+                                I: 0.34,
+                                J: 0.38,
+                                K: 0.35,
+                                L: 0.39
+                              }
+                            ]}
                             margin={{
                               top: 30,
                               right: 30,
@@ -918,15 +927,20 @@ export default function SimpleSensePage() {
                             <XAxis
                               dataKey="timing"
                               label={{
-                                value: "Timing",
+                                value: "Growth Stage",
                                 position: "insideBottom",
                                 offset: -5
                               }}
-                              domain={[0, 7]}
+                              domain={[0.5, 5.5]}
+                              ticks={[1, 2, 3, 4, 5]}
+                              tickFormatter={value => {
+                                const stages = ["V4", "V9", "R1", "R3", "R5"];
+                                return stages[value - 1] || "";
+                              }}
                               tick={{ fontSize: 12 }}
                             />
                             <YAxis
-                              domain={[0, 1.0]}
+                              domain={[0.2, 0.8]}
                               label={{
                                 value: "NDVI",
                                 angle: -90,
@@ -936,11 +950,16 @@ export default function SimpleSensePage() {
                               tick={{ fontSize: 12 }}
                             />
                             <Tooltip
-                              formatter={value => [
-                                Number(value).toFixed(2),
-                                "NDVI"
+                              formatter={(value, name) => [
+                                Number(value).toFixed(3),
+                                `Product ${name}`
                               ]}
-                              labelFormatter={label => `Timing: ${label}`}
+                              labelFormatter={label => {
+                                const stages = ["V4", "V9", "R1", "R3", "R5"];
+                                return `Growth Stage: ${
+                                  stages[label - 1] || ""
+                                }`;
+                              }}
                               contentStyle={{
                                 borderColor: "var(--border)",
                                 backgroundColor: "white",
@@ -961,27 +980,39 @@ export default function SimpleSensePage() {
                                 overflowWrap: "break-word",
                                 paddingTop: "32px"
                               }}
+                              formatter={value => `Product ${value}`}
                             />
                             {(() => {
-                              // Get the treatments directly from the data
+                              // All treatments A through L
                               const treatments = [
-                                ...new Set(
-                                  demoPlotData.features.map(
-                                    feature => feature.properties.Trt
-                                  )
-                                )
-                              ]
-                                .sort()
-                                .slice(0, 6);
+                                "A",
+                                "B",
+                                "C",
+                                "D",
+                                "E",
+                                "F",
+                                "G",
+                                "H",
+                                "I",
+                                "J",
+                                "K",
+                                "L"
+                              ];
 
-                              // Color palette matching the reference image
+                              // Color palette using a broader range of distinct colors for 12 treatments
                               const colors = [
-                                "#1f77b4",
-                                "#ff7f0e",
-                                "#2ca02c",
-                                "#00a2ff",
-                                "#9467bd",
-                                "#8c564b"
+                                "#e6194B", // Red
+                                "#3cb44b", // Green
+                                "#ffe119", // Yellow
+                                "#4363d8", // Blue
+                                "#f58231", // Orange
+                                "#911eb4", // Purple
+                                "#42d4f4", // Cyan
+                                "#f032e6", // Magenta
+                                "#bfef45", // Lime
+                                "#fabed4", // Pink
+                                "#469990", // Teal
+                                "#dcbeff" // Lavender
                               ];
 
                               return treatments.map((treatment, index) => (
@@ -989,7 +1020,7 @@ export default function SimpleSensePage() {
                                   key={treatment}
                                   type="monotone"
                                   dataKey={treatment}
-                                  name={`Treatment ${treatment}`}
+                                  name={treatment}
                                   stroke={colors[index % colors.length]}
                                   activeDot={{ r: 6 }}
                                   strokeWidth={2}

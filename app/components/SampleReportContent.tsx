@@ -2309,12 +2309,6 @@ export default function SampleReportContent() {
           description:
             "Continuous monitoring of field conditions, weather patterns, and crop performance, with regular data analysis and reporting.",
           icon: LineChart
-        },
-        {
-          title: "Year-Round Support",
-          description:
-            "Dedicated agronomist support throughout the season, with regular check-ins and proactive adjustments to maximize your ROI.",
-          icon: Settings
         }
       ]
     }

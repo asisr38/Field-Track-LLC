@@ -86,7 +86,7 @@ export default function About() {
                 {
                   title: "Data Integration",
                   description:
-                    "Seamlessly work with John Deere, Climate FieldView, and other precision ag platforms you already use.",
+                    "Seamlessly work with John Deere, Climate FieldView, and other platforms you already use.",
                   image: "/images/farmmobile.jpg"
                 },
                 {
