@@ -1032,7 +1032,7 @@ export default function SampleReportContent() {
       number: 1,
       title: "Laboratory Analysis",
       description:
-        "We work with certified soil testing laboratories to deliver rapid and reliable soil analysis results.",
+        "We work with certified laboratories to deliver rapid and reliable analysis results.",
       component: (
         <div className="space-y-6">
           {/* Tabs Navigation */}
@@ -2286,7 +2286,7 @@ export default function SampleReportContent() {
       number: 5,
       title: "Implementation & Monitoring",
       description:
-        "Simple, practical steps to put your soil management plan into action, with ongoing support to ensure success.",
+        "Simple, practical steps to put your NUTRIENT management plan into action, with ongoing support to ensure success.",
       component: (
         <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
           <div className="bg-card rounded-lg p-6 border border-border/50">

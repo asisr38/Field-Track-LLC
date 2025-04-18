@@ -326,7 +326,7 @@ export default function FieldSamplingPage() {
                 <h4 className="font-semibold text-lg">Field Observations</h4>
                 <p className="text-muted-foreground text-sm">
                   Regular field scouting provides critical context that
-                  complements and enhances your data-driven decisions.
+                  validates and complements your data-driven decisions.”
                 </p>
               </div>
             </div>

@@ -12,14 +12,14 @@ interface FieldSamplingMapProps {
 // Define nutrient information with display names, property keys, and color scales
 const nutrientInfo = {
   phosphorus: {
-    displayName: "Phosphorus (P)",
+    displayName: "Phosphorus (P₂O₅)",
     property: "P_M3_ppm",
     unit: "ppm",
     ranges: [0, 20, 40, 60, 80], // Based on actual data range: 20-86 ppm
     colors: ["#FF5252", "#FF9800", "#FFEB3B", "#8BC34A", "#4CAF50"]
   },
   potassium: {
-    displayName: "Potassium (K)",
+    displayName: "Potassium (K₂O - ppm)",
     property: "K_M3_ppm",
     unit: "ppm",
     ranges: [0, 30, 40, 50, 60], // Based on actual data range: 30-54 ppm
