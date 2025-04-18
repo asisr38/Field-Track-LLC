@@ -222,7 +222,7 @@ export default function TrialLayout({ view = "treatment" }: TrialLayoutProps) {
           <>
             <div className="flex items-center justify-between mb-2">
               <h6 className="font-semibold text-black dark:text-white">
-                {view === "treatment" ? "Products" : "Replications"}
+                {view === "treatment" ? "Treatment" : "Replications"}
               </h6>
               <button
                 onClick={() => setIsCollapsed(true)}
