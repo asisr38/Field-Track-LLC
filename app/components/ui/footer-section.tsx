@@ -93,15 +93,21 @@ function Footerdemo() {
                 variant="outline"
                 size="icon"
                 className="rounded-full h-10 w-10 border-border hover:bg-primary hover:text-primary-foreground"
+                asChild
               >
-                <Linkedin className="h-4 w-4" />
+                <a href="https://www.linkedin.com/company/field-track-llc/" target="_blank" rel="noopener noreferrer">
+                  <Linkedin className="h-4 w-4" />
+                </a>
               </Button>
               <Button
                 variant="outline"
                 size="icon"
                 className="rounded-full h-10 w-10 border-border hover:bg-primary hover:text-primary-foreground"
+                asChild
               >
-                <Twitter className="h-4 w-4" />
+                <a href="https://x.com/FieldTrack_Ag" target="_blank" rel="noopener noreferrer">
+                  <Twitter className="h-4 w-4" />
+                </a>
               </Button>
             </div>
           </div>
