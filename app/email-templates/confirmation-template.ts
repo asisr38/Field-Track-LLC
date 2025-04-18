@@ -87,18 +87,7 @@ export const generateConfirmationEmail = (name: string) => `
       
       <p>Thank you for reaching out to Field Track LLC. We've received your inquiry and appreciate your interest in our precision agriculture services.</p>
       
-      <p>A member of our team will review your message and get back to you as soon as possible. We're committed to helping you optimize your field operations and maximize your crop yields through data-driven solutions.</p>
-      
-      <div class="services">
-        <h3>Our Agricultural Technology Services Include:</h3>
-        <ul>
-          <li>Precision field mapping and analysis</li>
-          <li>Crop monitoring and data collection</li>
-          <li>Yield optimization strategies</li>
-          <li>Research and development support</li>
-          <li>Customized agricultural data solutions</li>
-        </ul>
-      </div>
+      <p>A member of our team will review your message and get back to you as soon as possible. </p>
       
       <p>In the meantime, you can learn more about our services on our website.</p>
       
@@ -122,14 +111,7 @@ Hello ${name},
 
 Thank you for reaching out to Field Track LLC. We've received your inquiry and appreciate your interest in our precision agriculture services.
 
-A member of our team will review your message and get back to you as soon as possible. We're committed to helping you optimize your field operations and maximize your crop yields through data-driven solutions.
-
-OUR AGRICULTURAL TECHNOLOGY SERVICES INCLUDE:
-- Precision field mapping and analysis
-- Crop monitoring and data collection
-- Yield optimization strategies
-- Research and development support
-- Customized agricultural data solutions
+A member of our team will review your message and get back to you as soon as possible.
 
 In the meantime, you can learn more about our services on our website.
 
@@ -140,4 +122,4 @@ Field Track LLC Team
 This is an automated response. Please do not reply to this email.
 
 © ${new Date().getFullYear()} Field Track LLC. All rights reserved.
-`; 
+`;

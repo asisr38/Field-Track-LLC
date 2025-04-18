@@ -103,7 +103,7 @@ const GeoRasterLayerWrapper = ({ map }: { map: L.Map | null }) => {
         ];
 
         let loaded = false;
-        let lastError = null;
+        let lastError: Error | null = null;
 
         // Try each file until one loads successfully
         for (const filePath of fileOptions) {
@@ -123,11 +123,13 @@ const GeoRasterLayerWrapper = ({ map }: { map: L.Map | null }) => {
             );
 
             const georasterData = await parseGeoraster(arrayBuffer);
+            // Type assertion to access the properties
+            const georaster = georasterData as any;
             console.log(`Successfully parsed georaster for ${filePath}:`, {
-              width: georasterData.width,
-              height: georasterData.height,
-              bands: georasterData.numberOfRasters,
-              noDataValue: georasterData.noDataValue
+              width: georaster.width,
+              height: georaster.height,
+              bands: georaster.numberOfRasters,
+              noDataValue: georaster.noDataValue
             });
 
             setVariMapRaster(georasterData);
@@ -137,7 +139,7 @@ const GeoRasterLayerWrapper = ({ map }: { map: L.Map | null }) => {
             break; // Exit the loop once a file loads successfully
           } catch (err) {
             console.error(`Error loading ${filePath}:`, err);
-            lastError = err;
+            lastError = err as Error;
           }
         }
 
@@ -219,8 +221,9 @@ const TemporalNDVIMap = ({
 }: TemporalNDVIMapProps) => {
   const [map, setMap] = useState<L.Map | null>(null);
   const [showNDVI, setShowNDVI] = useState(true);
-  const [showVARI, setShowVARI] = useState(false);
+  const [showVARI, setShowVARI] = useState(true);
   const [, setErrorState] = useState<string | null>(null);
+  const [plotData, setPlotData] = useState<any>(null);
 
   // Calculate bounds from trial data
   const calculateTrialBounds = () => {
@@ -315,8 +318,28 @@ const TemporalNDVIMap = ({
 
   useEffect(() => {
     if (map && bounds) {
+      // Fit to bounds first
       map.fitBounds(bounds);
-      map.setMaxBounds(bounds);
+      map.setMaxBounds(bounds.pad(0.2));
+
+      // Disable all zoom interactions programmatically as well
+      map.scrollWheelZoom.disable();
+      map.touchZoom.disable();
+      map.doubleClickZoom.disable();
+      map.boxZoom.disable();
+      map.keyboard.disable();
+
+      // Add event listener to enforce bounds
+      const panHandler = () => {
+        map.panInsideBounds(bounds, { animate: false });
+      };
+
+      map.on("drag", panHandler);
+
+      // Cleanup event listener when component unmounts or dependencies change
+      return () => {
+        map.off("drag", panHandler);
+      };
     }
   }, [map, bounds, measurementIndex]);
 
@@ -331,7 +354,7 @@ const TemporalNDVIMap = ({
         onEachFeature={onEachFeature}
         onMapCreated={setMap}
         useSatelliteLayer={true}
-        zoomPosition="topleft"
+        disableZoom={true} // Completely disable zoom
       />
 
       {/* Layer Controls */}

@@ -8,7 +8,7 @@ import {
   LayersControl
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import demoPlotData from "@/public/simple-sense/ExtractionZones_v2.json";
+import demoPlotData from "@/public/simple-sense/ExtractionZones_v3.json";
 import { useCallback, useEffect, useState, useRef, useMemo } from "react";
 import type { FeatureCollection, Feature, GeoJsonProperties } from "geojson";
 import { PathOptions, LatLngBounds, latLng, PointTuple } from "leaflet";

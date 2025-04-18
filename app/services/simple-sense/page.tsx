@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
-import demoPlotData from "@/public/simple-sense/ExtractionZones_v2.json";
+import demoPlotData from "@/public/simple-sense/ExtractionZones_v3.json";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IconContext } from "react-icons";
@@ -39,7 +39,7 @@ import {
   Line,
   ResponsiveContainer
 } from "recharts";
-import plotData from "../../../public/simple-sense/ExtractionZones_v2.json";
+import plotData from "../../../public/simple-sense/ExtractionZones_v3.json";
 
 // Dynamic import of TrialLayout component
 const TrialLayout = dynamic(() => import("@/components/TrialLayout"), {
@@ -232,7 +232,7 @@ const getAllTreatmentsData = () => {
 
 export default function SimpleSensePage() {
   const [selectedGrowthStage, setSelectedGrowthStage] = useState<
-    "V4" | "V9" | "R1" | "R3"
+    "V4" | "V9" | "R1" | "R3" | "R5"
   >("V4");
   const [selectedIndex, setSelectedIndex] = useState<"NDVI" | "NDRE" | "VARI">(
     "NDVI"
@@ -246,7 +246,13 @@ export default function SimpleSensePage() {
   // Animation interval for growth stages
   useEffect(() => {
     if (isPlaying) {
-      const stages: Array<"V4" | "V9" | "R1" | "R3"> = ["V4", "V9", "R1", "R3"];
+      const stages: Array<"V4" | "V9" | "R1" | "R3" | "R5"> = [
+        "V4",
+        "V9",
+        "R1",
+        "R3",
+        "R5"
+      ];
       const interval = setInterval(() => {
         setSelectedGrowthStage(current => {
           const currentIndex = stages.indexOf(current);
@@ -734,8 +740,8 @@ export default function SimpleSensePage() {
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     Interactive visualization of vegetation indices across
-                    different growth stages. Toggle between NDVI and VARI layers
-                    with the controls in the top right.
+                    different growth stages. Toggle between the layers with the
+                    controls in the top right.
                   </p>
                 </div>
 
@@ -744,16 +750,19 @@ export default function SimpleSensePage() {
                     <div className="overflow-x-auto pb-2">
                       <TabsList className="min-w-[500px]">
                         <TabsTrigger value="1" className="text-sm">
-                          V4 Stage (Early)
+                          V4 (Early)
                         </TabsTrigger>
                         <TabsTrigger value="2" className="text-sm">
-                          V9 Stage (Mid)
+                          V9 (Rapid Growth)
                         </TabsTrigger>
                         <TabsTrigger value="3" className="text-sm">
-                          R1 Stage (Silking)
+                          R1 (Silking)
                         </TabsTrigger>
                         <TabsTrigger value="4" className="text-sm">
-                          R3 Stage (Milk)
+                          R3 (Milk)
+                        </TabsTrigger>
+                        <TabsTrigger value="5" className="text-sm">
+                          R5 (Dent)
                         </TabsTrigger>
                       </TabsList>
                     </div>
@@ -952,7 +961,7 @@ export default function SimpleSensePage() {
                             <Tooltip
                               formatter={(value, name) => [
                                 Number(value).toFixed(3),
-                                `Product ${name}`
+                                ` ${name}`
                               ]}
                               labelFormatter={label => {
                                 const stages = ["V4", "V9", "R1", "R3", "R5"];
@@ -980,7 +989,7 @@ export default function SimpleSensePage() {
                                 overflowWrap: "break-word",
                                 paddingTop: "32px"
                               }}
-                              formatter={value => `Product ${value}`}
+                              formatter={value => ` ${value}`}
                             />
                             {(() => {
                               // All treatments A through L
