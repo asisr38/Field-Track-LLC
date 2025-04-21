@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import trialData from "@/public/onfarm/trial-design-seed-2025_v2.json";
+import trialData from "@/public/onfarm/TrialDesign_OnFarm_250421_v2.json";
 
 interface OnFarmMapProps {
   className?: string;
@@ -92,7 +92,7 @@ const OnFarmMap = ({ className }: OnFarmMapProps) => {
     // Add trial plots to map with improved styling for better visibility on satellite imagery
     const plotsLayer = L.geoJSON(typedTrialData, {
       style: feature => ({
-        fillColor: getColor(Number(feature?.properties?.tgt_seed)),
+        fillColor: getColor(Number(feature?.properties?.SeedRate)),
         weight: 2,
         opacity: 1,
         color: "black",
@@ -107,24 +107,21 @@ const OnFarmMap = ({ className }: OnFarmMapProps) => {
               <div style="padding: 10px 15px 10px 10px;">
                 <div style="margin-bottom: 10px;">
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; background-color: #f0fdf4; padding: 6px 8px; border-radius: 4px;">
-                    <span style="font-weight: 600; color: #166534;">Plot ID</span>
-                    <span style="font-weight: 600; color: #047857; font-size: 14px;">${
-                      feature.properties.ID_1
-                    }</span>
+                    <span style="font-weight: 600; color: #166534;">Block</span>
+                    <span style="font-weight: 600; color: #047857; font-size: 14px;">${feature.properties.Block}</span>
                   </div>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
                   <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px;">
                     <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Seed Rate</div>
-                    <div style="font-weight: 500; color: #111827; margin-top: 2px;">${feature.properties.tgt_seed.toLocaleString()} seeds/ac</div>
+                                        <span style="font-weight: 600; color: #047857; font-size: 14px;">${feature.properties.SeedRate}</span>
+
                   </div>
                   
                   <div style="background-color: #ecfdf5; padding: 6px 8px; border-radius: 4px;">
                     <div style="color: #065f46; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Yield</div>
-                    <div style="font-weight: 600; color: #047857; margin-top: 2px;">${
-                      feature.properties.Yield
-                    } bu/ac</div>
+                    <div style="font-weight: 600; color: #047857; margin-top: 2px;">${feature.properties.Yield} bu/ac</div>
                   </div>
                 </div>
               </div>
