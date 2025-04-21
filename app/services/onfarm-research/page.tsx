@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
-import trialData from "@/public/onfarm/trial-design-seed-2025_v2.json";
+import trialData from "@/public/onfarm/TrialDesign_OnFarm_250421_v2.json";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IconContext } from "react-icons";
@@ -584,7 +584,7 @@ export default function OnFarmResearchPage() {
             if (!feature || !feature.properties) return acc;
 
             // Safely parse values with fallbacks
-            const seedRate = parseInt(feature.properties.tgt_seed) || 0;
+            const seedRate = parseInt(feature.properties.SeedRate) || 0;
             const yield_value = parseFloat(feature.properties.Yield) || 0;
 
             // Skip invalid entries
@@ -683,14 +683,14 @@ export default function OnFarmResearchPage() {
               feature &&
               feature.properties &&
               !isNaN(parseFloat(feature.properties.Yield)) &&
-              !isNaN(parseInt(feature.properties.tgt_seed))
+              !isNaN(parseInt(feature.properties.SeedRate))
           )
           .map((feature: any) => ({
-            seedRate: parseInt(feature.properties.tgt_seed),
+            seedRate: parseInt(feature.properties.SeedRate),
             yield: parseFloat(feature.properties.Yield),
             plotId: feature.properties.ID_1 || "",
             color:
-              seedRateColors[parseInt(feature.properties.tgt_seed)] ||
+              seedRateColors[parseInt(feature.properties.SeedRate)] ||
               (theme === "dark" ? "#90be6d" : "#2a9d8f")
           }));
       }
