@@ -1419,7 +1419,7 @@ export default function OnFarmResearchPage() {
                     icon={<FileBarChart className="w-5 h-5" />}
                   >
                     <div className="space-y-2">
-                      <DataRow label="Location" value="Central Illinois" />
+                      <DataRow label="Location" value="Kansas" />
                       <DataRow label="Crop" value="Corn" />
                       <DataRow label="Planting Date" value="April 15, 2024" />
                       <DataRow label="Harvest Date" value="October 10, 2024" />

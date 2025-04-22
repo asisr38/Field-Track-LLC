@@ -331,25 +331,13 @@ const MapWrapper = ({ view }: OnFarmTrialMapProps) => {
                     </div>
                     
                     <div style="margin-bottom: 8px; background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px;">
-                      <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Treatment</div>
-                      <div style="font-weight: 500; color: #111827; margin-top: 2px;">${
-                        props.Treatment || "N/A"
-                      }</div>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-                      <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px;">
-                        <div style="color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Seed Rate</div>
-                        <div style="font-weight: 500; color: #111827; margin-top: 2px;">${props.SeedRate.toLocaleString()} seeds/ac</div>
-                      </div>
-                      
-                      <div style="background-color: #ecfdf5; padding: 6px 8px; border-radius: 4px;">
-                        <div style="color: #065f46; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Yield</div>
+                          <div style="color: #065f46; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Yield</div>
                         <div style="font-weight: 600; color: #047857; margin-top: 2px;">${
                           props.Product_Yld || props.Yield
                         } bu/ac</div>
-                      </div>
                     </div>
+                    
+
                   </div>
                 </div>
               `;

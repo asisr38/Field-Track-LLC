@@ -105,12 +105,6 @@ const OnFarmMap = ({ className }: OnFarmMapProps) => {
             `
             <div style="font-family: system-ui, sans-serif; width: auto; font-size: 12px; padding: 0;">
               <div style="padding: 10px 15px 10px 10px;">
-                <div style="margin-bottom: 10px;">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; background-color: #f0fdf4; padding: 6px 8px; border-radius: 4px;">
-                    <span style="font-weight: 600; color: #166534;">Block</span>
-                    <span style="font-weight: 600; color: #047857; font-size: 14px;">${feature.properties.Block}</span>
-                  </div>
-                </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
                   <div style="background-color: #f3f4f6; padding: 6px 8px; border-radius: 4px;">
