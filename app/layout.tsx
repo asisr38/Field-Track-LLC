@@ -117,6 +117,21 @@ export default function RootLayout({
           crossOrigin="anonymous"
           defer
         ></script>
+        {/* Google Analytics */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-Q45SWT33GD"
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-Q45SWT33GD');
+            `
+          }}
+        />
       </head>
       <body className={`${inter.variable} ${openSans.variable} font-secondary`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
