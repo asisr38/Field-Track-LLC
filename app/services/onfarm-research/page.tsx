@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
-import trialData from "@/public/onfarm/TrialDesign_OnFarm_250421_v2.json";
+import trialData from "@/public/onfarm/TrialDesign_OnFarm_250428_v1.json";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IconContext } from "react-icons";
