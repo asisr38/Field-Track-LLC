@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import trialData from "@/public/onfarm/TrialDesign_OnFarm_250421_v2.json";
+import trialData from "@/public/onfarm/TrialDesign_OnFarm_250428_v1.json";
 
 interface OnFarmMapProps {
   className?: string;
