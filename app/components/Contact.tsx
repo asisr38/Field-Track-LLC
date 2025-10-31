@@ -6,6 +6,7 @@ import { useInView } from "react-intersection-observer";
 import { Check, AlertCircle } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 const cropTypes = [
   "Corn",
@@ -88,6 +89,7 @@ export default function Contact() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string>("");
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -145,6 +147,12 @@ export default function Contact() {
 
     if (!validateForm()) return;
 
+    // Check if Turnstile token exists
+    if (!turnstileToken) {
+      alert("Please complete the security verification");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -158,6 +166,7 @@ export default function Contact() {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
+          turnstileToken: turnstileToken,
           message: `
 Crop Types: ${formData.cropTypes || "Not specified"}
 Service Type: ${formData.serviceType || "Not specified"}
@@ -186,6 +195,7 @@ ${formData.message}
         message: "",
         preferredContact: "email"
       });
+      setTurnstileToken(""); // Reset Turnstile token
       setIsSubmitting(false);
     } catch (error) {
       console.error("Error sending contact form:", error);
@@ -426,9 +436,26 @@ ${formData.message}
                     )}
                   </div>
 
+                  {/* Cloudflare Turnstile */}
+                  <div className="flex justify-center">
+                    <Turnstile
+                      siteKey={
+                        process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
+                        "1x00000000000000000000AA"
+                      }
+                      onSuccess={token => setTurnstileToken(token)}
+                      onError={() => setTurnstileToken("")}
+                      onExpire={() => setTurnstileToken("")}
+                      options={{
+                        theme: "auto",
+                        size: "normal"
+                      }}
+                    />
+                  </div>
+
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !turnstileToken}
                     className="w-full bg-primary text-primary-foreground font-medium py-2.5 px-4 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors disabled:opacity-70 text-sm sm:text-base"
                   >
                     {isSubmitting ? (
